@@ -22,6 +22,8 @@
   "homepage": "https://github.com/cr7boulos/ast_interpreter#readme",
   "devDependencies": {
     "bower": "^1.7.9",
-    "grunt": "^1.0.1"
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0"
   }
 }
