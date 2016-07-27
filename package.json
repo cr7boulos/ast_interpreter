@@ -1,0 +1,27 @@
+{
+  "name": "ast_interpreter",
+  "version": "1.0.0",
+  "description": "AngularJS app of an ast-walking interpter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cr7boulos/ast_interpreter.git"
+  },
+  "keywords": [
+    "angular",
+    "interpreter"
+  ],
+  "author": "Daniel Boulos",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cr7boulos/ast_interpreter/issues"
+  },
+  "homepage": "https://github.com/cr7boulos/ast_interpreter#readme",
+  "devDependencies": {
+    "bower": "^1.7.9",
+    "grunt": "^1.0.1"
+  }
+}
