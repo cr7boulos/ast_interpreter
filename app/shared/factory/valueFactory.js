@@ -1,8 +1,8 @@
-((function(){
+(function(){
     "use strict";
 
     angular.module('astInterpreter')
-        .factory('valueFactory', function ($scope) {
+        .factory('valueFactory', [ '$scope', function ($scope) {
             $scope.Value = Value;
 
 
@@ -67,6 +67,6 @@
 
                     }
             }
-        });
+        }]);
 
-    }));
+    })();
