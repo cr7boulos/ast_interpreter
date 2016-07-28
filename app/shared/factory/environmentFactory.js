@@ -2,8 +2,8 @@
     "use strict";
     angular
         .module('astInterpreter')
-        .factory('environmentFactory', [$scope, function ($scope) {
-            $scope.Environment = Environment;
+        .factory('environmentFactory', function () {
+           
 
            function Environment(env, label) {
             this.variables = [];
@@ -117,6 +117,9 @@
                 
             }
         } 
+        return {
+            "Environment": Environment
+        };
 
-    }]);
+    });
 })();

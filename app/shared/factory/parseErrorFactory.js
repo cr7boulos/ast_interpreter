@@ -2,8 +2,8 @@
     'use strict';
     angular
         .module('astInterpreter')
-        .factory('parseErrorFactory', ['$scope', function ($scope) {
-            $scope.ParseError = ParseError;
+        .factory('parseErrorFactory', function () {
+            
 
             //the basic structure of these Errors follows
             //the template used here: http://eloquentjavascript.net/08_error.html
@@ -14,5 +14,9 @@
             }
             ParseError.prototype = Object.create(Error.prototype);
 
-        }]);
+            return {
+                "ParseError": ParseError
+            };
+
+        });
 })();

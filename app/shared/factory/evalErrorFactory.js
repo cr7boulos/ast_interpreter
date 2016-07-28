@@ -3,8 +3,8 @@
 
     angular
         .module('astInterpreter')
-        .factory('evalErrorFactory', [ '$scope', function($scope){
-            $scope.EvaluationError = EvaluationError;
+        .factory('evalErrorFactory', function(){
+            
 
             //the basic structure of these Errors follows
             //the template used here: http://eloquentjavascript.net/08_error.html
@@ -18,6 +18,11 @@
                 this.name = "EvaluationError";
             }
 
+            
+
             EvaluationError.prototype = Object.create(Error.prototype);
-    }]);
+            return {
+                "EvaluationError": EvaluationError
+            };
+    });
 })

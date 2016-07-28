@@ -2,10 +2,11 @@
     'use strict';
     angular
         .module('astInterpreter')
-        .factory('buildTreeFactory', ['$scope', 'treeFactory',  function ($scope, treeFactory) {
-            $scope.BuildTree = BuildTree;
+        .factory('buildTreeFactory', [ 'treeFactory',
+          function ( treeFactory) {
+            
             var Tree = treeFactory.Tree;
-            var ParseError = parseErrorFactory.ParseError;
+            //var ParseError = parseErrorFactory.ParseError;
 
             function BuildTree(tokenizer) { 
                 this.counter = 1;
@@ -64,5 +65,9 @@
                     return result;
                 }//getTree()
         }
+
+        return {
+            "BuildTree": BuildTree
+        };
     }]);
 })();

@@ -2,19 +2,19 @@
     "use strict";
 
     angular
-    .module('astInterperter')
+    .module('astInterpreter')
     .factory('evaluateFactory', 
     [ 'environmentFactory',
-        'evalErrorFactory', 'valueFactory', '$scope' , 
-        function(environmentFactory, evalErrorFactory, valueFactory, $scope) {
-        $scope.Evalaute = Evaluate;
+         'valueFactory', 
+        function(environmentFactory, valueFactory) {
+        
         
         
         var Environment = environmentFactory.Environment;
         var Value = valueFactory.Value;
-        var EvalError = evalErrorFactory.EvaluationError;
+        //var EvalError = evalErrorFactory.EvaluationError;
 
-    function Evalaute() {
+    function Evaluate() {
         //don't set this variable to 1 when running large programs
         //can cuase stack overflows due to large environments!!
         this.DEBUG = 0;
@@ -694,6 +694,10 @@
             return new Value(result);
         }//evaluateAexp()
     }
+
+    return {
+            "Evaluate": Evaluate
+        };
 
     }]);
     

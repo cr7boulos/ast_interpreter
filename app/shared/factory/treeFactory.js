@@ -2,9 +2,8 @@
    "use strict"; 
 
    angular.module('astInterpreter')
-   .factory('treeFactory', [ '$scope', function($scope){
-       $scope.Tree = Tree;
-
+   .factory('treeFactory', function(){
+       
        function Tree(element) {
             this.element = element;
             this.subTrees = [];
@@ -58,6 +57,10 @@
 
         }
 
-    }]);
+        return {
+            "Tree": Tree
+        };
+
+    });
 
 })();

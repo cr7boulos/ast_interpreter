@@ -2,11 +2,11 @@
     "use strict";
 
     angular.module('astInterpreter')
-        .factory('valueFactory', [ '$scope', function ($scope) {
-            $scope.Value = Value;
+        .factory('valueFactory', function () {
+            
 
 
-            function Value() {
+            function Value(value) {
                 if(typeof value === "number") {
                     this.tag = "int";
                     this.valueI = value;
@@ -67,6 +67,10 @@
 
                     }
             }
-        }]);
+
+            return {
+                "Value": Value
+            };
+        });
 
     })();

@@ -1,8 +1,8 @@
 (function () {
    "use strict"; 
    angular.module('astInterpreter')
-        .factory('tokenizerFactory', ['$scope', function ($scope) {
-            $scope = Tokenizer;
+        .factory('tokenizerFactory', function () {
+           
 
             function Tokenizer(str) {
             this._tokens = str.trim().split(/\s+/);//RegEx for whitespace
@@ -60,7 +60,11 @@
             }
         }
 
-    }]);
+        return {
+            "Tokenizer": Tokenizer
+        };
+
+    });
 
    
 })();

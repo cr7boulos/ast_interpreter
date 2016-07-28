@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html ng-app="astInterpreter" >
+<head>
+    <title>{{"angular!"}}</title>
+    <div>{{"This is angular!"}}</div>
+    <div ng-controller="AController as ast">{{ast.result.valueI}}</div>
+</head>
+
+<body>
+
+
+<script src="./bower_components/angular/angular.js"></script>
+<script src="app/app.js"></script>
+<script src="app/shared/factory/treeFactory.js"></script>
+<script src="app/shared/factory/valueFactory.js"></script>
+<!--<script src="app/shared/factory/parseErrorFactory.js"></script>
+<script src="app/shared/factory/evalErrorFactory.js"></script>-->
+<script src="app/shared/factory/tokenizerFactory.js"></script>
+<script src="app/shared/factory/environmentFactory.js"></script>
+<script src="app/shared/factory/buildTreeFactory.js"></script>
+<script src="app/shared/factory/evaluateFactory.js"></script>
+<script src="app/ast/ASTController.js"></script>
+
+</body>
+</html>

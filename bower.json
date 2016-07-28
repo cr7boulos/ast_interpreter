@@ -22,5 +22,8 @@
   "dependencies": {
     "d3": "^4.1.1",
     "velocity": "^1.2.3"
+  },
+  "devDependencies": {
+    "angular": "^1.5.8"
   }
 }
