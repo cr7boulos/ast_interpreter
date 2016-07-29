@@ -14,7 +14,7 @@
             
             function EvaluationError(errMessage) {
                 this.message = errMessage;
-                this.stack = (new Error).stack;
+                this.stack = (new Error() ).stack;
                 this.name = "EvaluationError";
             }
 
@@ -25,4 +25,4 @@
                 "EvaluationError": EvaluationError
             };
     });
-})
+})();

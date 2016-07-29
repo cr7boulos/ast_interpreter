@@ -25,11 +25,11 @@
             this.add = function (variable, value) {
                 this.variables.push(variable);
                 this.values.push(value);
-            }
+            };
 
             this.defined = function (variable) {
                 return (null !== this.lookUp(variable));
-            }
+            };
 
             this.lookUp = function (variable) {
                 var i = 0;
@@ -51,7 +51,7 @@
                         return this.nonLocalLink.lookUp(variable);
                     }
                 }
-            }
+            };
 
             this.definedLocal = function (variable) {
                 var i = 0;
@@ -67,7 +67,7 @@
                 else {
                     return false;
                 }
-            }
+            };
 
             this.update = function (variable, value) {
                 var i = 0;
@@ -90,7 +90,7 @@
                         return this.nonLocalLink.update(variable, value);
                     }
                 }
-            }
+            };
 
             /**
                 Convert the contents of the environment chain into a string.
@@ -115,7 +115,7 @@
                 return result;
 
                 
-            }
+            };
         } 
         return {
             "Environment": Environment

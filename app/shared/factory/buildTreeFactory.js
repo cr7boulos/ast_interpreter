@@ -63,7 +63,7 @@
                     
 
                     return result;
-                }//getTree()
+                }; //getTree()
         }
 
         return {
