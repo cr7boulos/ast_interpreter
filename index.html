@@ -2,18 +2,50 @@
 
 <html ng-app="astInterpreter" >
 <head>
+    
     <title>{{"angular!"}}</title>
-    <div>{{"This is angular!"}}</div>
-    <div ng-controller="AController as ast">{{ast.result.valueI}}</div>
+    
+        
+    
 </head>
 
 <body>
+<script src="http://d3js.org/d3.v3.min.js"></script> <!-- always use version 3 of D3js to ensure the API works with my code! -->
+<script src="./monaco-editor-samples/node_modules/monaco-editor/min/vs/loader.js"></script>
 
+
+
+
+<div>{{"This is angular!"}}</div>
+    
+    <div ng-controller="mainController as main">
+        <monaco-editor>
+            
+        </monaco-editor>
+        
+        <div build-tree editorcontent="{{main.getContent()}}">
+            
+        </div>
+            
+        
+        
+        <!--<d3-ast build-tree="hello">
+            
+        </d3-ast>-->
+        
+    </div>
+    
 
 <script src="./bower_components/angular/angular.js"></script>
-<script src="app/app.js"></script>
-<script src="mySharedLib.js"></script>
-<script src="app/ast/ASTController.js"></script>
 
+<script src="app/app.js"></script>
+<script src="mainController.js"></script>
+<script src="mySharedLib.js"></script>
+<script src="rootDirective.js"></script>
+<script src="app/ast/ASTController.js"></script>
+<script src="app/ast/astDirective.js"></script>
+<script src="app/editor/controller/editorController.js"></script>
+<script src="app/editor/editorDirective.js"></script>
+<script src="app/shared/directives/buildTreeDirective.js"></script>
 </body>
 </html>

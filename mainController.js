@@ -2,13 +2,16 @@
 
 angular
     .module('astInterpreter')
-    .controller('mainController', function(){
+    .controller('mainController', function($scope){
             var animationCallbacks = [];
-            this.editorContent = 'hello';
+            var tree;
+            this.editorContent = "hello";  
+            
+            
             var index = 0;
             
             this.setContent = function(content){
-              this.editorContent = content;
+             this.editorContent = content;
             }
             
             this.getContent = function(){
@@ -30,5 +33,15 @@ angular
             this.executeAnimation = function(){
               animationCallbacks[index]();
             }
+            
+            this.setAST = function(ast){
+                tree = ast;
+            }
+            
+            this.getAST = function(){
+                return tree;
+            }
+            
+            
             
     });

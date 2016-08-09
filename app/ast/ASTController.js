@@ -12,6 +12,8 @@
                                 "( var y 6 ) " +
                                 "( fun f ( lambda x ( * x y ) ) ) " +  // y is a non-local reference
                                 "( apply f 5 ) )";
+                                
+                
 
                 var Tokenizer = tokenizerFactory.Tokenizer;
                 var BuildTree = buildTreeFactory.BuildTree;
