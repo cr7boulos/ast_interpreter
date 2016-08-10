@@ -1,39 +1,56 @@
 <!DOCTYPE html>
 
-<html ng-app="astInterpreter" >
+<html lang="en" ng-app="astInterpreter">
 <head>
-    
-    <title>{{"angular!"}}</title>
-    
+    <meta charset="utf-8">
+    <title>{{"D3 Data Viz"}}</title>
+     <!--copied the stylesheet code from here https://gist.github.com/d3noob/8326869-->
+    <style>
+        .node circle {
+          fill: #fff;
+          stroke: steelblue;
+          stroke-width: 3px;
+        }
+        .node text { font: 20px sans-serif; }
+        .link {
+          fill: none;
+          stroke: #ccc;
+          stroke-width: 2px;
+        }
+        /*end copied stylesheet code*/
         
+        #editor{
+            width: calc(50%);
+            border: 1px solid red;
+            height: 400px;
+            position: relative;
+            left: 25%;
+        }
+    
+    </style>
     
 </head>
 
 <body>
-<script src="http://d3js.org/d3.v3.min.js"></script> <!-- always use version 3 of D3js to ensure the API works with my code! -->
+    <script src="./bower_components/d3/d3.js"></script> <!-- always use version 3 of D3js to ensure the API works with my code! -->
 <script src="./monaco-editor-samples/node_modules/monaco-editor/min/vs/loader.js"></script>
 
 
 
-
-<div>{{"This is angular!"}}</div>
+<div>{{"Language 7"}}</div>
     
     <div ng-controller="mainController as main">
         <monaco-editor>
             
         </monaco-editor>
         
-        <div build-tree editorcontent="{{main.getContent()}}">
+        <d3-ast data="{{main.getAST()}}" build-tree editorcontent="{{main.getContent()}}">
             
-        </div>
-            
+        </d3-ast>
+    </div>  
         
         
-        <!--<d3-ast build-tree="hello">
-            
-        </d3-ast>-->
         
-    </div>
     
 
 <script src="./bower_components/angular/angular.js"></script>
@@ -46,6 +63,7 @@
 <script src="app/ast/astDirective.js"></script>
 <script src="app/editor/controller/editorController.js"></script>
 <script src="app/editor/editorDirective.js"></script>
-<script src="app/shared/directives/buildTreeDirective.js"></script>
+
+<script src="app/ast/d3Directive.js"></script>
 </body>
 </html>

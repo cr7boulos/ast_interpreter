@@ -26,7 +26,8 @@
                 var e = new Evaluate();
                 this.result = e.evaluate(ast);
                 console.log(this.result.valueI);
-
+                
+                
 
             }]);
 })();

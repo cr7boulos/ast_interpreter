@@ -6,7 +6,7 @@ module.exports = function(grunt){
                 separator: '\n\n'
             },
             dist: {
-                src: ['./app/shared/factory/*.js'],
+                src: ['./app/shared/factory/*.js', './app/shared/directives/*.js' ],
                 dest: 'mySharedLib.js'
             },
             

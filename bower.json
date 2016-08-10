@@ -20,10 +20,8 @@
     "tests"
   ],
   "dependencies": {
-    "d3": "^4.1.1",
-    "velocity": "^1.2.3",
     "angular": "^1.5.8",
-    "angular-route": "^1.5.8",
-    "monaco-editor": "https://github.com/Microsoft/monaco-editor.git#^0.5.1"
+    "monaco-editor": "https://github.com/Microsoft/monaco-editor.git#^0.5.1",
+    "d3": "3" //the D3js 4.0 API breaks the code I am currently using
   }
 }

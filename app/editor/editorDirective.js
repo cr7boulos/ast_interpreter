@@ -5,7 +5,7 @@ angular
                 restrict: 'E',
                 replace: true,
             
-                template: '<div><div style="width:800px;height:600px;border:1px solid grey"></div><button ng-click="mco.save()">Click</button></div>',
+                template: '<div><div id="editor" ></div><button ng-click="mco.save()">Visualize program</button></div>',
                 require: 'monacoEditor',
                 controller: function(){
                     this.editor = null;        
@@ -114,12 +114,30 @@ angular
                         //end copied code
                         
                         mController.editor = monaco.editor.create(element[0].firstElementChild /*the editor sits in the first nested <div>*/, {
-                            value: "( prog " + /*default content*/
-                                    "( fun f ( lambda x ( * x x ) ) ) " +
-                                    "( fun g ( lambda x ( + x ( apply f x ) ) ) ) " +
-                                    "( apply g 5 ) )",
+                            value: "( prog \n\t" +
+           "( var w 10 ) \n\t" +
+           "( fun f ( lambda x ( * x x ) ) ) \n\t" +
+           "( var z ( begin \n\t\t\t\t" +
+                     "( var x 0 ) \n\t\t\t\t" +
+                     "( begin ( var y 2 ) \n\t\t\t\t" +
+                            "( begin \n\t\t\t\t\t" +
+                               "( set x w ) \n\t\t\t\t\t" +
+                               "( apply f ( + x y ) ) ) ) ) ) " + "z \n)",
                             language: 'myCustomLanguage'
                         });
+                        var ttt = "( prog " + /*default content*/
+                                    "\n\t( fun f ( lambda x ( * x x ) ) ) " +
+                                    "\n\t( fun g ( lambda x ( + x ( apply f x ) ) ) ) " +
+                                    "( apply g 5 ) \n)";
+                        var rrr = "( prog " +
+           "( var w 10 ) " +
+           "( fun f ( lambda x ( * x x ) ) ) " +
+           "( var z ( begin " +
+                     "( var x 0 ) " +
+                     "( begin ( var y 2 ) " +
+                            "( begin " +
+                               "( set x w ) " +
+                               "( apply f ( + x y ) ) ) ) ) ) " +"z )";
                         
                         mController.save = function(){
                             

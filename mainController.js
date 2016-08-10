@@ -4,18 +4,20 @@ angular
     .module('astInterpreter')
     .controller('mainController', function($scope){
             var animationCallbacks = [];
-            var tree;
-            this.editorContent = "hello";  
             
+            var self = this;
+            self.editorContent = "hello world";
+            var tree;
+            self.tree = tree;
             
             var index = 0;
             
-            this.setContent = function(content){
-             this.editorContent = content;
+            self.setContent = function(content){
+             self.editorContent = content;
             }
             
-            this.getContent = function(){
-              return this.editorContent;
+            self.getContent = function(){
+              return self.editorContent;
             }
             
             this.nextAnimation = function(){
