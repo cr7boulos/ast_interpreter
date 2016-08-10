@@ -16,7 +16,7 @@ angular
                     
                     console.log("Editor scope\n");
                     console.log(scope);
-                    require.config({ paths: { 'vs': './monaco-editor-samples/node_modules/monaco-editor/min/vs' }});
+                    require.config({ paths: { 'vs': './bower_components/monaco-editor-samples/node_modules/monaco-editor/min/vs' }});
                  
                     require(['vs/editor/editor.main'], function() {
                     
