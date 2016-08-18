@@ -4,8 +4,8 @@ angular
         return {
                 restrict: 'E',
                 replace: true,
-            
-                template: '<div><div id="editor" ></div><button ng-click="mco.save()">Visualize program</button></div>',
+                //reset scope.index to zero so that the animation starts from the root of every AST
+                template: '<div><div id="editor" ></div><button ng-click="mco.save();index = 0">Visualize program</button></div>',
                 require: 'monacoEditor',
                 controller: function(){
                     this.editor = null;        

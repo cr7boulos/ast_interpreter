@@ -3,18 +3,20 @@
 <html lang="en" ng-app="astInterpreter">
 <head>
     <meta charset="utf-8">
-    <title>{{"D3 Data Viz"}}</title>
+    <title>D3 Data Viz</title>
      <!--copied the stylesheet code from here https://gist.github.com/d3noob/8326869-->
     <style>
         .node circle {
           fill: #fff;
           stroke: steelblue;
+          /*stroke: white;*/
           stroke-width: 3px;
         }
         .node text { font: 20px sans-serif; }
         .link {
           fill: none;
           stroke: #ccc;
+          /*stroke: steelblue;*/
           stroke-width: 2px;
         }
         /*end copied stylesheet code*/
@@ -38,7 +40,7 @@
 
 
 
-<div>{{"Language 7"}}</div>
+<div>Language 7</div>
     
     <div ng-controller="mainController as main">
         <monaco-editor>
@@ -48,6 +50,9 @@
         <d3-ast data="{{main.getAST()}}" build-tree editorcontent="{{main.getContent()}}">
             
         </d3-ast>
+        <animation-button>
+            
+        </animation-button>
     </div>  
         
         

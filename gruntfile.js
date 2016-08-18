@@ -1,6 +1,13 @@
 module.exports = function(grunt){
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        
+        watch: {
+            js: {
+                files: ['./app/shared/factory/*.js', './app/shared/directives/*.js' ],
+                tasks: ['concat'],
+            }
+        },
         concat: {
             options: {
                 separator: '\n\n'
@@ -20,9 +27,10 @@ module.exports = function(grunt){
 
     //shortcut for loading all grunt tasks
     //require('load')
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.registerTask('default', ['concat']);
+    grunt.registerTask('default', ['watch']);
     
     
 }

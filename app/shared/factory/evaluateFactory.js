@@ -14,10 +14,10 @@
         var Value = valueFactory.Value;
         //var EvalError = evalErrorFactory.EvaluationError;
 
-    function Evaluate() {
+    function Evaluate(scope) {
         //don't set this variable to 1 when running large programs
         //can cuase stack overflows due to large environments!!
-        this.DEBUG = 0;
+        this.DEBUG = 0; //always keep this set to zero when running on Angularjs!
         this.globalEnv = null;
         this.env = null;
 
@@ -38,6 +38,8 @@
             // environment chain).
             this.globalEnv = new Environment();
             this.env = this.globalEnv;
+            
+            //emit a "envStackPush" event
 
             // Check whick kind of Prog we have.
             if (!(tree.element === "prog")) {
@@ -92,9 +94,11 @@
 
             //get the function name
             var name = tree.getSubTree(0).element;
+            //emit a "nodeTraversal" event
 
             // check if this function has already been defined
             if (this.env.definedLocal(name)) {
+                //emit a "envLocalSearch" event
                 throw new EvalError("function already exists: " + name);
             }
 
@@ -111,6 +115,8 @@
             // create a function Value and
             // add a <name, lambda> pair to the environment
             this.env.add(name, new Value(lambda));
+            //emit an "envAdd" event
+            
 
             if (this.DEBUG > 0) {
                 // for debugging purposes
@@ -129,53 +135,66 @@
             var node = tree.element;
 
             if (node === "apply") {
-
+                //emit "nodeTraversal" event
                 result = this.evaluateApply(tree);
             }
             else if (node === "if") {
-
+                //emit "nodeTraversal" event
                 result = this.evaluateIf(tree);
             }
             else if (node === "while") {
+                //emit "nodeTraversal" event
                 result = this.evaluateWhile(tree);
             }
             else if (node === "set") {
+                //emit "nodeTraversal" event
                 result = this.evaluateSet(tree);
             }
             else if (node === "begin") {
+                //emit "nodeTraversal" event
                 result = this.evaluateBegin(tree);
             }
             else if (node === "var") {
+                //emit "nodeTraversal" event
                 result = this.evaluateVar(tree);
             }
             else if (node === "print") {
+                //emit "nodeTraversal" event
                 result = this.evaluatePrint(tree);
             }
             else if ((node === "&&") || (node === "||") || (node === "!")) {
+                //emit "nodeTraversal" event
                 result = this.evaluateBexp(tree) //boolean expression
             }
             else if ((node === "<") || (node === ">")
                     || (node === "<=") || (node === ">=")
                     || (node === "==") || (node === "!=")) {
+                //emit "nodeTraversal" event
                 result = this.evaluateRexp(tree); //relational operator
             }
             else if ((node === "+") || (node === "-")
                 || (node === "*") || (node === "/")
                 || (node === "%") || (node === "^")) {
+                //emit "nodeTraversal" event
                 result = this.evaluateAexp(tree); //arithmetic expression
             }
             else if (tree.degree() === 0) {
 
                 if ((node === "true") || (node === "false")) {
-
+                    //emit "nodeTraversal" event
                     result = new Value(node === "true");
                 }
                 else if (node.match(/^[-]*[0-9][0-9]*/)) {
-
+                    //emit "nodeTraversal" event
                     result = new Value(parseInt(node, 10));
                 }
                 else if (this.env.defined(node)) { // a variable
-
+                    //since env.defined is basically a wrapper function
+                    //for env.lookUp we will only emit one event
+                    //I need to think about how this will work
+                    
+                    //emit "nodeTraversal" event
+                    //emit "envSearch" event
                     result = this.env.lookUp(node);
                 }
                 else {
@@ -232,6 +251,7 @@
             // values to formal paramter names.
             /*2*/
             var localEnv = new Environment(this.globalEnv, "Function Activation");
+            //emit "envAdd" event
 
             // Bind, in the new environment object, the actual parameter
             // values to the formal parameter names.
@@ -255,6 +275,7 @@
                 // paramter value to a formal parameter name.
                 /*6*/
                 localEnv.add(formalParamName, actualParamValue);
+                //emit "envAdd" event
 
             }
             if (this.DEBUG > 0) {
@@ -266,7 +287,7 @@
             // parameter values to the function's formal parameter names).
             /*7*/
             var originalEnv = this.env;
-
+            //ask Professor Kraft to draw a diagram of this code behavior on paper.
             /*8*/
             this.env = localEnv;
 
@@ -276,8 +297,10 @@
             // Finally, restore the environment chain.
             /*10*/
             this.env = originalEnv;
+            // emit "envRemove" event?
 
             return result;
+        //Pick up from here with annotating the source with event emitters. 8/11/16 9:08AM
 
 
 
@@ -421,9 +444,9 @@
             //var result := Value
             var result = null;
 
-            //get the varriable
+            //get the variable
             var variable = tree.getSubTree(0).element;
-
+            // emit "nodeTraversal" event
 
             //check if this variable has already been declared
             //in the local environment
@@ -589,6 +612,9 @@
                 result = resultL != resultR;
             }
 
+            //emit a "nodeTraversal" event: tree.element == relational operator
+            //if var result == T => highlight tree.element green, else highlight it red.
+            //see the code in Evaluate.js of Language_6 for more info.
             return new Value(result);
         }//evaluateRexp()
 

@@ -27,7 +27,7 @@ angular
                     .size([height, width]);
                  var diagonal = d3.svg.diagonal()
                     .projection(function(d) { return [d.x, d.y]; });
-                    
+                    console.log(scope);
                     
                 function update(source) {
                           // Compute the new tree layout.
@@ -42,13 +42,15 @@ angular
                           // Enter the nodes.
                           var nodeEnter = node.enter().append("g")
                               .attr("class", "node")
-                              .attr("id", function (d) {
-                                  return d.id;
-                              })
+                              
                               .attr("transform", function(d) { 
                                   return "translate(" + d.x + "," + d.y + ")"; });
                           nodeEnter.append("circle")
                               .attr("r", 10)
+                              .attr("class", "nodeShapes")
+                              .attr("id", function (d) {
+                                  return "node" + d.id;
+                              })
                               .style("fill", "#fff");
                           nodeEnter.append("text")
                               //.attr("y", function(d) { 
@@ -67,30 +69,52 @@ angular
                           link.enter().insert("path", "g")
                               .attr("class", "link")
                               .attr("d", diagonal);
-                        }
+                              //console.log(scope);
+                }
                             
-                    attrs.$observe('data', function(newVal){
-                        ast = scope.$eval(newVal);
+                attrs.$observe('data', function(newVal){
+                    ast = scope.$eval(newVal);
+                
+                
+                    
+                    var hier = [];
+                    i = 0;
+                    hier.push(ast2JsonFactory.traverse(ast));
+                    
+                    d3.layout.hierarchy(hier[0]);
+                    // ************** Generate the tree diagram	 *****************
+                    
+                    //the idea for clearing the <svg> container after
+                    //each render comes from this blog post
+                    // www.tivix.com/blog/data-viz-d3-and-angular
+                    svg.selectAll("*").remove();
                     
                     
-                        
-                        var hier = [];
-                        i = 0;
-                        hier.push(ast2JsonFactory.traverse(ast));
-                        
-                        d3.layout.hierarchy(hier[0]);
-                        // ************** Generate the tree diagram	 *****************
-                        
-                        //the idea for clearing the <svg> container after
-                        //each render comes from this blog post
-                        // www.tivix.com/blog/data-viz-d3-and-angular
-                        svg.selectAll("*").remove();
-                        
-                        
-                        var root = hier[0];
-                        update(root);
-                        
-                    });
+                    var root = hier[0];
+                    update(root);
+                    
+                    
+                    
+                });
+                    
+                //handles animation of the generated ast diagram.
+                
+                scope.$watch("index", function(){
+                 var currentData = scope.main.getCurrentAnimObject();
+                 //if(currentData.name === "nodeTraversal"){
+                 
+                   console.log(scope.index);
+                   d3.selectAll(".nodeShapes")
+                     .style("fill", "#fff"); //remove any previous highlighting
+                     d3.select("#" + "node" + scope.index)
+                        .style("fill", "#ff0" );//by setting the nodes to white
+                    //d3.select(currentData.objData.number)
+                    //  .style("fill", "#ff0"); //color red
+                 //}
+                }, true);
+               
+                
+                    
                 },
         };
     }]);
