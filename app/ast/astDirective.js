@@ -101,16 +101,16 @@ angular
                 
                 scope.$watch("index", function(){
                  var currentData = scope.main.getCurrentAnimObject();
-                 //if(currentData.name === "nodeTraversal"){
+                 if(currentData.name === "nodeTraversal"){
                  
-                   console.log(scope.index);
-                   d3.selectAll(".nodeShapes")
-                     .style("fill", "#fff"); //remove any previous highlighting
-                     d3.select("#" + "node" + scope.index)
-                        .style("fill", "#ff0" );//by setting the nodes to white
-                    //d3.select(currentData.objData.number)
-                    //  .style("fill", "#ff0"); //color red
-                 //}
+                   console.log(currentData);
+                   d3.selectAll(".nodeShapes") //removes all previous 
+                     .style("fill", "#fff"); //formatting by coloring all nodes white
+                     
+                   d3.select("#" + "node" + currentData.data.id)
+                     .style("fill", currentData.data.color);
+                    
+                 }
                 }, true);
                
                 

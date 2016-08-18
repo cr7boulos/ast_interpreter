@@ -2,7 +2,7 @@
 
 angular
     .module('astInterpreter')
-    .controller('mainController', function($scope){
+    .controller('mainController',['$scope', function($scope){
             var animationFunctionData = []; //stores objects relating
                                             //relating to animation
             
@@ -13,6 +13,9 @@ angular
             
             this.getCurrentAnimObject = function(){
                 return animationFunctionData[$scope.index];
+            }
+            this.addAnimationData = function(obj){
+                animationFunctionData.push(obj);
             }
             
             this.getIndex = function(){
@@ -67,4 +70,4 @@ angular
             
             
             
-    });
+    }]);
