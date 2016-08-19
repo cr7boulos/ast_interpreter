@@ -1,6 +1,8 @@
 # ast_interpreter
 AngularJS app for visualizing an AST-walking interpreter
 
+Check out pre-built website [here](https://cr7boulos.github.io/ast_interpreter/) 
+
 ## Requirements
 * NodeJS 
 * npm
