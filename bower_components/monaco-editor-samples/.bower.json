@@ -1,0 +1,14 @@
+{
+  "name": "monaco-editor-samples",
+  "homepage": "https://github.com/Microsoft/monaco-editor-samples",
+  "_release": "4dad8338f9",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "4dad8338f912c0d2aff36b1fa6efb54160456e66"
+  },
+  "_source": "https://github.com/Microsoft/monaco-editor-samples.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/Microsoft/monaco-editor-samples.git",
+  "_direct": true
+}
