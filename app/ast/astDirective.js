@@ -49,7 +49,7 @@ angular
                               .attr("r", 10)
                               .attr("class", "nodeShapes")
                               .attr("id", function (d) {
-                                  return "node" + d.id;
+                                  return "node" + (d.id - 1); //ids start with "node0" , "node1", "node2", ...
                               })
                               .style("fill", "#fff");
                           nodeEnter.append("text")

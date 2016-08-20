@@ -47,12 +47,15 @@
             
         </monaco-editor>
         
-        <d3-ast data="{{main.getAST()}}" build-tree editorcontent="{{main.getContent()}}">
+        <d3-ast evaluate data="{{main.getAST()}}" build-tree editorcontent="{{main.getContent()}}">
             
         </d3-ast>
         <animation-button>
             
         </animation-button>
+        
+        <div id="result" >{{main.getResult().valueI}}</div>
+        <div>{{main.getAnim()}}</div>
     </div>  
         
         

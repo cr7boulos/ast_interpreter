@@ -297,7 +297,7 @@
         this.DEBUG = 0; //always keep this set to zero when running on Angularjs!
         this.globalEnv = null;
         this.env = null;
-
+        var id = 0; //used for the animation of nodes 
         this.evaluate = function (tree) {
             //throws EvalError
             
@@ -320,12 +320,27 @@
 
             // Check whick kind of Prog we have.
             if (!(tree.element === "prog")) {
-
+                //emit a "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': tree.element,
+                    }
+                });
                 // Evaluate the single expression.
                 //console.log("calling evaluateExp");
                 result = this.evaluateExp(tree);
             }
             else {
+                //emit a "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': tree.element,
+                    }
+                });
                 // Evaluate each Fun or Exp in the Prog.
                 // Any Fun will have the side effect of putting
                 // a function name in the global environment.
@@ -339,7 +354,13 @@
                 for (var i = 0; i < tree.degree() - 1 ; i++) {
 
                     if (tree.getSubTree(i).element === "fun") {
-
+                          scope.main.addAnimationData({'name': "nodeTraversal",
+                                data: {
+                                    'id': id++,
+                                    'color': "#ff4",
+                                    'node': tree.getSubTree(i).element,
+                                }
+                          });                      
                         this.handleFun(tree.getSubTree(i));
                     }
                     else {
@@ -372,6 +393,13 @@
             //get the function name
             var name = tree.getSubTree(0).element;
             //emit a "nodeTraversal" event
+            scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': name,
+                    }
+            });
 
             // check if this function has already been defined
             if (this.env.definedLocal(name)) {
@@ -383,6 +411,13 @@
 
             //var lambda := Tree
             var lambda = tree.getSubTree(1);
+            scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': lambda.element,
+                    }
+            });
 
             // check if the definition really is a function
             if (!(lambda.element === "lambda")) {
@@ -412,57 +447,140 @@
             var node = tree.element;
 
             if (node === "apply") {
-                //emit "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': node,
+                    },
+                });
                 result = this.evaluateApply(tree);
             }
             else if (node === "if") {
                 //emit "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': node,
+                    },
+                });
                 result = this.evaluateIf(tree);
             }
             else if (node === "while") {
                 //emit "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': node,
+                    },
+                });
                 result = this.evaluateWhile(tree);
             }
             else if (node === "set") {
                 //emit "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': node,
+                    },
+                });
                 result = this.evaluateSet(tree);
             }
             else if (node === "begin") {
                 //emit "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': node,
+                    },
+                });
                 result = this.evaluateBegin(tree);
             }
             else if (node === "var") {
                 //emit "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': node,
+                    },
+                });
                 result = this.evaluateVar(tree);
             }
             else if (node === "print") {
                 //emit "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': node,
+                    },
+                });
                 result = this.evaluatePrint(tree);
             }
             else if ((node === "&&") || (node === "||") || (node === "!")) {
                 //emit "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': node,
+                    },
+                });
                 result = this.evaluateBexp(tree) //boolean expression
             }
             else if ((node === "<") || (node === ">")
                     || (node === "<=") || (node === ">=")
                     || (node === "==") || (node === "!=")) {
                 //emit "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': node,
+                    },
+                });
                 result = this.evaluateRexp(tree); //relational operator
             }
             else if ((node === "+") || (node === "-")
                 || (node === "*") || (node === "/")
                 || (node === "%") || (node === "^")) {
                 //emit "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': node,
+                    },
+                });
                 result = this.evaluateAexp(tree); //arithmetic expression
             }
             else if (tree.degree() === 0) {
 
                 if ((node === "true") || (node === "false")) {
                     //emit "nodeTraversal" event
+                    scope.main.addAnimationData({'name': "nodeTraversal",
+                        data: {
+                            'id': id++,
+                            'color': "#ff4",
+                            'node': node,
+                        },
+                    });
                     result = new Value(node === "true");
                 }
                 else if (node.match(/^[-]*[0-9][0-9]*/)) {
                     //emit "nodeTraversal" event
+                    scope.main.addAnimationData({'name': "nodeTraversal",
+                        data: {
+                            'id': id++,
+                            'color': "#ff4",
+                            'node': node,
+                        },
+                    });
                     result = new Value(parseInt(node, 10));
                 }
                 else if (this.env.defined(node)) { // a variable
@@ -471,6 +589,14 @@
                     //I need to think about how this will work
                     
                     //emit "nodeTraversal" event
+                    
+                    scope.main.addAnimationData({'name': "nodeTraversal",
+                        data: {
+                            'id': id++,
+                            'color': "#ff4",
+                            'node': node,
+                        },
+                    });
                     //emit "envSearch" event
                     result = this.env.lookUp(node);
                 }
@@ -546,6 +672,14 @@
                 // a formal parameter name.
                 /*5*/
                 var formalParamName = lambda.getSubTree(zz - 1).element;
+                //emit a "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                        data: {
+                            'id': id++,
+                            'color': "#ff4",
+                            'node': formalParamName,
+                        },
+                });
                 //console.log("Formal name : " + formalParamName);
 
                 // Bind, in the new local environment object, the actual
@@ -659,6 +793,14 @@
 
             //get the variable
             var variable = tree.getSubTree(0).element;
+            //emit an "nodeTraversal" event
+            scope.main.addAnimationData({'name': "nodeTraversal",
+                        data: {
+                            'id': id++,
+                            'color': "#ff4",
+                            'node': variable,
+                        },
+            });
             // check if this variable has already been declared
             if (!this.env.defined(variable)) {
                 //runtime check
@@ -724,6 +866,13 @@
             //get the variable
             var variable = tree.getSubTree(0).element;
             // emit "nodeTraversal" event
+            scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': variable,
+                    },
+            });
 
             //check if this variable has already been declared
             //in the local environment
@@ -757,8 +906,8 @@
 
             var result = this.evaluateExp(tree.getSubTree(0));
 
-            //print the expression on the associated web page
-            document.body.innerHTML += "<pre>" + result + "</pre>";
+            //print the expression on the console.
+            console.log("The printed result is" + result);
 
             return result;
         }//evalautePrint()
@@ -851,6 +1000,8 @@
             var result = false;
 
             var opStr = tree.element;
+            //emit a "nodeTraversal" event
+            //the event code is further down in the function definition
 
             var valueL = this.evaluateExp(tree.getSubTree(0));
 
@@ -890,6 +1041,19 @@
             }
 
             //emit a "nodeTraversal" event: tree.element == relational operator
+            var colorCode = "#ff0"; //red
+            if (result) {
+                //Color code from http://color.adobe.com
+                colorCode = "#87ff1d"; //green
+            }
+            scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': colorCode,
+                        'node' : opStr,
+                    },
+            });
+            
             //if var result == T => highlight tree.element green, else highlight it red.
             //see the code in Evaluate.js of Language_6 for more info.
             return new Value(result);
@@ -902,6 +1066,9 @@
 
             var result = 0;
             var node = tree.element;
+            //do not emit a "nodeTraversal" event since we
+            //already did so in the evaluateExp function
+            
 
             var valueL = this.evaluateExp(tree.getSubTree(0));
             if (!(valueL.tag === valueL.INT_TAG)) {
@@ -1292,3 +1459,30 @@
     
 })();   
     
+
+(function(){
+angular
+    .module('astInterpreter')
+    .directive('evaluate', ['evaluateFactory', function(evalFactory){
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs){
+              var Evaluate = evalFactory.Evaluate;
+              var ast = null;
+              console.log(attrs);
+              attrs.$observe('data', function(){
+                  ast = scope.main.getAST();
+                  if(ast !== undefined) {
+                    scope.main.resetAnimationData();//clear out all previous animations
+                    console.log(ast);
+                    var e = new Evaluate(scope);
+                    scope.main.setResult(e.evaluate(ast));
+                    console.log(scope.main.getAnimationData());
+                  }
+              });
+              
+              //console.log(mainController);
+            },
+        }
+    }]);
+})();

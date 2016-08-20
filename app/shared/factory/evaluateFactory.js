@@ -43,12 +43,27 @@
 
             // Check whick kind of Prog we have.
             if (!(tree.element === "prog")) {
-
+                //emit a "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': tree.element,
+                    }
+                });
                 // Evaluate the single expression.
                 //console.log("calling evaluateExp");
                 result = this.evaluateExp(tree);
             }
             else {
+                //emit a "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': tree.element,
+                    }
+                });
                 // Evaluate each Fun or Exp in the Prog.
                 // Any Fun will have the side effect of putting
                 // a function name in the global environment.
@@ -62,7 +77,13 @@
                 for (var i = 0; i < tree.degree() - 1 ; i++) {
 
                     if (tree.getSubTree(i).element === "fun") {
-
+                          scope.main.addAnimationData({'name': "nodeTraversal",
+                                data: {
+                                    'id': id++,
+                                    'color': "#ff4",
+                                    'node': tree.getSubTree(i).element,
+                                }
+                          });                      
                         this.handleFun(tree.getSubTree(i));
                     }
                     else {
@@ -98,7 +119,8 @@
             scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': id++,
-                        'color': "#ff4"
+                        'color': "#ff4",
+                        'node': name,
                     }
             });
 
@@ -112,6 +134,13 @@
 
             //var lambda := Tree
             var lambda = tree.getSubTree(1);
+            scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': id++,
+                        'color': "#ff4",
+                        'node': lambda.element,
+                    }
+            });
 
             // check if the definition really is a function
             if (!(lambda.element === "lambda")) {
@@ -145,6 +174,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': node,
                     },
                 });
                 result = this.evaluateApply(tree);
@@ -155,6 +185,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': node,
                     },
                 });
                 result = this.evaluateIf(tree);
@@ -165,6 +196,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': node,
                     },
                 });
                 result = this.evaluateWhile(tree);
@@ -175,6 +207,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': node,
                     },
                 });
                 result = this.evaluateSet(tree);
@@ -185,6 +218,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': node,
                     },
                 });
                 result = this.evaluateBegin(tree);
@@ -195,6 +229,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': node,
                     },
                 });
                 result = this.evaluateVar(tree);
@@ -205,6 +240,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': node,
                     },
                 });
                 result = this.evaluatePrint(tree);
@@ -215,6 +251,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': node,
                     },
                 });
                 result = this.evaluateBexp(tree) //boolean expression
@@ -227,6 +264,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': node,
                     },
                 });
                 result = this.evaluateRexp(tree); //relational operator
@@ -239,6 +277,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': node,
                     },
                 });
                 result = this.evaluateAexp(tree); //arithmetic expression
@@ -251,6 +290,7 @@
                         data: {
                             'id': id++,
                             'color': "#ff4",
+                            'node': node,
                         },
                     });
                     result = new Value(node === "true");
@@ -261,6 +301,7 @@
                         data: {
                             'id': id++,
                             'color': "#ff4",
+                            'node': node,
                         },
                     });
                     result = new Value(parseInt(node, 10));
@@ -271,10 +312,12 @@
                     //I need to think about how this will work
                     
                     //emit "nodeTraversal" event
+                    
                     scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
                             'id': id++,
                             'color': "#ff4",
+                            'node': node,
                         },
                     });
                     //emit "envSearch" event
@@ -352,6 +395,14 @@
                 // a formal parameter name.
                 /*5*/
                 var formalParamName = lambda.getSubTree(zz - 1).element;
+                //emit a "nodeTraversal" event
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                        data: {
+                            'id': id++,
+                            'color': "#ff4",
+                            'node': formalParamName,
+                        },
+                });
                 //console.log("Formal name : " + formalParamName);
 
                 // Bind, in the new local environment object, the actual
@@ -465,6 +516,14 @@
 
             //get the variable
             var variable = tree.getSubTree(0).element;
+            //emit an "nodeTraversal" event
+            scope.main.addAnimationData({'name': "nodeTraversal",
+                        data: {
+                            'id': id++,
+                            'color': "#ff4",
+                            'node': variable,
+                        },
+            });
             // check if this variable has already been declared
             if (!this.env.defined(variable)) {
                 //runtime check
@@ -534,6 +593,7 @@
                     data: {
                         'id': id++,
                         'color': "#ff4",
+                        'node': variable,
                     },
             });
 
@@ -663,6 +723,8 @@
             var result = false;
 
             var opStr = tree.element;
+            //emit a "nodeTraversal" event
+            //the event code is further down in the function definition
 
             var valueL = this.evaluateExp(tree.getSubTree(0));
 
@@ -711,6 +773,7 @@
                     data: {
                         'id': id++,
                         'color': colorCode,
+                        'node' : opStr,
                     },
             });
             
@@ -726,6 +789,9 @@
 
             var result = 0;
             var node = tree.element;
+            //do not emit a "nodeTraversal" event since we
+            //already did so in the evaluateExp function
+            
 
             var valueL = this.evaluateExp(tree.getSubTree(0));
             if (!(valueL.tag === valueL.INT_TAG)) {

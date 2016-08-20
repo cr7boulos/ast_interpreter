@@ -6,10 +6,33 @@ angular
             var animationFunctionData = []; //stores objects relating
                                             //relating to animation
             
+            this.resetAnimationData = function(){
+                animationFunctionData = [];
+            }
+            
+            this.getAnimationData = function(){
+                return animationFunctionData;
+            }
+            
             var self = this;
-            self.editorContent = "hello world";
+            //self.editorContent = "hello world";
+            this.editorContent = null;
             var tree;
             self.tree = tree;
+            
+            var result;
+            
+            this.getAnim = function(){
+                return animationFunctionData;
+            }
+            
+            this.getResult = function(){
+                return result;
+            }
+            
+            this.setResult = function(value){
+                result = value;
+            }
             
             this.getCurrentAnimObject = function(){
                 return animationFunctionData[$scope.index];
