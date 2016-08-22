@@ -47,7 +47,11 @@ angular
             
             this.animationReady = false;
             
-            $scope.index = 0;
+            $scope.index = -1; //this allows the animations to begin when the variable is incremented to 0
+            
+            this.resetIndex = function(){
+                $scope.index = -1;
+            }
             
             this.incrementIndex = function(){
                 if ($scope.index < animationFunctionData.length) {

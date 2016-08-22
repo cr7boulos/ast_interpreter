@@ -5,7 +5,7 @@ angular
                 restrict: 'E',
                 replace: true,
                 //reset scope.index to zero so that the animation starts from the root of every AST
-                template: '<div><div id="editor" ></div><button ng-click="mco.save();index = 0">Visualize program</button></div>',
+                template: '<div><div id="editor" ></div><button ng-click="mco.save();main.resetIndex()">Visualize program</button></div>',
                 require: 'monacoEditor',
                 controller: function(){
                     this.editor = null;        
