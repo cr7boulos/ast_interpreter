@@ -25,6 +25,11 @@
             this.add = function (variable, value) {
                 this.variables.push(variable);
                 this.values.push(value);
+                //emit an "envAdd" event
+                //pass along the proper env id when creating the associated <div> on a webpage 
+                //text to be displayed in div on web pages should be formatted like so:
+                //  "var" + [variable name] + "=" + [ VALUE | "function" ]
+                // where 'VALUE' := 'INTEGER' | 'BOOLEAN'
             };
 
             this.defined = function (variable) {
@@ -32,11 +37,16 @@
             };
 
             this.lookUp = function (variable) {
+                //when emitting events an id to the current env ( represented as a div) will need to be passed along
                 var i = 0;
                 for (; i < this.variables.length; i++) {
                     if (variable.trim() === this.variables[i].trim()) {
+                        // set the color to be green i.e found the variable we are looking for
+                        //emit an "envSearch" event
                         break;
                     }
+                    //set the color to be red (i.e the variable currently looked up is not the one we want)
+                    //emit an "envSearch" event
                 }
 
                 if (i < this.variables.length) {
@@ -70,11 +80,16 @@
             };
 
             this.update = function (variable, value) {
+                //when emitting events an id to the current env ( represented as a div) will need to be passed along
                 var i = 0;
                 for (; i < this.variables.length; i++) {
                     if (variable.trim() === this.variables[i].trim()) {
+                        // set the color to be green i.e found the variable we are looking for
+                        //emit an "envSearch" event
                         break;
                     }
+                    //set the color to be red (i.e the variable currently looked up is not the one we want)
+                    //emit an "envSearch" event
                 }
 
                 if (i < this.variables.length) {
@@ -95,6 +110,7 @@
             /**
                 Convert the contents of the environment chain into a string.
                 This is mainly for debugging purposes.
+                In this JS version I will never need to use the toString() method
             */
 
             this.toString = function () {

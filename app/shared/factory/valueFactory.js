@@ -13,6 +13,7 @@
                     this.valueB = false;//default value
                     this.INT_TAG = "int";
                     this.BOOL_TAG = "bool";
+                    this.LAMBDA_TAG = "lambda";
                 }
                 else if(typeof value === "boolean") {
                         this.tag = "bool";
@@ -20,6 +21,7 @@
                         this.valueB = value;
                         this.INT_TAG = "int";
                         this.BOOL_TAG = "bool";
+                        this.LAMBDA_TAG = "lambda";
                 }
                 else {
                     if (typeof value === "object") {
