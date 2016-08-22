@@ -57,7 +57,7 @@
             //var ParseError = parseErrorFactory.ParseError;
 
             function BuildTree(tokenizer) { 
-                this.counter = 1;
+                this.counter = 0;//numId should be zero-indexed not one-indexed. 8/21/16
                 this.tokens = tokenizer;
                 
 
@@ -323,7 +323,7 @@
                 //emit a "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': tree.element,
                     }
@@ -336,7 +336,7 @@
                 //emit a "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': tree.element,
                     }
@@ -356,7 +356,7 @@
                     if (tree.getSubTree(i).element === "fun") {
                           scope.main.addAnimationData({'name': "nodeTraversal",
                                 data: {
-                                    'id': id++,
+                                    'id': tree.getSubTree(i).numId,
                                     'color': "#ff4",
                                     'node': tree.getSubTree(i).element,
                                 }
@@ -395,7 +395,7 @@
             //emit a "nodeTraversal" event
             scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.getSubTree(0).numId,
                         'color': "#ff4",
                         'node': name,
                     }
@@ -413,7 +413,7 @@
             var lambda = tree.getSubTree(1);
             scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': lambda.numId,
                         'color': "#ff4",
                         'node': lambda.element,
                     }
@@ -449,7 +449,7 @@
             if (node === "apply") {
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': node,
                     },
@@ -460,7 +460,7 @@
                 //emit "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': node,
                     },
@@ -471,7 +471,7 @@
                 //emit "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': node,
                     },
@@ -482,7 +482,7 @@
                 //emit "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': node,
                     },
@@ -493,7 +493,7 @@
                 //emit "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': node,
                     },
@@ -504,7 +504,7 @@
                 //emit "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': node,
                     },
@@ -515,7 +515,7 @@
                 //emit "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': node,
                     },
@@ -526,7 +526,7 @@
                 //emit "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': node,
                     },
@@ -539,7 +539,7 @@
                 //emit "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': node,
                     },
@@ -552,7 +552,7 @@
                 //emit "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': "#ff4",
                         'node': node,
                     },
@@ -565,7 +565,7 @@
                     //emit "nodeTraversal" event
                     scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
-                            'id': id++,
+                            'id': tree.numId,
                             'color': "#ff4",
                             'node': node,
                         },
@@ -576,7 +576,7 @@
                     //emit "nodeTraversal" event
                     scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
-                            'id': id++,
+                            'id': tree.numId,
                             'color': "#ff4",
                             'node': node,
                         },
@@ -592,7 +592,7 @@
                     
                     scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
-                            'id': id++,
+                            'id': tree.numId,
                             'color': "#ff4",
                             'node': node,
                         },
@@ -675,7 +675,7 @@
                 //emit a "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
-                            'id': id++,
+                            'id': lambda.getSubTree(zz - 1).numId,
                             'color': "#ff4",
                             'node': formalParamName,
                         },
@@ -711,7 +711,7 @@
             // emit "envRemove" event?
 
             return result;
-        //Pick up from here with annotating the source with event emitters. 8/11/16 9:08AM
+        
 
 
 
@@ -796,7 +796,7 @@
             //emit an "nodeTraversal" event
             scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
-                            'id': id++,
+                            'id': tree.getSubTree(0).numId,
                             'color': "#ff4",
                             'node': variable,
                         },
@@ -868,7 +868,7 @@
             // emit "nodeTraversal" event
             scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.getSubTree(0).numId,
                         'color': "#ff4",
                         'node': variable,
                     },
@@ -1048,7 +1048,7 @@
             }
             scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
-                        'id': id++,
+                        'id': tree.numId,
                         'color': colorCode,
                         'node' : opStr,
                     },
@@ -1453,7 +1453,7 @@
             return {
               restrict: 'E',
               replace: true,
-              template: '<div><button ng-click="index = index + 1">Advance</button><button ng-click="index = index - 1">Reverse</button><div>',
+              template: '<div><button ng-click="main.incrementIndex()">Advance</button><button ng-click="main.decrementIndex()">Reverse</button><div>',
             };
         });
     

@@ -49,6 +49,18 @@ angular
             
             $scope.index = 0;
             
+            this.incrementIndex = function(){
+                if ($scope.index < animationFunctionData.length) {
+                        $scope.index++;
+                }
+            }
+            
+            this.decrementIndex = function(){
+                if ($scope.index > 0) {
+                        $scope.index--;
+                }
+            }
+            
             this.animate = function(){
                 if (animationFunctionData[$scope.index].name === "nodeTraversal") {
                         animateNode(animationFunctionData[$scope.index].data);

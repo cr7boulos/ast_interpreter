@@ -9,7 +9,7 @@
             //var ParseError = parseErrorFactory.ParseError;
 
             function BuildTree(tokenizer) { 
-                this.counter = 1;
+                this.counter = 0;//numId should be zero-indexed not one-indexed. 8/21/16
                 this.tokens = tokenizer;
                 
 

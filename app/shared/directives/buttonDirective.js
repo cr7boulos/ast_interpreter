@@ -5,7 +5,7 @@
             return {
               restrict: 'E',
               replace: true,
-              template: '<div><button ng-click="index = index + 1">Advance</button><button ng-click="index = index - 1">Reverse</button><div>',
+              template: '<div><button ng-click="main.incrementIndex()">Advance</button><button ng-click="main.decrementIndex()">Reverse</button><div>',
             };
         });
     
