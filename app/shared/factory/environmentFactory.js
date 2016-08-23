@@ -3,12 +3,14 @@
     angular
         .module('astInterpreter')
         .factory('environmentFactory', function () {
-           
+           var envId = 0;
 
-           function Environment(env, label) {
+           function Environment(scope, env, label ) {
+            var self = this;
             this.variables = [];
             this.values = [];
-            this.label = null; //label is used for debugging purposes
+            this.id = envId++;
+            this.label = null; //label is used for debugging purposes; Update: use the label property for naming an env <div> on a webpage
             if (label !== undefined) {
                 this.label = label;
             }
@@ -27,9 +29,16 @@
                 this.values.push(value);
                 //emit an "envAdd" event
                 //pass along the proper env id when creating the associated <div> on a webpage 
-                //text to be displayed in div on web pages should be formatted like so:
+                //text to be displayed in <div> on web pages should be formatted like so:
                 //  "var" + [variable name] + "=" + [ VALUE | "function" ]
                 // where 'VALUE' := 'INTEGER' | 'BOOLEAN'
+                scope.main.addAnimationData({'name': "envAdd",
+                    data: {
+                        'id': self.id,
+                        'label': self.label, //this will name the environment; e.g. 'Global Env'
+                        'value': variable + " = " + value, //this will be the text in the new p element
+                    }
+                });
             };
 
             this.defined = function (variable) {

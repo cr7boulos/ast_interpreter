@@ -18,6 +18,7 @@
         //don't set this variable to 1 when running large programs
         //can cuase stack overflows due to large environments!!
         this.DEBUG = 0; //always keep this set to zero when running on Angularjs!
+        var self = this;
         this.globalEnv = null;
         this.env = null;
         var id = 0; //used for the animation of nodes 
@@ -36,10 +37,16 @@
             // Instantiate the global environment
             // (it will always be at the end of the
             // environment chain).
-            this.globalEnv = new Environment();
+            this.globalEnv = new Environment(scope, null, "Global Env");
             this.env = this.globalEnv;
             
             //emit a "envStackPush" event
+            scope.main.addAnimationData({'name': "envStackPush",
+                    data: {
+                        'id': self.globalEnv.id,
+                        'label': self.globalEnv.label,
+                    }
+                });
 
             // Check whick kind of Prog we have.
             if (!(tree.element === "prog")) {
@@ -376,7 +383,7 @@
             // This environment is used to bind actual parameter
             // values to formal paramter names.
             /*2*/
-            var localEnv = new Environment(this.globalEnv, "Function Activation");
+            var localEnv = new Environment(scope, this.globalEnv, "Function Activation");
             //emit "envAdd" event
 
             // Bind, in the new environment object, the actual parameter
@@ -551,7 +558,7 @@
             // Create a new Environment object chained to (or "nested in")
             // the previous (:outer") environment object.
             var previousEnv = this.env;
-            this.env = new Environment(previousEnv, "Local (begin)");
+            this.env = new Environment(scope, previousEnv, "Local (begin)");
 
             // Evaluate each sub expression in the begin
             // expression (using the new environment chain).

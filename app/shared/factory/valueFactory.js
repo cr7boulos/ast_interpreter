@@ -56,7 +56,9 @@
                         result += this.valueI;
                     }
                     else if (this.tag === this.LAMBDA_TAG) {
-                        result += this.valueL;
+                        //result += this.valueL;
+                        //changing this function may break code somewhere else; be careful!!! D.B. 8/23/16
+                        result += "function";
                     }
                     else {
                         // bad tag (shouldn't get here)

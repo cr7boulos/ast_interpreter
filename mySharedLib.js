@@ -125,12 +125,14 @@
     angular
         .module('astInterpreter')
         .factory('environmentFactory', function () {
-           
+           var envId = 0;
 
-           function Environment(env, label) {
+           function Environment(scope, env, label ) {
+            var self = this;
             this.variables = [];
             this.values = [];
-            this.label = null; //label is used for debugging purposes
+            this.id = envId++;
+            this.label = null; //label is used for debugging purposes; Update: use the label property for naming an env <div> on a webpage
             if (label !== undefined) {
                 this.label = label;
             }
@@ -147,6 +149,18 @@
             this.add = function (variable, value) {
                 this.variables.push(variable);
                 this.values.push(value);
+                //emit an "envAdd" event
+                //pass along the proper env id when creating the associated <div> on a webpage 
+                //text to be displayed in <div> on web pages should be formatted like so:
+                //  "var" + [variable name] + "=" + [ VALUE | "function" ]
+                // where 'VALUE' := 'INTEGER' | 'BOOLEAN'
+                scope.main.addAnimationData({'name': "envAdd",
+                    data: {
+                        'id': self.id,
+                        'label': self.label, //this will name the environment; e.g. 'Global Env'
+                        'value': variable + " = " + value, //this will be the text in the new p element
+                    }
+                });
             };
 
             this.defined = function (variable) {
@@ -154,11 +168,16 @@
             };
 
             this.lookUp = function (variable) {
+                //when emitting events an id to the current env ( represented as a div) will need to be passed along
                 var i = 0;
                 for (; i < this.variables.length; i++) {
                     if (variable.trim() === this.variables[i].trim()) {
+                        // set the color to be green i.e found the variable we are looking for
+                        //emit an "envSearch" event
                         break;
                     }
+                    //set the color to be red (i.e the variable currently looked up is not the one we want)
+                    //emit an "envSearch" event
                 }
 
                 if (i < this.variables.length) {
@@ -192,11 +211,16 @@
             };
 
             this.update = function (variable, value) {
+                //when emitting events an id to the current env ( represented as a div) will need to be passed along
                 var i = 0;
                 for (; i < this.variables.length; i++) {
                     if (variable.trim() === this.variables[i].trim()) {
+                        // set the color to be green i.e found the variable we are looking for
+                        //emit an "envSearch" event
                         break;
                     }
+                    //set the color to be red (i.e the variable currently looked up is not the one we want)
+                    //emit an "envSearch" event
                 }
 
                 if (i < this.variables.length) {
@@ -217,6 +241,7 @@
             /**
                 Convert the contents of the environment chain into a string.
                 This is mainly for debugging purposes.
+                In this JS version I will never need to use the toString() method
             */
 
             this.toString = function () {
@@ -295,6 +320,7 @@
         //don't set this variable to 1 when running large programs
         //can cuase stack overflows due to large environments!!
         this.DEBUG = 0; //always keep this set to zero when running on Angularjs!
+        var self = this;
         this.globalEnv = null;
         this.env = null;
         var id = 0; //used for the animation of nodes 
@@ -313,10 +339,16 @@
             // Instantiate the global environment
             // (it will always be at the end of the
             // environment chain).
-            this.globalEnv = new Environment();
+            this.globalEnv = new Environment(scope, null, "Global Env");
             this.env = this.globalEnv;
             
             //emit a "envStackPush" event
+            scope.main.addAnimationData({'name': "envStackPush",
+                    data: {
+                        'id': self.globalEnv.id,
+                        'label': self.globalEnv.label,
+                    }
+                });
 
             // Check whick kind of Prog we have.
             if (!(tree.element === "prog")) {
@@ -653,7 +685,7 @@
             // This environment is used to bind actual parameter
             // values to formal paramter names.
             /*2*/
-            var localEnv = new Environment(this.globalEnv, "Function Activation");
+            var localEnv = new Environment(scope, this.globalEnv, "Function Activation");
             //emit "envAdd" event
 
             // Bind, in the new environment object, the actual parameter
@@ -828,7 +860,7 @@
             // Create a new Environment object chained to (or "nested in")
             // the previous (:outer") environment object.
             var previousEnv = this.env;
-            this.env = new Environment(previousEnv, "Local (begin)");
+            this.env = new Environment(scope, previousEnv, "Local (begin)");
 
             // Evaluate each sub expression in the begin
             // expression (using the new environment chain).
@@ -1351,6 +1383,7 @@
                     this.valueB = false;//default value
                     this.INT_TAG = "int";
                     this.BOOL_TAG = "bool";
+                    this.LAMBDA_TAG = "lambda";
                 }
                 else if(typeof value === "boolean") {
                         this.tag = "bool";
@@ -1358,6 +1391,7 @@
                         this.valueB = value;
                         this.INT_TAG = "int";
                         this.BOOL_TAG = "bool";
+                        this.LAMBDA_TAG = "lambda";
                 }
                 else {
                     if (typeof value === "object") {
@@ -1392,7 +1426,9 @@
                         result += this.valueI;
                     }
                     else if (this.tag === this.LAMBDA_TAG) {
-                        result += this.valueL;
+                        //result += this.valueL;
+                        //changing this function may break code somewhere else; be careful!!! D.B. 8/23/16
+                        result += "function";
                     }
                     else {
                         // bad tag (shouldn't get here)
