@@ -26,6 +26,7 @@
 
 <body>
 	<script src="./bower_components/d3/d3.js"></script>
+	<div id="env">
     <div class="alert alert-warning" id="one">
         <ul>
             <li style="color: green">
@@ -62,15 +63,15 @@
 				<p>v = true</p>
 			
     </div>
-
+</div>
 
 <script>
-	var selectedEnv = d3.select("#three");
+	var selectedEnv = d3.select("#env");
 	
 	//code (http://stackoverflow.com/a/29278310) is based off of Lars Kotthoff (http://stackoverflow.com/users/1172002/lars-kotthoff)
 	//and Hugolpz (http://stackoverflow.com/users/1974961/hugolpz) answer for this question:
 	//http://stackoverflow.com/q/29278107
-	selectedEnv.select("p:nth-child(" + 3 + ")").text("var t = 67");
+	selectedEnv.append("div").attr("class", "alert alert-info").text("hello").style("color", "#ff4");
 </script>
 
 

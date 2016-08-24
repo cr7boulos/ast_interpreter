@@ -50,10 +50,26 @@
                 var i = 0;
                 for (; i < this.variables.length; i++) {
                     if (variable.trim() === this.variables[i].trim()) {
+                        scope.main.addAnimationData({'name': "envSearch",
+                            data: {
+                                'id': self.id,
+                                'label': self.label, 
+                                'childRank': i + 1,
+                                'color': "#1C5204", //green; color code from color.adobe.com
+                            }
+                        });
                         // set the color to be green i.e found the variable we are looking for
                         //emit an "envSearch" event
                         break;
                     }
+                    scope.main.addAnimationData({'name': "envSearch",
+                        data: {
+                            'id': self.id,
+                            'label': self.label, 
+                            'childRank': i + 1,
+                            'color': "#FF0302", //red; color code from color.adobe.com
+                        }
+                    });
                     //set the color to be red (i.e the variable currently looked up is not the one we want)
                     //emit an "envSearch" event
                 }

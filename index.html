@@ -26,11 +26,18 @@
             border: 1px solid red;
             height: 400px;
             position: relative;
-            left: 25%;
+            left: 10%;
+        }
+        
+        #envBase{
+            width: 200px;
+            position: relative;
+            left: 80%;
+            border: 1px solid red;
         }
     
     </style>
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 
 <body>
@@ -43,6 +50,9 @@
 <div>Language 7</div>
     
     <div ng-controller="mainController as main">
+        <env-stack>
+            
+        </env-stack>
         <monaco-editor>
             
         </monaco-editor>
@@ -56,6 +66,7 @@
         
         <!--<div id="result" >{{main.getResult().valueI}}</div>-->
         <!--<div>{{main.getAnim()}}</div>-->  <!-- use this div for logging debug information on the page -->
+        
     </div>  
         
         

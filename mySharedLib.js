@@ -172,10 +172,26 @@
                 var i = 0;
                 for (; i < this.variables.length; i++) {
                     if (variable.trim() === this.variables[i].trim()) {
+                        scope.main.addAnimationData({'name': "envSearch",
+                            data: {
+                                'id': self.id,
+                                'label': self.label, 
+                                'childRank': i + 1,
+                                'color': "#1C5204", //green; color code from color.adobe.com
+                            }
+                        });
                         // set the color to be green i.e found the variable we are looking for
                         //emit an "envSearch" event
                         break;
                     }
+                    scope.main.addAnimationData({'name': "envSearch",
+                        data: {
+                            'id': self.id,
+                            'label': self.label, 
+                            'childRank': i + 1,
+                            'color': "#FF0302", //red; color code from color.adobe.com
+                        }
+                    });
                     //set the color to be red (i.e the variable currently looked up is not the one we want)
                     //emit an "envSearch" event
                 }
@@ -460,7 +476,7 @@
             // add a <name, lambda> pair to the environment
             this.env.add(name, new Value(lambda));
             //emit an "envAdd" event
-            
+            //note: handled in the environmentFactory.js file
 
             if (this.DEBUG > 0) {
                 // for debugging purposes
@@ -1495,6 +1511,50 @@
     
 })();   
     
+
+(function(){
+    angular
+        .module('astInterpreter')
+        .directive('envStack', function(){
+                return {
+                    'restrict': 'E',
+                    'replace': true,
+                    'template': '<div id="envBase"></div>',
+                    'link': function(scope, element, attrs ){
+                        scope.$watch('index', function(){
+                            
+                            var currentData = scope.main.getCurrentAnimObject();
+                            console.log(currentData);
+                            if (currentData.name === "envStackPush") {
+                                
+                                var envStack = d3.select("#envBase");
+                                envStack
+                                    .append("div")
+                                    .attr("id", "env" + currentData.data.id)
+                                    .attr("class", "alert alert-info")
+                                    .text(currentData.data.label);
+                            }
+                            
+                            else if (currentData.name === "envAdd") {
+                                var envStack = d3.select("#env" + currentData.data.id);
+                                envStack
+                                    .append("p")
+                                    .text(currentData.data.value);
+                            }
+                            else if (currentData.name === "envSearch") {
+                                var envStack = d3.select("#env" + currentData.data.id);
+                                console.log(envStack);
+                                envStack
+                                    .select("p:nth-child(" + currentData.data.childRank + ")")
+                                    .style("color", currentData.data.color);
+                            }
+                        });
+                    }
+                }
+        });
+    
+})();
+
 
 (function(){
 angular

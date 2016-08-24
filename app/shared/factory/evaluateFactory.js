@@ -158,7 +158,7 @@
             // add a <name, lambda> pair to the environment
             this.env.add(name, new Value(lambda));
             //emit an "envAdd" event
-            
+            //note: handled in the environmentFactory.js file
 
             if (this.DEBUG > 0) {
                 // for debugging purposes
