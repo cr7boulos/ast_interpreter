@@ -22,6 +22,7 @@
                             }
                             
                             else if (currentData.name === "envAdd") {
+                                console.log("#env" + currentData.data.id);
                                 var envStack = d3.select("#env" + currentData.data.id);
                                 envStack
                                     .append("p")

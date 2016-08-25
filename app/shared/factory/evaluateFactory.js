@@ -46,7 +46,7 @@
                         'id': self.globalEnv.id,
                         'label': self.globalEnv.label,
                     }
-                });
+            });
 
             // Check whick kind of Prog we have.
             if (!(tree.element === "prog")) {
@@ -559,6 +559,12 @@
             // the previous (:outer") environment object.
             var previousEnv = this.env;
             this.env = new Environment(scope, previousEnv, "Local (begin)");
+            scope.main.addAnimationData({'name': "envStackPush",
+                    data: {
+                        'id': self.env.id,
+                        'label': self.env.label,
+                    }
+            });
 
             // Evaluate each sub expression in the begin
             // expression (using the new environment chain).
