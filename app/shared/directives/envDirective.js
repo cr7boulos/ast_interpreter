@@ -26,9 +26,11 @@
                                 var envStack = d3.select("#env" + currentData.data.id);
                                 envStack
                                     .append("p")
+                                    .attr("class", "envVar")
                                     .text(currentData.data.value);
                             }
                             else if (currentData.name === "envSearch") {
+                                d3.selectAll(".envVar").style("color", "#fff"); //color all nodes black to remove previous formatting
                                 var envStack = d3.select("#env" + currentData.data.id);
                                 console.log(envStack);
                                 envStack
