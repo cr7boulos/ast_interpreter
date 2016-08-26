@@ -41,37 +41,68 @@
                 });
             };
 
-            this.defined = function (variable) {
-                return (null !== this.lookUp(variable));
+            this.defined = function (variable, emitEvents) {
+                return (null !== this.lookUp(variable, emitEvents));
             };
-
-            this.lookUp = function (variable) {
+            //this.defined = function (variable) {
+            //    
+            //    var i = 0;
+            //    for (; i < this.variables.length; i++) {
+            //        if (variable.trim() === this.variables[i].trim()) {
+            //            break;
+            //        }
+            //    }
+            //
+            //    if (i < this.variables.length) {
+            //        return true;// variable is found
+            //    }
+            //    else {
+            //        if (null === this.nonLocalLink) {
+            //            return false; //variable cannot be found
+            //        }
+            //        else {
+            //            // recursively search the rest of the environment chain
+            //            return this.nonLocalLink.defined(variable);
+            //        }
+            //    }
+            //};
+            
+            //I need to set a parameter to tell the lookUp function if it should emit events or not
+            this.lookUp = function (variable, emitEvents) {
                 //when emitting events an id to the current env ( represented as a div) will need to be passed along
                 var i = 0;
                 for (; i < this.variables.length; i++) {
                     if (variable.trim() === this.variables[i].trim()) {
-                        scope.main.addAnimationData({'name': "envSearch",
+                        //if emitEvents is undefined assume the user wants events emitted
+                        if (emitEvents) {
+                            // set the color to be green i.e found the variable we are looking for
+                            //emit an "envSearch" event
+                            scope.main.addAnimationData({'name': "envSearch",
+                                data: {
+                                    'id': self.id,
+                                    'label': self.label, 
+                                    'childRank': i + 1,
+                                    'color': "#5FAD00", //green; color code from color.adobe.com
+                                }
+                            });
+                        }
+                        
+                        break;
+                    }
+                    //if emitEvents is undefined assume the user wants events emitted
+                    if (emitEvents) {
+                       //set the color to be red (i.e the variable currently looked up is not the one we want)
+                       //emit an "envSearch" event
+                       scope.main.addAnimationData({'name': "envSearch",
                             data: {
                                 'id': self.id,
                                 'label': self.label, 
                                 'childRank': i + 1,
-                                'color': "#1C5204", //green; color code from color.adobe.com
+                                'color': "#FF0302", //red; color code from color.adobe.com
                             }
                         });
-                        // set the color to be green i.e found the variable we are looking for
-                        //emit an "envSearch" event
-                        break;
                     }
-                    scope.main.addAnimationData({'name': "envSearch",
-                        data: {
-                            'id': self.id,
-                            'label': self.label, 
-                            'childRank': i + 1,
-                            'color': "#FF0302", //red; color code from color.adobe.com
-                        }
-                    });
-                    //set the color to be red (i.e the variable currently looked up is not the one we want)
-                    //emit an "envSearch" event
+                    
                 }
 
                 if (i < this.variables.length) {
@@ -83,7 +114,7 @@
                     }
                     else {
                         // recursively search the rest of the environment chain
-                        return this.nonLocalLink.lookUp(variable);
+                        return this.nonLocalLink.lookUp(variable, emitEvents);
                     }
                 }
             };
@@ -111,14 +142,39 @@
                     if (variable.trim() === this.variables[i].trim()) {
                         // set the color to be green i.e found the variable we are looking for
                         //emit an "envSearch" event
+                        scope.main.addAnimationData({'name': "envSearch",
+                            data: {
+                                'id': self.id,
+                                'label': self.label, 
+                                'childRank': i + 1,
+                                'color': "#5FAD00", //green; color code from color.adobe.com
+                            }
+                        });
                         break;
                     }
                     //set the color to be red (i.e the variable currently looked up is not the one we want)
                     //emit an "envSearch" event
+                    scope.main.addAnimationData({'name': "envSearch",
+                        data: {
+                            'id': self.id,
+                            'label': self.label, 
+                            'childRank': i + 1,
+                            'color': "#FF0302", //red; color code from color.adobe.com
+                        }
+                    });
                 }
 
                 if (i < this.variables.length) {
                     this.values[i] = value;
+                    scope.main.addAnimationData({'name': "envUpdate",
+                        data: {
+                            'id': self.id,
+                            'label': self.label, 
+                            'childRank': i + 1,
+                            'value': variable + " = " + value,
+                            'color': "#FF4", //yellow; I want the user to note the change made
+                        }
+                    });
                     return true;
                 }
                 else {

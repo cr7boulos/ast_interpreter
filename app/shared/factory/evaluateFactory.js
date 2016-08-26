@@ -313,7 +313,7 @@
                     });
                     result = new Value(parseInt(node, 10));
                 }
-                else if (this.env.defined(node)) { // a variable
+                else if (this.env.defined(node, false)) { // a variable
                     //since env.defined is basically a wrapper function
                     //for env.lookUp we will only emit one event
                     //I need to think about how this will work
@@ -328,7 +328,7 @@
                         },
                     });
                     //emit "envSearch" event
-                    result = this.env.lookUp(node);
+                    result = this.env.lookUp(node, true);
                 }
                 else {
                     //runtime check
@@ -384,7 +384,13 @@
             // values to formal paramter names.
             /*2*/
             var localEnv = new Environment(scope, this.globalEnv, "Function Activation");
-            //emit "envAdd" event
+            //emit "envStackPush" event
+            scope.main.addAnimationData({'name': "envStackPush",
+                    data: {
+                        'id': localEnv.id,
+                        'label': localEnv.label,
+                    }
+            });
 
             // Bind, in the new environment object, the actual parameter
             // values to the formal parameter names.
@@ -438,6 +444,12 @@
             // Finally, restore the environment chain.
             /*10*/
             this.env = originalEnv;
+            scope.main.addAnimationData({'name': "envStackPop",
+                    data: {
+                        'id': localEnv.id,
+                        'label': localEnv.label,
+                    }
+            });
             // emit "envRemove" event?
 
             return result;
@@ -532,7 +544,7 @@
                         },
             });
             // check if this variable has already been declared
-            if (!this.env.defined(variable)) {
+            if (!this.env.defined(variable, true)) {
                 //runtime check
                 throw new EvalError("undefined variable: " + variable);
             }

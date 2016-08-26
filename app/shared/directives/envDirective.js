@@ -7,7 +7,10 @@
                     'replace': true,
                     'template': '<div id="envBase"></div>',
                     'link': function(scope, element, attrs ){
-                        scope.$watch('index', function(){
+                        scope.$watch('index', function(newValue){
+                            if (newValue === -1) {
+                                d3.select("#envBase").selectAll("div").remove(); //reset the env Stack on click of the Visualize data button
+                            }
                             
                             var currentData = scope.main.getCurrentAnimObject();
                             console.log(currentData);
@@ -36,6 +39,22 @@
                                 envStack
                                     .select("p:nth-child(" + currentData.data.childRank + ")")
                                     .style("color", currentData.data.color);
+                            }
+                            
+                            else if (currentData.name === "envUpdate") {
+                                d3.selectAll(".envVar").style("color", "#fff"); //color all nodes white to remove previous formatting
+                                var envStack = d3.select("#env" + currentData.data.id);
+                                console.log(envStack);
+                                envStack
+                                    .select("p:nth-child(" + currentData.data.childRank + ")")
+                                    .style("color", currentData.data.color)
+                                    .text(currentData.data.value);
+                            }
+                            
+                            else if (currentData.name === "envStackPop") {
+                                var envStack = d3.select("#env" + currentData.data.id);
+                                console.log(envStack);
+                                envStack.remove();
                             }
                         });
                     }

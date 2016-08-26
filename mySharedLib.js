@@ -163,37 +163,68 @@
                 });
             };
 
-            this.defined = function (variable) {
-                return (null !== this.lookUp(variable));
+            this.defined = function (variable, emitEvents) {
+                return (null !== this.lookUp(variable, emitEvents));
             };
-
-            this.lookUp = function (variable) {
+            //this.defined = function (variable) {
+            //    
+            //    var i = 0;
+            //    for (; i < this.variables.length; i++) {
+            //        if (variable.trim() === this.variables[i].trim()) {
+            //            break;
+            //        }
+            //    }
+            //
+            //    if (i < this.variables.length) {
+            //        return true;// variable is found
+            //    }
+            //    else {
+            //        if (null === this.nonLocalLink) {
+            //            return false; //variable cannot be found
+            //        }
+            //        else {
+            //            // recursively search the rest of the environment chain
+            //            return this.nonLocalLink.defined(variable);
+            //        }
+            //    }
+            //};
+            
+            //I need to set a parameter to tell the lookUp function if it should emit events or not
+            this.lookUp = function (variable, emitEvents) {
                 //when emitting events an id to the current env ( represented as a div) will need to be passed along
                 var i = 0;
                 for (; i < this.variables.length; i++) {
                     if (variable.trim() === this.variables[i].trim()) {
-                        scope.main.addAnimationData({'name': "envSearch",
+                        //if emitEvents is undefined assume the user wants events emitted
+                        if (emitEvents) {
+                            // set the color to be green i.e found the variable we are looking for
+                            //emit an "envSearch" event
+                            scope.main.addAnimationData({'name': "envSearch",
+                                data: {
+                                    'id': self.id,
+                                    'label': self.label, 
+                                    'childRank': i + 1,
+                                    'color': "#5FAD00", //green; color code from color.adobe.com
+                                }
+                            });
+                        }
+                        
+                        break;
+                    }
+                    //if emitEvents is undefined assume the user wants events emitted
+                    if (emitEvents) {
+                       //set the color to be red (i.e the variable currently looked up is not the one we want)
+                       //emit an "envSearch" event
+                       scope.main.addAnimationData({'name': "envSearch",
                             data: {
                                 'id': self.id,
                                 'label': self.label, 
                                 'childRank': i + 1,
-                                'color': "#1C5204", //green; color code from color.adobe.com
+                                'color': "#FF0302", //red; color code from color.adobe.com
                             }
                         });
-                        // set the color to be green i.e found the variable we are looking for
-                        //emit an "envSearch" event
-                        break;
                     }
-                    scope.main.addAnimationData({'name': "envSearch",
-                        data: {
-                            'id': self.id,
-                            'label': self.label, 
-                            'childRank': i + 1,
-                            'color': "#FF0302", //red; color code from color.adobe.com
-                        }
-                    });
-                    //set the color to be red (i.e the variable currently looked up is not the one we want)
-                    //emit an "envSearch" event
+                    
                 }
 
                 if (i < this.variables.length) {
@@ -205,7 +236,7 @@
                     }
                     else {
                         // recursively search the rest of the environment chain
-                        return this.nonLocalLink.lookUp(variable);
+                        return this.nonLocalLink.lookUp(variable, emitEvents);
                     }
                 }
             };
@@ -233,14 +264,39 @@
                     if (variable.trim() === this.variables[i].trim()) {
                         // set the color to be green i.e found the variable we are looking for
                         //emit an "envSearch" event
+                        scope.main.addAnimationData({'name': "envSearch",
+                            data: {
+                                'id': self.id,
+                                'label': self.label, 
+                                'childRank': i + 1,
+                                'color': "#5FAD00", //green; color code from color.adobe.com
+                            }
+                        });
                         break;
                     }
                     //set the color to be red (i.e the variable currently looked up is not the one we want)
                     //emit an "envSearch" event
+                    scope.main.addAnimationData({'name': "envSearch",
+                        data: {
+                            'id': self.id,
+                            'label': self.label, 
+                            'childRank': i + 1,
+                            'color': "#FF0302", //red; color code from color.adobe.com
+                        }
+                    });
                 }
 
                 if (i < this.variables.length) {
                     this.values[i] = value;
+                    scope.main.addAnimationData({'name': "envUpdate",
+                        data: {
+                            'id': self.id,
+                            'label': self.label, 
+                            'childRank': i + 1,
+                            'value': variable + " = " + value,
+                            'color': "#FF4", //yellow; I want the user to note the change made
+                        }
+                    });
                     return true;
                 }
                 else {
@@ -631,7 +687,7 @@
                     });
                     result = new Value(parseInt(node, 10));
                 }
-                else if (this.env.defined(node)) { // a variable
+                else if (this.env.defined(node, false)) { // a variable
                     //since env.defined is basically a wrapper function
                     //for env.lookUp we will only emit one event
                     //I need to think about how this will work
@@ -646,7 +702,7 @@
                         },
                     });
                     //emit "envSearch" event
-                    result = this.env.lookUp(node);
+                    result = this.env.lookUp(node, true);
                 }
                 else {
                     //runtime check
@@ -702,7 +758,13 @@
             // values to formal paramter names.
             /*2*/
             var localEnv = new Environment(scope, this.globalEnv, "Function Activation");
-            //emit "envAdd" event
+            //emit "envStackPush" event
+            scope.main.addAnimationData({'name': "envStackPush",
+                    data: {
+                        'id': localEnv.id,
+                        'label': localEnv.label,
+                    }
+            });
 
             // Bind, in the new environment object, the actual parameter
             // values to the formal parameter names.
@@ -756,6 +818,12 @@
             // Finally, restore the environment chain.
             /*10*/
             this.env = originalEnv;
+            scope.main.addAnimationData({'name': "envStackPop",
+                    data: {
+                        'id': localEnv.id,
+                        'label': localEnv.label,
+                    }
+            });
             // emit "envRemove" event?
 
             return result;
@@ -850,7 +918,7 @@
                         },
             });
             // check if this variable has already been declared
-            if (!this.env.defined(variable)) {
+            if (!this.env.defined(variable, true)) {
                 //runtime check
                 throw new EvalError("undefined variable: " + variable);
             }
@@ -1527,7 +1595,10 @@
                     'replace': true,
                     'template': '<div id="envBase"></div>',
                     'link': function(scope, element, attrs ){
-                        scope.$watch('index', function(){
+                        scope.$watch('index', function(newValue){
+                            if (newValue === -1) {
+                                d3.select("#envBase").selectAll("div").remove(); //reset the env Stack on click of the Visualize data button
+                            }
                             
                             var currentData = scope.main.getCurrentAnimObject();
                             console.log(currentData);
@@ -1556,6 +1627,22 @@
                                 envStack
                                     .select("p:nth-child(" + currentData.data.childRank + ")")
                                     .style("color", currentData.data.color);
+                            }
+                            
+                            else if (currentData.name === "envUpdate") {
+                                d3.selectAll(".envVar").style("color", "#fff"); //color all nodes white to remove previous formatting
+                                var envStack = d3.select("#env" + currentData.data.id);
+                                console.log(envStack);
+                                envStack
+                                    .select("p:nth-child(" + currentData.data.childRank + ")")
+                                    .style("color", currentData.data.color)
+                                    .text(currentData.data.value);
+                            }
+                            
+                            else if (currentData.name === "envStackPop") {
+                                var envStack = d3.select("#env" + currentData.data.id);
+                                console.log(envStack);
+                                envStack.remove();
                             }
                         });
                     }
