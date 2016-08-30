@@ -6,6 +6,11 @@
     <title>D3 Data Viz</title>
      <!--copied the stylesheet code from here https://gist.github.com/d3noob/8326869-->
     <style>
+        
+        #parent, html, body{
+        height:  98%;
+        width: 99%;
+       }
         .node circle {
           fill: #fff;
           stroke: steelblue;
@@ -29,12 +34,67 @@
             left: 10%;
         }
         
-        #envBase{
+        #code{
+        float: left;
+        padding-left: 1%;
+        
+        width: 35%;
+        height: 30%;
+        
+    }
+        
+        /*#envBase{
             width: 200px;
             position: relative;
             left: 80%;
             border: 1px solid red;
+        }*/
+        
+        #envBase{
+            float: right;
+            clear: right;
+            padding-left: 1%;
+            padding-top: 10px;
+            overflow: auto;
+            width: 15%;
+            height: 100%;
         }
+        
+        #advance{
+        float: right;
+        width: 8%;
+        height: 5%;
+        background: red;
+        text-align: center;
+        color: #fff;
+        
+        
+    }
+    
+    #reverse{
+        float: right;
+        
+        width: 6%;
+        height: 5%;
+        text-align: center;
+        background: #D9D8D8;
+        
+    }
+    
+    #ast{
+        float: left;
+        padding-left: 1
+        
+        overflow-x: auto;
+        overflow-y: auto;
+        
+    }
+    
+    svg { 
+        width: inherit;
+        height: auto;
+        overflow: scroll;
+    }
         
         
         
@@ -63,9 +123,9 @@
         <monaco-editor>
             
         </monaco-editor>
-        <animation-button>
+        <!--<animation-button>
             
-        </animation-button>
+        </animation-button>-->
         <d3-ast evaluate data="{{main.getAST()}}" build-tree editorcontent="{{main.getContent()}}">
             
         </d3-ast>
