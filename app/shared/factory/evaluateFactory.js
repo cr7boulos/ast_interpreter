@@ -789,7 +789,7 @@
             }
 
             //emit a "nodeTraversal" event: tree.element == relational operator
-            var colorCode = "#ff0000"; //red
+            var colorCode = "#ff0000"; //red color; code from http://html-color-codes.info/
             if (result) {
                 //Color code from http://color.adobe.com
                 colorCode = "#87ff1d"; //green
