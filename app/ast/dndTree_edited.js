@@ -1,48 +1,36 @@
+/*Copyright (c) 2013-2016, Rob Schmuecker
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* The name Rob Schmuecker may not be used to endorse or promote products
+  derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL MICHAEL BOSTOCK BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+
+//Modified by Daniel Boulos 8/30/16
+
 'use strict';
 
-angular
-    .module('astInterpreter')
-    .directive('d3Ast', /*Inject dependencies here*/ ['ast2JsonFactory',
-        function( ast2JsonFactory){
-        return {
-            restrict: 'E',
-            replace: true,
-            template: '<div id="ast"></div>',
-            
-            link: function(scope, element, attrs){
-                //copied the d3 code from here https://gist.github.com/d3noob/8326869 for testing
-                
-                var ast;
-                
-        /*Copyright (c) 2013-2016, Rob Schmuecker
-            All rights reserved.
-            
-            Redistribution and use in source and binary forms, with or without
-            modification, are permitted provided that the following conditions are met:
-            
-            * Redistributions of source code must retain the above copyright notice, this
-              list of conditions and the following disclaimer.
-            
-            * Redistributions in binary form must reproduce the above copyright notice,
-              this list of conditions and the following disclaimer in the documentation
-              and/or other materials provided with the distribution.
-            
-            * The name Rob Schmuecker may not be used to endorse or promote products
-              derived from this software without specific prior written permission.
-            
-            THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-            AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-            IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-            DISCLAIMED. IN NO EVENT SHALL MICHAEL BOSTOCK BE LIABLE FOR ANY DIRECT,
-            INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-            BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-            DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-            OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-            NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-            EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
-            
-            //Modified by Daniel Boulos 8/30/16
-                // Calculate total nodes, max label length
+
+    // Calculate total nodes, max label length
     var totalNodes = 0;
     var maxLabelLength = 0;
     
@@ -181,11 +169,11 @@ angular
                 });
             }
         };
-        childCount(0, source);
+        childCount(0, root);
         var newHeight = d3.max(levelWidth) * 200; // still need to work on the proper spacing b/t nodes D.B 9/2/16
         
         // Call visit function to establish maxLabelLength
-        visit(source, function(d) {
+        visit(treeData, function(d) {
             totalNodes++;
             maxLabelLength = Math.max(d.name.length, maxLabelLength);
     
@@ -196,7 +184,7 @@ angular
         tree = tree.size([newHeight, viewerWidth]);
 
         // Compute the new tree layout.
-        var nodes = tree.nodes(source).reverse(), //might need to rm the reverse() call
+        var nodes = tree.nodes(root).reverse(), //might need to rm the reverse() call
             links = tree.links(nodes);
 
         // Set widths between levels based on maxLabelLength.
@@ -209,7 +197,7 @@ angular
             //d.x = (d.depth * (maxLabelLength * 10));
         });
 
-        // Update the nodes…
+        // Update the nodesâ€¦
         var node = svgGroup.selectAll("g.node")
             .data(nodes, function(d) {
                 return d.id || (d.id = ++i);
@@ -289,7 +277,7 @@ angular
         nodeExit.select("text")
             .style("fill-opacity", 0);
 
-        // Update the links…
+        // Update the linksâ€¦
         var link = svgGroup.selectAll("path.link")
             .data(links, function(d) {
                 return d.target.id;
@@ -335,53 +323,15 @@ angular
             d.y0 = d.y;
         });
     }
+
     // Append a group which holds all nodes and which the zoom Listener can act upon.
     var svgGroup = baseSvg.append("g");
-    //end copied code
-                            
-                attrs.$observe('data', function(newVal){
-                    ast = scope.$eval(newVal);
-                
-                
-                    
-                    var hier = [];
-                    i = 0;
-                    hier.push(ast2JsonFactory.traverse(ast));
-                    
-                    d3.layout.hierarchy(hier[0]);
-                    // ************** Generate the tree diagram	 *****************
-                    
-                    //the idea for clearing the <svg> container after
-                    //each render comes from this blog post
-                    // www.tivix.com/blog/data-viz-d3-and-angular
-                    //svg.selectAll("*").remove();
-                    
-                    
-                    var root = hier[0];
-                    update(root);
-                    
-                    
-                    
-                });
-                    
-                //handles animation of the generated ast diagram.
-                
-                scope.$watch("index", function(){
-                 var currentData = scope.main.getCurrentAnimObject();
-                 if(currentData.name === "nodeTraversal"){
-                 
-                   console.log(currentData);
-                   d3.selectAll(".nodeShapes") //removes all previous 
-                     .style("fill", "#fff"); //formatting by coloring all nodes white
-                     
-                   d3.select("#" + "node" + currentData.data.id)
-                     .style("fill", currentData.data.color);
-                    
-                 }
-                }, true);
-               
-                
-                    
-                },
-        };
-    }]);
+
+    // Define the root
+    root = treeData;
+    root.x0 = viewerHeight;
+    root.y0 = 0;
+
+    // Layout the tree initially and center on the root node.
+    update(root);
+    centerNode(root);
