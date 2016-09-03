@@ -14,8 +14,9 @@ angular
                 
                 var ast;
                 var margin = {top: 40, right: 120, bottom: 20, left: 120},
-                            width = 1000 - margin.right - margin.left,
-                            height = 960 - margin.top - margin.bottom;
+                            //removed 1000 , 960
+                            width = ($(document).width() / 3) - margin.right - margin.left,
+                            height = $(document).height() - margin.top - margin.bottom;
                 var svg = d3.select("#ast")
                             .append("svg")
                             .attr("width", width + margin.right + margin.left)
@@ -24,10 +25,16 @@ angular
                             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
                  var i = 0;
                  var tree = d3.layout.tree()
-                    .size([height, width]);
+                            
+                            .size([width, height]);
+                    
+                    //function sep(a,b){
+                    //    return a.parent == b.parent ? 2 : 4;
+                    //}
+                    //tree.separation(sep );
                  var diagonal = d3.svg.diagonal()
                     .projection(function(d) { return [d.x, d.y]; });
-                    console.log(scope);
+                    //console.log(scope);
                     
                 function update(source) {
                           // Compute the new tree layout.
@@ -42,11 +49,10 @@ angular
                           // Enter the nodes.
                           var nodeEnter = node.enter().append("g")
                               .attr("class", "node")
-                              
                               .attr("transform", function(d) { 
                                   return "translate(" + d.x + "," + d.y + ")"; });
                           nodeEnter.append("circle")
-                              .attr("r", 10)
+                              .attr("r", 10)//changed from 10
                               .attr("class", "nodeShapes")
                               .attr("id", function (d) {
                                   return "node" + (d.id - 1); //ids start with "node0" , "node1", "node2", ...
@@ -55,7 +61,7 @@ angular
                           nodeEnter.append("text")
                               //.attr("y", function(d) { 
                               //    return d.children || d._children ? -25 : 25; })
-                              .attr("y", -25)
+                              .attr("y", -25)//changed from -25px
                               .attr("dy", ".35em")
                               .attr("text-anchor", "middle")
                               .text(function(d) { return d.name; })
