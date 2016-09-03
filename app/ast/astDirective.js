@@ -201,8 +201,8 @@ angular
 
         // Set widths between levels based on maxLabelLength.
         nodes.forEach(function(d) {
-            
-            d.y = (d.depth * (maxLabelLength * 10)); //maxLabelLength * 10px
+            d.y = d.depth * 100;
+            //d.y = (d.depth * (maxLabelLength * 10)); //maxLabelLength * 10px
             // alternatively to keep a fixed scale one can set a fixed depth per level
             // Normalize for fixed-depth by commenting out below line
             // d.y = (d.depth * 500); //500px per level.
@@ -248,11 +248,12 @@ angular
         // Update the text to reflect whether node has children or not.
         node.select('text')
             .attr("y", function(d) { //changed x to y so the labels are above and below nodes
-                return d.children || d._children ? -10 : 10;
+                return d.children || d._children ? -15 : 15;
             })
-            .attr("text-anchor", function(d) {
-                return d.children || d._children ? "end" : "start";
-            })
+            //.attr("text-anchor", function(d) {
+            //    return d.children || d._children ? "end" : "start";
+            //})
+            .attr("text-anchor", "middle")
             .text(function(d) {
                 return d.name;
             });
