@@ -260,7 +260,7 @@ angular
 
         // Change the circle fill depending on whether it has children and is collapsed
         node.select("circle.nodeCircle")
-            .attr("r", 4.5)
+            .attr("r", 4.5) // add my node class so that the nodeTraversal works
             .style("fill", function(d) {
                 return d._children ? "lightsteelblue" : "#fff";
             });
