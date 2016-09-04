@@ -10,7 +10,7 @@ angular
             template: '<div id="ast"></div>',
             
             link: function(scope, element, attrs){
-                var idNumber = 0;
+               // var idNumber = 0;
                 
                 var ast;
                 
@@ -358,7 +358,7 @@ console.log(source);
                     //the idea for clearing the <svg> container after
                     //each render comes from this blog post
                     // www.tivix.com/blog/data-viz-d3-and-angular
-                    //svg.selectAll("*").remove();
+                    //baseSvg.selectAll("*").remove();
                     
                     
                     var root = hier[0];
