@@ -10,7 +10,7 @@ angular
             template: '<div id="ast"></div>',
             
             link: function(scope, element, attrs){
-                //copied the d3 code from here https://gist.github.com/d3noob/8326869 for testing
+                var idNumber = 0;
                 
                 var ast;
                 
@@ -196,9 +196,9 @@ angular
         tree = tree.size([newHeight, viewerWidth]);
 
         // Compute the new tree layout.
-        var nodes = tree.nodes(source).reverse(), //might need to rm the reverse() call
+        var nodes = tree.nodes(source), //might need to rm the reverse() call
             links = tree.links(nodes);
-
+console.log(source);
         // Set widths between levels based on maxLabelLength.
         nodes.forEach(function(d) {
             d.y = d.depth * 100;
@@ -260,6 +260,9 @@ angular
 
         // Change the circle fill depending on whether it has children and is collapsed
         node.select("circle.nodeCircle")
+            .attr("id", function(d){
+                return   "node" + (d.id - 1); 
+            })
             .attr("r", 4.5) // add my node class so that the nodeTraversal works
             .style("fill", function(d) {
                 return d._children ? "lightsteelblue" : "#fff";
@@ -359,7 +362,10 @@ angular
                     
                     
                     var root = hier[0];
+                    root.x0 = viewerHeight;
+                    root.y0 = 0;
                     update(root);
+                    centerNode(root);
                     
                     
                     
@@ -371,8 +377,8 @@ angular
                  var currentData = scope.main.getCurrentAnimObject();
                  if(currentData.name === "nodeTraversal"){
                  
-                   console.log(currentData);
-                   d3.selectAll(".nodeShapes") //removes all previous 
+                   console.log(currentData); //change the class name Update
+                   d3.selectAll(".nodeCircle") //removes all previous 
                      .style("fill", "#fff"); //formatting by coloring all nodes white
                      
                    d3.select("#" + "node" + currentData.data.id)
