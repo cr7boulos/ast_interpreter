@@ -5,7 +5,7 @@ angular
                 restrict: 'E',
                 replace: true,
                 //reset scope.index to zero so that the animation starts from the root of every AST
-                template: '<div id="code"><button ng-click="mco.save();main.resetIndex()">Visualize program</button><div id="editor" ></div></div>',
+                template: '<div id="editor" ></div>',
                 require: 'monacoEditor',
                 controller: function(){
                     this.editor = null;        
@@ -113,16 +113,10 @@ angular
                         });
                         //end copied code
                         console.log(element);
-                        mController.editor = monaco.editor.create(element[0].children[1] /*the editor is the second element of the  nested <div>*/, {
-                            value: "( prog \n\t" +
-           "( var w 10 ) \n\t" +
-           "( fun f ( lambda x ( * x x ) ) ) \n\t" +
-           "( var z ( begin \n\t\t\t\t" +
-                     "( var x 0 ) \n\t\t\t\t" +
-                     "( begin ( var y 2 ) \n\t\t\t\t" +
-                            "( begin \n\t\t\t\t\t" +
-                               "( set x w ) \n\t\t\t\t\t" +
-                               "( apply f ( + x y ) ) ) ) ) ) " + "z \n)",
+                        mController.editor = monaco.editor.create(element[0] /*the editor is the second element of the  nested <div>*/, {
+                            value: "( prog\n\t" +
+                            "( var w 10 )\n\t" +
+                            "( while ( > w 9 )\n\t\t( set w ( - w 1 ) ) \n\t)\n)",
                             language: 'myCustomLanguage'
                         });
                         var ttt = "( prog " + /*default content*/

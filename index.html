@@ -27,20 +27,27 @@
         /*end copied stylesheet code*/
         
         #editor{
-            
+            /*margin-right: 1%;*/
             border: 1px solid #000;
-            height: 500px;
-            
+            position: absolute;
+            top: 5%;
+            bottom: 0px;
+            left: 0px;
+            right: 70%;
         }
         
-        #code{
-        float: left;
-        
-        
-        width: 35%;
-        height: 100%;
-        
-    }
+        /*#code{
+            
+            
+            
+            
+            position: absolute;
+            bottom: 0px;
+            top: 10%;
+            left: 0px;
+            right: 60%;
+            
+        }*/
         
         /*#envBase{
             width: 200px;
@@ -52,16 +59,24 @@
         #envBase{
             float: right;
             clear: right;
-            padding-left: 1%;
+            
             padding-top: 10px;
             overflow: auto;
             width: 15%;
             height: 100%;
         }
         
+        #envBase > div{
+            float: right;
+            clear: inherit;
+            width: 90%;
+            padding-top: 10px;
+            
+        }
+        
         #advance{
         float: right;
-        width: 8%;
+        width: 10%;
         height: 5%;
         background: red;
         text-align: center;
@@ -81,12 +96,15 @@
     }
     
     #ast{
-        float: left;
+        position: absolute;
+        left: 30%;
+        right: 20%;
+        bottom: 0px;
+        top: 5%;
         padding-left: 1;
         
         
-        overflow-x: auto;
-        overflow-y: auto;
+        
         
     }
     /*copied code from Rob Schmuecker*/
@@ -115,9 +133,10 @@
 
 
 
-<div>Language 7</div>
+<!--<div>Language 7</div>-->
     
     <div ng-controller="mainController as main">
+        <button ng-click="mco.save();main.resetIndex()">Visualize program</button>
         <animation-button>
             
         </animation-button>

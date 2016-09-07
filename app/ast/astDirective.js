@@ -53,7 +53,7 @@ angular
 
     // size of the diagram
     var viewerWidth = $(document).width() / 2;
-    var viewerHeight = $(document).height() / 2;
+    var viewerHeight = $(document).height();
 
     var tree = d3.layout.tree()
         .size([viewerWidth, viewerHeight ]);
