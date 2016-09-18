@@ -6,6 +6,13 @@ angular
             var animationFunctionData = []; //stores objects relating
                                             //relating to animation
             
+            $scope.editing = true;// this determines if the editor is revealed or the pretty-printed code.
+            
+            this.editing = function(){
+                $scope.editing = !$scope.editing;
+                console.log($scope);
+            }
+            
             this.resetAnimationData = function(){
                 animationFunctionData = [];
             }

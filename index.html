@@ -36,6 +36,15 @@
             right: 70%;
         }
         
+        #prettyCode{
+          border: 1px solid #000;
+            position: absolute;
+            top: 5%;
+            bottom: 0px;
+            left: 0px;
+            right: 70%;
+        }
+        
         
         
         /*#envBase{
@@ -121,7 +130,7 @@
 <!--<div>Language 7</div>-->
     
     <div ng-controller="mainController as main">
-        <button ng-click="mco.save();main.resetIndex()">Visualize program</button>
+        <button ng-click="mco.save();main.resetIndex();editing = !editing">Visualize program</button>
         <animation-button>
             
         </animation-button>
@@ -131,12 +140,18 @@
         <monaco-editor>
             
         </monaco-editor>
+        
+        
         <!--<animation-button>
             
         </animation-button>-->
         <d3-ast evaluate data="{{main.getAST()}}" build-tree editorcontent="{{main.getContent()}}">
             
         </d3-ast>
+        
+        <pretty-code editorcontent="{{main.getContent()}}">
+          
+        </pretty-code>
         
         
         <!--<div id="result" >{{main.getResult().valueI}}</div>-->
