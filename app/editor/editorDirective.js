@@ -172,6 +172,39 @@ angular
                             
                             //console.log(scope.main.getContent()); //for debugging; rm later
                         }
+                        scope.$watch("editing", function(){
+                            if (scope.editing) {
+                                var v = scope.mco.editor.getValue();
+                                //Note: since jQuery is loaded, angular.element is an simply an
+                                //alias for jQuery
+                                console.log(v);
+                                angular.element('#editor').children().remove(); //get rid of the current editor
+                                    $(document).ready(function(){
+                                        scope.mco.editor = monaco.editor.create(element[0] /*the editor is the second element of the  nested <div>*/, {
+                                        value: v, //rebuild the editor so that it spans
+                                                    //its holding div when said div resizes
+                                        language: 'myCustomLanguage'
+                                    });
+                                });
+                                
+                            }
+                        });
+                        
+                        angular.element(window).on('resize', function(){
+                            if (scope.editing) {
+                                
+                                var val = scope.mco.editor.getValue();
+                                //Note: since jQuery is loaded, angular.element is an simply an
+                                //alias for jQuery
+                                
+                                angular.element('#editor').children().remove(); //get rid of the current editor
+                                scope.mco.editor = monaco.editor.create(element[0] /*the editor is the second element of the  nested <div>*/, {
+                                    value: val, //rebuild the editor so that it spans
+                                                //its holding div when said div resizes
+                                    language: 'myCustomLanguage'
+                                });
+                            }
+                        });
                     
                        
                         

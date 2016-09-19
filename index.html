@@ -7,10 +7,10 @@
      <!--copied the stylesheet code from here https://gist.github.com/d3noob/8326869-->
     <style>
         
-        #parent, html, body{
-        height:  98%;
-        width: 99%;
-       }
+       /* #parent, html, body{*/
+       /* height:  98%;*/
+       /* width: 99%;*/
+       /*}*/
         .node circle {
           fill: #fff;
           stroke: steelblue;
@@ -25,9 +25,10 @@
           stroke-width: 2px;
         }
         /*end copied stylesheet code*/
-        
+@media ( min-width: 500px) and (min-height: 200px) {
         #editor{
             /*margin-right: 1%;*/
+            float: left;
             border: 1px solid #000;
             position: absolute;
             top: 5%;
@@ -37,12 +38,18 @@
         }
         
         #prettyCode{
+          float: left;
           border: 1px solid #000;
             position: absolute;
             top: 5%;
             bottom: 0px;
             left: 0px;
-            right: 70%;
+            /*right: 70%;*/
+            display: inline-block;
+             /*thanks to this link: https://css-tricks.com/forums/topic/automatically-fit-the-div-to-the-inner-content/
+                and this answer: http://codepen.io/anon/pen/lrdfn Paulie_D https://css-tricks.com/forums/topic/automatically-fit-the-div-to-the-inner-content/#post-134991
+            */
+            margin-right: 50px;
         }
         
         
@@ -93,18 +100,24 @@
         
     }
     
+    #pCode{
+      height:100%;
+    }
+    
     #ast{
+        float: left;
         position: absolute;
-        left: 30%;
+/*        left: 30%;*/
         right: 20%;
         bottom: 0px;
         top: 5%;
-        padding-left: 1;
+        padding-left: 1px;
         
         
         
         
     }
+}
     /*copied code from Rob Schmuecker*/
     .overlay{
       background-color:#EEE;

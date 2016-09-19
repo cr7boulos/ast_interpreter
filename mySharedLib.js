@@ -1837,7 +1837,7 @@ angular
                             restrict: 'E',
                             replace: true,
                             require: 'prettyCode',
-                            template: '<div id="prettyCode" ng-show="!editing"><pre>{{prettyCode}}</pre></div>',
+                            template: '<div id="prettyCode" ng-show="!editing"><pre id="pCode">{{prettyCode}}</pre></div>',
                             controller: function($scope){
                                 //this.prettyCode = prettyPrinterFactory.prettyPrint($scope.main.getContent());
                             },
