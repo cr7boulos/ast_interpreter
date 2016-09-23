@@ -1320,22 +1320,22 @@
 })();
 
 (function(){
-
+//this factory needs a strong unit test!!
 'use strict';
 angular
         .module('astInterpreter')
         .factory('prettyPrinterFactory', function () {
             
-            
+            var counter = 0;
 
             function prettyPrint2(formatting, tree) {
                 var result = "";
 
                 if (tree.depth() === 0) {
-                    return formatting + tree.element;
+                    return formatting + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                 }
                 else if (tree.depth() === 1) {
-                    result += formatting + "( " + tree.element;
+                    result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                     for (var i = 0; i < tree.degree() - 1; i++) {
                         result += prettyPrint2(" ", tree.getSubTree(i));
                     }
@@ -1345,14 +1345,14 @@ angular
                 else if (tree.depth() > 1) {
                     if(tree.element === "prog" ||
                         tree.element === "begin") {
-                        result += formatting + "( " + tree.element;
+                        result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                         for (var x = 0; x < tree.degree() ; x++) {
-                            result += "\n" + prettyPrint2("   ", tree.getSubTree(x));
+                            result += "\n" + prettyPrint2(formatting + "   ", tree.getSubTree(x));
                         }
                         return result + "\n" + formatting + ")";
                     }
                     else if (tree.element === "print") {
-                        result += formatting + "( " + tree.element;
+                        result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                         for (var y = 0; y < tree.degree() - 1; y++) {
                             result += prettyPrint2(" ", tree.getSubTree(y));
                         }
@@ -1360,26 +1360,26 @@ angular
                         return result;
                     }
                     else if (tree.element === "if") {
-                        result += formatting + "( " + tree.element;
+                        result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                         result += prettyPrint2(" ", tree.getSubTree(0));
                         result += "\n" + prettyPrint2(formatting + "     ", tree.getSubTree(1));
                         result += "\n" + prettyPrint2(formatting + "     ", tree.getSubTree(2));
                         return result + "\n" + formatting + ")";
                     }
                     else if (tree.element === "while") {
-                        result += formatting + "( " + tree.element;
+                        result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                         result += prettyPrint2(" ", tree.getSubTree(0));
                         result += "\n" + prettyPrint2(formatting + "        ", tree.getSubTree(1));
                         return result + "\n" + formatting + ")";
                     }
                     else if (tree.element === "fun") {
-                        result += formatting + "( " + tree.element;
+                        result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                         result += prettyPrint2(" ", tree.getSubTree(0));
                         result += "\n" + prettyPrint2(formatting + "      ", tree.getSubTree(1));
                         return result + "\n" + formatting + ")";
                     }
                     else if (tree.element === "lambda") {
-                        result += formatting + "( " + tree.element;
+                        result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                         for (var t = 0; t < tree.degree() - 1; t++) {
                             result += prettyPrint2(" ", tree.getSubTree(t));
                         }
@@ -1389,7 +1389,7 @@ angular
                     else if (tree.element == "apply") {
                         if(tree.depth() == 2)
                         {
-                            result +=  formatting + "( " + tree.element;
+                            result +=  formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                             for (var c = 0; c < tree.degree() ; c++) {
                                 result += prettyPrint2(" ", tree.getSubTree(c));
                             }
@@ -1404,13 +1404,13 @@ angular
                     else if(tree.element === "var" ||
                             tree.element === "set") {
                         if (tree.depth() === 2) {
-                            result += formatting + "( " + tree.element;
+                            result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                             result += prettyPrint2(" ", tree.getSubTree(0));
                             result += prettyPrint2(" ", tree.getSubTree(1)) + " )";
                             return result;
                         }
                         else {
-                            result += formatting + "( " + tree.element;
+                            result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                             result += prettyPrint2(" ", tree.getSubTree(0));
                             result += "\n" + prettyPrint2(formatting + "      ", tree.getSubTree(1));
                             return result + "\n" + formatting + ")";
@@ -1434,16 +1434,16 @@ angular
                             tree.element === ">"  ||
                             tree.element === ">=" ){
                         if (tree.depth() > 2) {
-                            result += formatting + "( " + tree.element;
+                            result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                             for (var z = 0; z < tree.degree() ; z++) {
                                 result += "\n" + prettyPrint2(formatting + "   ", tree.getSubTree(z));
                             }
                             return result + "\n" + formatting + ")";
                         }
                         else {
-                            result += formatting + "( " + tree.element;
+                            result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                             for (var q = 0; q < tree.degree() - 1; q++) {
-                                result += prettyPrint2(" ", tree.getSubTree(i));
+                                result += prettyPrint2(" ", tree.getSubTree(q));
                             }
                             result += prettyPrint2(" ", tree.getSubTree(tree.degree() - 1)) + " )";
                             return result;
@@ -1457,7 +1457,11 @@ angular
             }
 
             function prettyPrint(tree) {
-                return prettyPrint2("", tree);
+                var result = prettyPrint2("", tree);
+                console.log("Printing from prettyPrintFactory");
+                console.log(result);
+                counter = 0; //reset the counter for proper highlighting of nodes
+                return result;
             }
 
             return {
@@ -1832,24 +1836,47 @@ angular
 "use strict";
             angular
                 .module('astInterpreter')
-                .directive('prettyCode', ['prettyPrinterFactory', function(prettyPrinterFactory){
+                .directive('prettyCode', ['prettyPrinterFactory' , '$compile', function(prettyPrinterFactory, $compile){
                         return {
                             restrict: 'E',
                             replace: true,
                             require: 'prettyCode',
-                            template: '<div id="prettyCode" ng-show="!editing"><pre id="pCode">{{prettyCode}}</pre></div>',
+                            template: '<div id="prettyCode" ng-show="!editing"><pre id="pCode"></pre></div>',
                             controller: function($scope){
                                 //this.prettyCode = prettyPrinterFactory.prettyPrint($scope.main.getContent());
                             },
                             
                             link: function(scope, element, attrs, pController){
                                 scope.prettyCode = "";
-                                attrs.$observe('editorcontent', function(newContent){
-                                        scope.prettyCode = prettyPrinterFactory.prettyPrint(scope.main.getAST());
+                                if(scope.editing){
+                                    attrs.$observe('editorcontent', function(newContent){
+                                        console.log(scope.main.getAST());
+                                        angular.element('#pCode')[0].innerHTML = prettyPrinterFactory.prettyPrint(scope.main.getAST());
+                                        
                                         
                                     });
                                 
-                                console.log(scope);
+                                    //console.log(scope);
+                                }
+                                
+                                scope.$watch('index', function(newValue){
+                                        if (!scope.editing) {
+                                            var currentData = scope.main.getCurrentAnimObject();
+                                            if(currentData.name === "nodeTraversal"){
+                                        
+                                             
+                                             d3.selectAll(".pNode") //removes all previous 
+                                               .style("color", "#000"); //formatting by coloring all nodes white
+                                            
+                                             d3.select("#" + "spn" + currentData.data.id)
+                                               .style("color", currentData.data.color);
+                                               //change nodeTraversal color from to a higher contrast color in evaluateFactory.js
+                                            }
+                                        }
+                                }, true);
+                                        
+                                
+                                
                             },
                         }
                 }]);

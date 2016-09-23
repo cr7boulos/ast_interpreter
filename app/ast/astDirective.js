@@ -393,7 +393,7 @@ console.log(source);
                     if (!scope.editing) {
                         $(document).ready(function(){
                             d3.select('svg').attr('width', angular.element(window)[0].innerWidth -
-                                              document.getElementById('prettyCode').offsetWidth -
+                                              //document.getElementById('prettyCode').offsetWidth - this might be wrong
                                               document.getElementById('envBase').offsetWidth -
                                               (angular.element(window)[0].innerWidth * 0.05) - 10);
                             
