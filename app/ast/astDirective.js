@@ -134,8 +134,8 @@ angular
 
     function centerNode(source) {
         var scale = zoomListener.scale();
-        var x = -source.x0; //swapped these two 
-        var y = -source.y0;
+        var x = -source.y0; //swapped these two; should these be swapped?
+        var y = -source.x0;
         x = x * scale + viewerWidth / 2;
         y = y * scale + viewerHeight / 2;
         d3.select('g').transition()
@@ -211,7 +211,7 @@ console.log(source);
             //d.x = (d.depth * (maxLabelLength * 10));
         });
 
-        // Update the nodes…
+        // Update the nodesï¿½
         var node = svgGroup.selectAll("g.node")
             .data(nodes, function(d) {
                 return d.id || (d.id = ++i);
@@ -295,7 +295,7 @@ console.log(source);
         nodeExit.select("text")
             .style("fill-opacity", 0);
 
-        // Update the links…
+        // Update the linksï¿½
         var link = svgGroup.selectAll("path.link")
             .data(links, function(d) {
                 return d.target.id;
