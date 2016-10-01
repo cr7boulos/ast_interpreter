@@ -1,0 +1,20 @@
+{
+  "name": "snap-svg",
+  "version": "0.0.0",
+  "homepage": "https://github.com/marcus7777/snap-svg",
+  "authors": [
+    "Marcus Hitchins <marcus7777@gmail.com>"
+  ],
+  "main": "snap-svg.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Snap.svg": "~0.4.1"
+  }
+}

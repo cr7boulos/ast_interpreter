@@ -1,0 +1,29 @@
+{
+  "name": "snap-svg",
+  "homepage": "https://github.com/marcus7777/snap-svg",
+  "authors": [
+    "Marcus Hitchins <marcus7777@gmail.com>"
+  ],
+  "main": "snap-svg.html",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Snap.svg": "~0.4.1"
+  },
+  "_release": "b5c5c8863d",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "b5c5c8863d61e9b4fee43f7ea52f78bb2bf55c58"
+  },
+  "_source": "https://github.com/marcus7777/snap-svg.git",
+  "_target": "*",
+  "_originalSource": "snap-svg",
+  "_direct": true
+}

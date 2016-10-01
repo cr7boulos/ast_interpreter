@@ -29,6 +29,16 @@
           /*stroke: steelblue;*/
           stroke-width: 2px;
         }
+        
+        .color0 {
+        fill: #bfbfbf;
+      }
+
+      .color1 {
+        fill: gray;
+      }
+        
+        
         /*end copied stylesheet code*/
 @media ( min-width: 500px) and (min-height: 200px) {
         #editor{
@@ -44,7 +54,6 @@
         
         #prettyCode{
           float: left;
-          
             position: absolute;
             top: 5%;
             /*width: 500px;*/
@@ -135,7 +144,7 @@
 
 <body>
     <script src="./bower_components/d3/d3.js"></script> <!-- always use version 3 of D3js to ensure the API works with my code! -->
-
+<script src="./bower_components/Snap.svg/dist/snap.svg-min.js"></script>
 <script src="./bower_components/monaco-editor-samples/node_modules/monaco-editor/min/vs/loader.js"></script>
 
 
@@ -147,9 +156,12 @@
         <animation-button>
             
         </animation-button>
-        <env-stack>
+        <!--<env-stack>
             
-        </env-stack>
+        </env-stack>-->
+        <env-svg>
+          
+        </env-svg>
         <monaco-editor>
             
         </monaco-editor>

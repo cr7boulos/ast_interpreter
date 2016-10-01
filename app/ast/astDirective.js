@@ -102,6 +102,7 @@ angular
 
     // define the baseSvg, attaching a class for styling and the zoomListener
     var baseSvg = d3.select("#ast").append("svg")
+        .attr('id', 'astSvg')   
         .attr("width", viewerWidth)
         .attr("height", "100%")// changed from viewerHeight
         .attr("class", "overlay")
@@ -392,7 +393,7 @@ console.log(source);
                 scope.$watch("editing", function(newValue, oldValue){
                     if (!scope.editing) {
                         $(document).ready(function(){
-                            d3.select('svg').attr('width', angular.element(window)[0].innerWidth -
+                            d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
                                               //document.getElementById('prettyCode').offsetWidth - this might be wrong
                                               document.getElementById('envBase').offsetWidth -
                                               (angular.element(window)[0].innerWidth * 0.05) - 10);
@@ -402,7 +403,7 @@ console.log(source);
                     }
                     else{
                         $(document).ready(function(){
-                            d3.select('svg').attr('width', angular.element(window)[0].innerWidth -
+                            d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
                                               document.getElementById('editor').offsetWidth -
                                               document.getElementById('envBase').offsetWidth -
                                               (angular.element(window)[0].innerWidth * 0.05) - 10);
@@ -416,13 +417,13 @@ console.log(source);
                 //cite this event handler code from  here: http://www.tivix.com/blog/data-viz-d3-and-angular/
                 angular.element(window).on('resize', function(){
                     if (scope.editing) {
-                        d3.select('svg').attr('width', angular.element(window)[0].innerWidth -
+                        d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
                                               document.getElementById('editor').offsetWidth -
                                               document.getElementById('envBase').offsetWidth -
                                               (angular.element(window)[0].innerWidth * 0.05) - 5);
                     }
                     else{
-                        d3.select('svg').attr('width', angular.element(window)[0].innerWidth -
+                        d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
                                               document.getElementById('prettyCode').offsetWidth -
                                               document.getElementById('envBase').offsetWidth -
                                               (angular.element(window)[0].innerWidth * 0.05) - 5);
