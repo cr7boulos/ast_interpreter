@@ -107,7 +107,7 @@
                                     
                                 Snap('#env' + currentData.data.id)
                                     .text(xMargin, newHeight - yMargin, currentData.data.value)
-                                    .addClass('text')
+                                    .addClass('envVar')
                                     .attr({
                                         'dy': '.35em',
                                     });
@@ -117,12 +117,21 @@
                                 console.log(totalHeight);
                             }
                             else if (currentData.name === "envSearch") {
-                                d3.selectAll(".envVar").style("color", "#fff"); //color all nodes black to remove previous formatting
-                                var envStack = d3.select("#env" + currentData.data.id);
-                                console.log(envStack);
-                                envStack
-                                    .select("p:nth-child(" + currentData.data.childRank + ")")
-                                    .style("color", currentData.data.color);
+                                //d3.selectAll(".envVar").style("color", "#fff"); //color all nodes black to remove previous formatting
+                                //var envStack = d3.select("#env" + currentData.data.id);
+                                //console.log(envStack);
+                                //envStack
+                                //    .select("p:nth-child(" + currentData.data.childRank + ")")
+                                //    .style("color", currentData.data.color);
+                                
+                                //thanks to this SO answer for explaining how hth-child works: http://stackoverflow.com/a/29278310
+                                //Original Poster (OP): http://stackoverflow.com/questions/29278107/d3js-how-to-select-nth-element-of-a-group
+                                Snap('.envVar')
+                                    .attr({
+                                        'stroke': '#000'
+                                    });
+                                    //need to offset by 3 due to the way svg is displayed on the page.
+                                Snap('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')').attr({'stroke': currentData.data.color});
                             }
                             
                             else if (currentData.name === "envUpdate") {
