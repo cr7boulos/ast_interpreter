@@ -1823,11 +1823,23 @@ angular
                         var yMargin = 10; //bottom y Margin
                         
                         function pushTriangles(currentEnv, count) {
-                            while (currentEnv <= count) {
+                            while (currentEnv < count) {
                                 console.log(currentEnv);
-                                var oldHeight = Snap('#pointer' + (currentEnv - 1)).attr('transform');
+                                var oldHeight = Snap('#pointer' + currentEnv).transform();
+                                Snap('#pointer' + currentEnv).transform('translate( 0 ' + (oldHeight.localMatrix.f + 15) + ')');
                                 console.log(count);
-                                //Snap('#pointer' + (currentEnv - 1)).attr('height', oldHeight + 15);
+                                //Snap('#pointer' + currentEnv).attr('height', oldHeight + 15);
+                                currentEnv++;
+                            }
+                        }
+                        
+                        function pushEnvs(currentEnv, count) {
+                            while (currentEnv <= count) {
+                                //console.log(currentEnv);
+                                var oldHeight = Snap('#env' + currentEnv).transform();
+                                Snap('#env' + currentEnv).transform('translate( 0 ' + (oldHeight.localMatrix.f + 15) + ')');
+                                console.log(count);
+                                //Snap('#pointer' + currentEnv).attr('height', oldHeight + 15);
                                 currentEnv++;
                             }
                         }
@@ -1919,6 +1931,7 @@ angular
                                     });
                                 
                                 totalHeight += 15;
+                                pushEnvs(currentData.data.id + 1, envCount);
                                 pushTriangles(currentData.data.id, envCount);
                                 console.log(totalHeight);
                             }
@@ -1941,19 +1954,35 @@ angular
                             }
                             
                             else if (currentData.name === "envUpdate") {
-                                d3.selectAll(".envVar").style("color", "#fff"); //color all nodes white to remove previous formatting
-                                var envStack = d3.select("#env" + currentData.data.id);
-                                console.log(envStack);
-                                envStack
-                                    .select("p:nth-child(" + currentData.data.childRank + ")")
-                                    .style("color", currentData.data.color)
-                                    .text(currentData.data.value);
+                                //d3.selectAll(".envVar").style("color", "#fff"); //color all nodes white to remove previous formatting
+                                //var envStack = d3.select("#env" + currentData.data.id);
+                                //console.log(envStack);
+                                //envStack
+                                //    .select("p:nth-child(" + currentData.data.childRank + ")")
+                                //    .style("color", currentData.data.color)
+                                //    .text(currentData.data.value);
+                                Snap('.envVar')
+                                    .attr({
+                                        'stroke': '#000'
+                                    });
+                                    //need to offset by 3 due to the way svg is displayed on the page.
+                                
+                                //don't know of a way to set the innerSVG of an SVG element using Snap.svg
+                                d3.select('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')').text(currentData.data.value);
+                                Snap('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')')
+                                    .attr({
+                                        'stroke': currentData.data.color,
+                                    });
+                                
                             }
                             
                             else if (currentData.name === "envStackPop") {
-                                var envStack = d3.select("#env" + currentData.data.id);
-                                console.log(envStack);
-                                envStack.remove();
+                                //var envStack = d3.select("#env" + currentData.data.id);
+                                //console.log(envStack);
+                                //envStack.remove();
+                                Snap('#env' + currentData.data.id).remove();
+                                Snap('#pointer' + (currentData.data.id - 1)).remove();
+                                envCount--;
                             }
                         });
                     }
