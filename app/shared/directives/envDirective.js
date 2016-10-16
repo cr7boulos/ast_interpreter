@@ -1,4 +1,5 @@
 (function(){
+    //this code is no longer used in production; remove whenever
     angular
         .module('astInterpreter')
         .directive('envStack', function(){

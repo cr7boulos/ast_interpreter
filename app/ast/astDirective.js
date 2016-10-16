@@ -417,14 +417,16 @@ console.log(source);
                 //cite this event handler code from  here: http://www.tivix.com/blog/data-viz-d3-and-angular/
                 angular.element(window).on('resize', function(){
                     if (scope.editing) {
+                        
                         d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
                                               document.getElementById('editor').offsetWidth -
                                               document.getElementById('envBase').offsetWidth -
                                               (angular.element(window)[0].innerWidth * 0.05) - 5);
                     }
                     else{
+                        
                         d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
-                                              document.getElementById('prettyCode').offsetWidth -
+                                              
                                               document.getElementById('envBase').offsetWidth -
                                               (angular.element(window)[0].innerWidth * 0.05) - 5);
                         //console.log('Handle !editing state');

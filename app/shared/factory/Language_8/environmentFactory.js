@@ -1,8 +1,21 @@
 (function(){
+    /**
+   An Environment object holds <variable,value> pairs and
+   it has a link to the rest of the objects in the environment
+   chain. This link is used to look up "non-local" variable
+   references.
+
+   The Environment interface has methods for
+   1) Adding new <variable,value> pairs to this environment object.
+   2) Looking up a variable to see if it is in the Environment chain.
+   2) Looking up a variable to see if it is in this Environment object.
+   3) Looking up a variable's value from the variable's <variable,value> pair.
+   4) Mutating the value part of a varaible's <variable,value> pair.
+*/
     "use strict";
     angular
         .module('astInterpreter')
-        .factory('environmentFactory', function () {
+        .factory('l8.environmentFactory', function () {
            var envId = 0;
 
            function Environment(scope, env, label ) {

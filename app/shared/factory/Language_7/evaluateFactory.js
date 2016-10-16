@@ -21,7 +21,8 @@
         var self = this;
         this.globalEnv = null;
         this.env = null;
-        var id = 0; //used for the animation of nodes 
+        var traverseColor = "#14A84A"; // defualt color to use when highlighting the current node or: "#14A84A" "#3885A8"
+        var id = 0; //used for the animation of nodes      //color codes from http://color.adobe.com  //^green   ^light-blue
         this.evaluate = function (tree) {
             //throws EvalError
             
@@ -54,7 +55,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': tree.element,
                     }
                 });
@@ -67,7 +68,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': tree.element,
                     }
                 });
@@ -87,7 +88,7 @@
                           scope.main.addAnimationData({'name': "nodeTraversal",
                                 data: {
                                     'id': tree.getSubTree(i).numId,
-                                    'color': "#ff4",
+                                    'color': traverseColor,
                                     'node': tree.getSubTree(i).element,
                                 }
                           });                      
@@ -126,7 +127,7 @@
             scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.getSubTree(0).numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': name,
                     }
             });
@@ -144,7 +145,7 @@
             scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': lambda.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': lambda.element,
                     }
             });
@@ -180,7 +181,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': node,
                     },
                 });
@@ -191,7 +192,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': node,
                     },
                 });
@@ -202,7 +203,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': node,
                     },
                 });
@@ -213,7 +214,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': node,
                     },
                 });
@@ -224,7 +225,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': node,
                     },
                 });
@@ -235,7 +236,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': node,
                     },
                 });
@@ -246,7 +247,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': node,
                     },
                 });
@@ -257,7 +258,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': node,
                     },
                 });
@@ -270,7 +271,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': node,
                     },
                 });
@@ -283,7 +284,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': node,
                     },
                 });
@@ -296,7 +297,7 @@
                     scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
                             'id': tree.numId,
-                            'color': "#ff4",
+                            'color': traverseColor,
                             'node': node,
                         },
                     });
@@ -307,7 +308,7 @@
                     scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
                             'id': tree.numId,
-                            'color': "#ff4",
+                            'color': traverseColor,
                             'node': node,
                         },
                     });
@@ -323,7 +324,7 @@
                     scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
                             'id': tree.numId,
-                            'color': "#ff4",
+                            'color': traverseColor,
                             'node': node,
                         },
                     });
@@ -412,7 +413,7 @@
                 scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
                             'id': lambda.getSubTree(zz - 1).numId,
-                            'color': "#ff4",
+                            'color': traverseColor,
                             'node': formalParamName,
                         },
                 });
@@ -539,7 +540,7 @@
             scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
                             'id': tree.getSubTree(0).numId,
-                            'color': "#ff4",
+                            'color': traverseColor,
                             'node': variable,
                         },
             });
@@ -617,7 +618,7 @@
             scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.getSubTree(0).numId,
-                        'color': "#ff4",
+                        'color': traverseColor,
                         'node': variable,
                     },
             });

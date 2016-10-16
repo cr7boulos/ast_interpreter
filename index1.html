@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="en" ng-app="astInterpreter">
+<head>
+    <meta charset="utf-8">
+    <title>D3 Data Viz</title>
+     <!--copied the stylesheet code from here https://gist.github.com/d3noob/8326869-->
+    <style>
+        /*hack for creating columns that scroll but the page does not
+            http://jsfiddle.net/wQ6WQ/1/
+            See SO question: http://stackoverflow.com/questions/15453410/independent-column-scroll-in-html-page
+            SO Awswer: http://stackoverflow.com/a/15453500
+            Note: all content must be in a wrapper div ( give it a descriptive id name, as well)
+        */
+       /* #parent, html, body{*/
+       /* height:  98%;*/
+       /* width: 99%;*/
+       /*}*/
+        .node circle {
+          fill: #fff;
+          stroke: steelblue;
+          /*stroke: white;*/
+          stroke-width: 2px;
+        }
+        .node text { font: 20px sans-serif; }
+        .link {
+          fill: none;
+          stroke: #ccc;
+          /*stroke: steelblue;*/
+          stroke-width: 2px;
+        }
+        
+        .color0 {
+        fill: #bfbfbf;
+      }
+
+      .color1 {
+        fill: gray;
+      }
+        
+        
+        /*end copied stylesheet code*/
+@media ( min-width: 500px) and (min-height: 200px) {
+        #editor{
+            /*margin-right: 1%;*/
+            float: left;
+            border: 1px solid #000;
+            position: absolute;
+            /*update the variable below when adjusting the spacing at the top*/
+            top: 7%;
+            bottom: 0px;
+            left: 0px;
+            right: 70%;
+        }
+        
+        #prettyCode{
+          float: left;
+            position: absolute;
+            /*update the variable below when adjusting the spacing at the top*/
+            top: 7%;
+            /*width: 500px;*/
+            left: 1%;
+            
+            /*display: inline-block;*/
+             /*thanks to this link: https://css-tricks.com/forums/topic/automatically-fit-the-div-to-the-inner-content/
+                and this answer: http://codepen.io/anon/pen/lrdfn Paulie_D https://css-tricks.com/forums/topic/automatically-fit-the-div-to-the-inner-content/#post-134991
+            */
+            
+        }
+        
+        
+        
+        
+        
+        #envBase{
+            float: right;
+            clear: right;
+            right: 50px;
+            padding-top: 10px;
+            overflow: auto;
+            width: 15%;
+            height: 100%;
+        }
+        
+        /*#envBase > div{
+            float: right;
+            clear: inherit;
+            width: 90%;
+            padding-top: 50px;
+            
+        }*/
+        
+        #advance{
+        float: right;
+        width: 10%;
+        height: 5%;
+        right: 5%;
+        background: red;
+        text-align: center;
+        color: #fff;
+        
+        
+    }
+    
+   /* #reverse{
+        float: right;
+        
+        width: 6%;
+        height: 5%;
+        text-align: center;
+        background: #D9D8D8;
+        
+    }*/
+    
+    #pCode{
+      height:100%;
+    }
+    
+    #ast{
+        float: left;
+        position: absolute;
+/*        left: 30%;*/
+        right: 20%;
+        bottom: 0px;
+        
+        /*left: 1%; need to work on a way to make the ast flush with the prettyCode and
+           not lie on top of the editor when switching between states*/
+        /*update the variable below when adjusting the spacing at the top*/
+        top: 7%;
+        padding-left: 1px;
+        
+        
+        
+        
+    }
+}
+    /*copied code from Rob Schmuecker*/
+    .overlay{
+      background-color:#EEE;
+  }
+    /*end copied code*/
+    
+        
+        
+        
+        
+    
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+    <script src="./bower_components/d3/d3.js"></script> <!-- always use version 3 of D3js to ensure the API works with my code! -->
+<script src="./bower_components/Snap.svg/dist/snap.svg-min.js"></script>
+<script src="./bower_components/monaco-editor-samples/node_modules/monaco-editor/min/vs/loader.js"></script>
+
+
+
+
+    
+    <div ng-controller="mainController as main">
+        <button ng-click="mco.save();main.resetIndex();editing = !editing">Visualize program</button>
+        <animation-button>
+            
+        </animation-button>
+        
+        <env-svg>
+          
+        </env-svg>
+        <monaco-editor>
+            
+        </monaco-editor>
+        
+        
+        <!--<animation-button>
+            
+        </animation-button>-->
+        <d3-ast evaluate data="{{main.getAST()}}" build-tree editorcontent="{{main.getContent()}}">
+            
+        </d3-ast>
+        
+        <pretty-code editorcontent="{{main.getContent()}}">
+          
+        </pretty-code>
+        
+        
+        
+        
+    </div>  
+        
+        
+        
+    
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<script src="./bower_components/angular/angular.js"></script>
+<script src="app/app.js"></script>
+<script src="mainController.js"></script>
+<script src="mySharedLib.js"></script>
+<script src="app/ast/astDirective.js"></script>
+<script src="app/editor/controller/editorController.js"></script>
+<script src="app/editor/editorDirective.js"></script>
+
+
+</body>
+</html>

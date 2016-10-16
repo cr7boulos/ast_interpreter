@@ -13,14 +13,15 @@
                         var totalHeight = 0;
                         var emptyEnv = 30; //height of an empty env
                         var xWidth = 150; //width of all envs
-                        var xMargin = 5;
+                        var xMargin = 10;
                         var yMargin = 10; //bottom y Margin
+                        var varAddedHeight = 25; //extention of the length of an environment when a new variable is pushed to it.
                         
                         function pushTriangles(currentEnv, count) {
                             while (currentEnv < count) {
                                 console.log(currentEnv);
                                 var oldHeight = Snap('#pointer' + currentEnv).transform();
-                                Snap('#pointer' + currentEnv).transform('translate( 0 ' + (oldHeight.localMatrix.f + 15) + ')');
+                                Snap('#pointer' + currentEnv).transform('translate( 0 ' + (oldHeight.localMatrix.f + varAddedHeight) + ')');
                                 console.log(count);
                                 //Snap('#pointer' + currentEnv).attr('height', oldHeight + 15);
                                 currentEnv++;
@@ -31,7 +32,7 @@
                             while (currentEnv <= count) {
                                 //console.log(currentEnv);
                                 var oldHeight = Snap('#env' + currentEnv).transform();
-                                Snap('#env' + currentEnv).transform('translate( 0 ' + (oldHeight.localMatrix.f + 15) + ')');
+                                Snap('#env' + currentEnv).transform('translate( 0 ' + (oldHeight.localMatrix.f + varAddedHeight) + ')');
                                 console.log(count);
                                 //Snap('#pointer' + currentEnv).attr('height', oldHeight + 15);
                                 currentEnv++;
@@ -64,7 +65,7 @@
                                     
                                 Snap('#env' + currentData.data.id)
                                     .text(xWidth / 2, 15, currentData.data.label)
-                                    .attr({
+                                    .attr({         //^ this is how far down from the top of the environment we want the name to be.
                                         "text-anchor": 'middle',
                                         'dy': '.35em',
                                     });
@@ -111,9 +112,9 @@
                                 //    .text(currentData.data.value);
                                 
                                 var currentHeight = parseInt(Snap('#rect' + currentData.data.id).attr('height'), 10);
-                                console.log('The current height of the previous rect is');
-                                console.log(currentHeight);
-                                var newHeight = currentHeight + 15;
+                                //console.log('The current height of the previous rect is');                   // ^ base to convert numbers to.  
+                                //console.log(currentHeight);
+                                var newHeight = currentHeight + varAddedHeight;
                                 Snap('#rect' + currentData.data.id)
                                     .attr('height', newHeight);
                                     
@@ -124,7 +125,7 @@
                                         'dy': '.35em',
                                     });
                                 
-                                totalHeight += 15;
+                                totalHeight += varAddedHeight;
                                 pushEnvs(currentData.data.id + 1, envCount);
                                 pushTriangles(currentData.data.id, envCount);
                                 console.log(totalHeight);
