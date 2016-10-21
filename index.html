@@ -187,66 +187,43 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">Dashboard</a>
+                    <a href="#/language1">Language 1</a>
                 </li>
                 <li>
-                    <a href="#">Shortcuts</a>
+                    <a href="#">Language 2</a>
                 </li>
                 <li>
-                    <a href="#">Overview</a>
+                    <a href="#">Language 3</a>
                 </li>
                 <li>
-                    <a href="#">Events</a>
+                    <a href="#">Language 4</a>
                 </li>
                 <li>
-                    <a href="#">About</a>
+                    <a href="#">Language 5</a>
                 </li>
                 <li>
-                    <a href="#">Services</a>
+                    <a href="#">Language 6</a>
                 </li>
                 <li>
-                    <a href="#">Contact</a>
+                    <a href="#">Language 7</a>
+                </li>
+                <li>
+                    <a href="#">Language 8</a>
+                </li>
+                <li>
+                    <a href="#">Language 9</a>
+                </li>
+                <li>
+                    <a href="#">Language 10</a>
                 </li>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
-        <div id="page-content-wrapper">
+        <div ng-view id="page-content-wrapper">
             
-              
-                      
-                        
-                        <div ng-controller="mainController as main">
-                          <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
-                            <button ng-click="mco.save();main.resetIndex();editing = !editing">Visualize program</button>
-                            <animation-button>
-                                
-                            </animation-button>
-                            
-                            <env-svg>
-                              
-                            </env-svg>
-                            <monaco-editor>
-                                
-                            </monaco-editor>
-                            
-                            
-                            <!--<animation-button>
-                                
-                            </animation-button>-->
-                            <d3-ast evaluate data="{{main.getAST()}}" build-tree editorcontent="{{main.getContent()}}">
-                                
-                            </d3-ast>
-                            
-                            <pretty-code editorcontent="{{main.getContent()}}">
-                              
-                            </pretty-code>
-                            
-                            
-                            
-                            
-                        </div>
+        <!--see the /routes/ folder for the templates that get injected here.-->
               
         </div>
         <!-- /#page-content-wrapper -->
@@ -258,7 +235,9 @@
     <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
     
     <script src="./bower_components/angular/angular.js"></script>
+    <script src="./bower_components/angular/bower_components/angular-route/angular-route.js"></script>
     <script src="app/app.js"></script>
+    <script src="app/app.config.js"></script>
     <script src="mainController.js"></script>
     <script src="mySharedLib.js"></script>
     <script src="app/ast/astDirective.js"></script>
@@ -268,15 +247,7 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
-    <!-- Menu Toggle Script -->
-    <script>
-      
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled" ); //this needs to be turned off by default
-        
-    });
-    </script>
+    
 
 </body>
 

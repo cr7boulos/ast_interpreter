@@ -4,8 +4,6 @@
   "license": "MIT",
   "main": "./angular.js",
   "ignore": [],
-  "dependencies": {},
-  "devDependencies": {
-    "angular-route": "1.5.8"
+  "dependencies": {
   }
 }
