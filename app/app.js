@@ -1,3 +1,3 @@
 (function(){
-    angular.module('astInterpreter', []);
+    angular.module('astInterpreter', ['ngRoute']);
 })();
