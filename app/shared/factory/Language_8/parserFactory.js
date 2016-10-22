@@ -71,28 +71,28 @@
         
             var Tree = treeFactory.Tree;
             
-            var counter = -1; //used for node animations
-                             //numId should be zero-indexed not one-indexed. 8/21/16
+            function Parser() {
+                this.counter = 0;
+                
+                this.parse = function (expStr) {
+                    //throws PraseError
+                    
+                    
+                    var tokens = new Tokenizer(expStr); // Tokenizer is defined
+                                                        // in Tokenizer.js
+                    var result = this.getProg(tokens); // parse the token stream
+                    
+                    if (tokens.hasToken()) {
+                        throw new ParseError("unexpected input: " + tokens.peekToken() + "\n" + tokens + "\n");
+                    }
             
-            function parse(expStr) {
-                //throws PraseError
-                
-                
-                var tokens = new Tokenizer(expStr); // Tokenizer is defined
-                                                    // in Tokenizer.js
-                var result = getProg(tokens); // parse the token stream
-                
-                if (tokens.hasToken()) {
-                    throw new ParseError("unexpected input: " + tokens.peekToken() + "\n" + tokens + "\n");
-                }
-        
-                return result;
+                    return result;
         
         
-            }//parse()
+                }//parse()
 
             //Parse a prog
-            function getProg(tokens) {
+            this.getProg = function (tokens) {
                 
         
                 var result = null;
@@ -100,7 +100,7 @@
                 // Check whick kind of Prog we have.
                 if (! (tokens.has2Token() && (tokens.peek2Token() === "prog")) ) {
                     // Evaluate the single expression.
-                    result = getExp(tokens);
+                    result = this.getExp(tokens);
                 }
                 else {
                     tokens.match("(");
@@ -110,13 +110,13 @@
                     }
         
                     result = new Tree("prog");
-                    result.numId = counter;
-                    counter++;
+                    result.numId = this.counter;
+                    this.counter++;
         
                     // Parse each Exp in the Prog.
                     while (tokens.hasToken() && (!(tokens.peekToken() === ")"))) {
                         
-                            result.addSubTree(getExp(tokens));
+                            result.addSubTree(this.getExp(tokens));
                     }
         
                     if ((!tokens.hasToken()) || (!tokens.match(")"))) {
@@ -129,7 +129,7 @@
             }//getProg()
 
             // Parse a function definition.
-            function getFun(tokens) {
+            this.getFun = function(tokens) {
                 //throws ParseError
         
                 
@@ -143,13 +143,13 @@
                 }
         
                 var result = new Tree("fun");
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 // parse the function name
                 if (tokens.hasToken()) {
                     //this may be a source of bugs 10/22/16
                     var temp = new Tree(tokens.nextToken());
-                    temp.numId = counter++;
+                    temp.numId = this.counter++;
                     result.addSubTree(temp);
                 }
                 else {
@@ -158,21 +158,21 @@
         
                 // parse the lambda expression
                 if (tokens.hasToken()) {
-                    result.addSubTree(getLambda(tokens));
+                    result.addSubTree(this.getLambda(tokens));
                 }
                 else {
                     throw new ParseError("expected lambda expression: " + tokens);
                 }
         
                 if ((!tokens.hasToken()) || (!tokens.match(")"))) {
-                    console.log("called from getFun");
+                    console.log("called from this.getFun");
                     throw new ParseError("expected ')': " + tokens);
                 }
                 return result;
             }//getFun()
 
             // Parse a lambda expression
-            function getLambda(tokens) {
+            this.getLambda = function (tokens) {
                 //throws ParseError
         
                 
@@ -186,16 +186,16 @@
                 }
         
                 var result = new Tree("lambda");
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 // this is not really correct since we are not distinguishing
                 // between the formal parameters and the function body
                 while (tokens.hasToken() && (!(tokens.peekToken() === ")"))) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
         
                 if ((!tokens.hasToken()) || (!tokens.match(")"))) {
-                    console.log("called from getlambda");
+                    console.log("called from this.getLambda");
                     throw new ParseError("expected ')': " + tokens);
                 }
         
@@ -203,7 +203,7 @@
             }//getLambda()
         
             // Parse an expression
-            function getExp(tokens) {
+            this.getExp = function (tokens) {
                 //throws ParseError
         
                 var result = null;
@@ -219,42 +219,42 @@
                     }
         
                     if (tk === "fun") {
-                        result = getFun(tokens);
+                        result = this.getFun(tokens);
                     }
                     else if (tk === "apply") {
-                        result = getApply(tokens);
+                        result = this.getApply(tokens);
                     }
                     else if (tk === "if") {
-                        result = getIf(tokens);
+                        result = this.getIf(tokens);
                     }
                     else if (tk === "while") {
-                        result = getWhile(tokens);
+                        result = this.getWhile(tokens);
                     }
                     else if (tk === "set") {
-                        result = getSet(tokens);
+                        result = this.getSet(tokens);
                     }
                     else if (tk === "var") {
-                        result = getVar(tokens);
+                        result = this.getVar(tokens);
                     }
                     else if (tk === "begin") {
-                        result = getBegin(tokens);
+                        result = this.getBegin(tokens);
                     }
                     else if (tk === "print") {
-                        result = getPrint(tokens);
+                        result = this.getPrint(tokens);
                     }
                     else if ( (tk === "&&") || (tk === "||")
                            || (tk === "!")) {
-                        result = getBexp(tokens); //boolean expression
+                        result = this.getBexp(tokens); //boolean expression
                     }
                     else if ( (tk === "<")  || (tk === ">")
                            || (tk === "<=") || (tk === ">=")
                            || (tk === "==") || (tk == "!=") ) {
-                        result = getRexp(tokens); //relational expression
+                        result = this.getRexp(tokens); //relational expression
                     }
                     else if ((tk === "+") || (tk === "-")
                            || (tk === "*") || (tk === "/")
                            || (tk === "%") || (tk == "^")) {
-                        result = getAexp(tokens); //arithmetic expression
+                        result = this.getAexp(tokens); //arithmetic expression
                     }
                     else {
                         throw new ParseError("unexpected expression: " + tk);
@@ -262,14 +262,14 @@
                 }
                 else {
                     result = new Tree(tokens.nextToken());
-                    result.numId = counter++;
+                    result.numId = this.counter++;
                 }
         
                 return result;
             }//getExp()
         
             // Parse a function application.
-            function getApply(tokens) {
+            this.getApply = function (tokens) {
                 //throws ParseError
         
                 
@@ -283,14 +283,14 @@
                 }
         
                 var result = new Tree("apply");
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 while (tokens.hasToken() && (!(tokens.peekToken() === ")"))) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
         
                 if ((!tokens.hasToken()) || (!tokens.match(")"))) {
-                    console.log("called from getApply");
+                    console.log("called from this.getApply");
                     throw new ParseError("expected ')': " + tokens);
                 }
         
@@ -298,7 +298,7 @@
             }//getApply()
         
             // Parse an if-expression
-            function getIf(tokens) {
+            this.getIf = function (tokens) {
                 //throws ParseError
         
                 
@@ -312,31 +312,31 @@
                 }
         
                 var result = new Tree("if");
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 if (tokens.hasToken()) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
                 else {
                     throw new ParseError("expected conditional expression: " + tokens);
                 }
         
                 if (tokens.hasToken()) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
                 else {
                     throw new ParseError("expected then expression: " + tokens);
                 }
         
                 if (tokens.hasToken()) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
                 else {
                     throw new ParseError("expected else expression: " + tokens);
                 }
                 console.log("about to call the problem" + tokens.peekToken());
                 if (!(tokens.hasToken() && tokens.match(")"))) {
-                    console.log("called from getIf");
+                    console.log("called from this.getIf");
                     throw new ParseError("expected ')': " + tokens);
                 }
         
@@ -344,7 +344,7 @@
             }//getIf()
         
             // Parse a while-loop expression
-            function getWhile(tokens) {
+            this.getWhile = function (tokens) {
                 //throws ParseError
         
                 
@@ -358,24 +358,24 @@
                 }
         
                 var result = new Tree("while");
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 if (tokens.hasToken()) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
                 else {
                     throw new ParseError("expected conditional expression: " + tokens);
                 }
         
                 if (tokens.hasToken()) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
                 else {
                     throw new ParseError("expected loop body: " + tokens);
                 }
         
                 if (!(tokens.hasToken() && tokens.match(")"))) {
-                    console.log("called from getWhile");
+                    console.log("called from this.getWhile");
                     throw new ParseError("expected ')': " + tokens);
                 }
         
@@ -383,7 +383,7 @@
             }//getWhile()
         
             // Parse a set expression
-            function getSet(tokens) {
+            this.getSet = function(tokens) {
                 //throws ParseError
         
                 
@@ -397,12 +397,12 @@
                 }
         
                 var result = new Tree("set");
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 // parse the variable
                 if (tokens.hasToken()) {
                     var temp = new Tree(tokens.nextToken());
-                    temp.numId = counter++;
+                    temp.numId = this.counter++;
                     
                     result.addSubTree(temp);
                 }
@@ -412,14 +412,14 @@
         
                 // parse the expression
                 if (tokens.hasToken()) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
                 else {
                     throw new ParseError("expected variable value: " + tokens);
                 }
         
                 if (!(tokens.hasToken() && tokens.match(")"))) {
-                    console.log("called from getSet");
+                    console.log("called from this.getSet");
                     throw new ParseError("expected ')': " + tokens);
                 }
         
@@ -427,7 +427,7 @@
             }//getSet()
         
             // Parse a var expression
-            function getVar(tokens) {
+            this.getVar = function(tokens) {
                 //throws ParseError
         
                 
@@ -441,12 +441,12 @@
                 }
         
                 var result = new Tree("var");
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 // parse the variable
                 if (tokens.hasToken()) {
                     var temp = new Tree(tokens.nextToken());
-                    temp.numId = counter++;
+                    temp.numId = this.counter++;
                     
                     result.addSubTree(temp);
                 }
@@ -456,14 +456,14 @@
         
                 // parse the expression
                 if (tokens.hasToken()) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
                 else {
                     throw new ParseError("expected variable value: " + tokens);
                 }
                 
                 if (!(  tokens.hasToken()  &&  tokens.match(")"))) {
-                    console.log("called from getVarrr");
+                    //console.log("called from this.getVarrr");
                     throw new ParseError("expected ')': " + tokens);
                 }
         
@@ -471,7 +471,7 @@
             }//getVar()
         
             // Parse a begin expression
-            function getBegin(tokens) {
+            this.getBegin = function (tokens) {
                 //throws ParseError
         
                 
@@ -485,10 +485,10 @@
                 }
         
                 var result = new Tree("begin");
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 while (tokens.hasToken() && (!(tokens.peekToken() === ")"))) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
         
                 if ((!tokens.hasToken()) || (!tokens.match(")"))) {
@@ -497,10 +497,10 @@
                 }
         
                 return result;
-            }//getBegin()
+            }//this.getBegin()
         
             // Parse a print expression
-            function getPrint(tokens) {
+            this.getPrint = function(tokens) {
                 //throws ParseError
         
                 
@@ -514,25 +514,25 @@
                 }
         
                 var result = new Tree("print");
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 // parse the expression
                 if (tokens.hasToken()) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.this.getExp(tokens));
                 }
                 else {
                     throw new ParseError("expected print's expression: " + tokens);
                 }
         
                 if (!(tokens.hasToken() && tokens.match(")"))) {
-                    console.log("called from getPrint");
+                    console.log("called from this.getPrint");
                     throw new ParseError("expected ')': " + tokens);
                 }
         
                 return result;
             }//getPrint()
         
-            function getBexp(tokens) {
+            this.getBexp = function (tokens) {
                 //throws ParseError
         
                 
@@ -544,12 +544,12 @@
                 var tk = tokens.nextToken();
         
                 var result = new Tree(tk);
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 if ((tk === "&&") || (tk === "||")) {
                     //parse the first expression
                     if (tokens.hasToken()) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                     else {
                         throw new ParseError("expected " + tk + "'s first operand: " + tokens);
@@ -557,7 +557,7 @@
         
                     //parse the second expression
                     if (tokens.hasToken()) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                     else {
                         throw new ParseError("expected " + tk + "'s second operand: " + tokens);
@@ -565,13 +565,13 @@
         
                     //parse any other expressions
                     while (tokens.hasToken() && (!(tokens.peekToken() === ")"))) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                 }
                 else if (tk === "!") {
                     //parse the expression
                     if (tokens.hasToken()) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                     else {
                         throw new ParseError("expected !'s operand: " + tokens);
@@ -583,7 +583,7 @@
                 }
         
                 if (!(tokens.hasToken() && tokens.match(")"))) {
-                    console.log("called from getBexp");
+                    console.log("called from this.getBexp");
                     throw new ParseError("expected ')': " + tokens);
                 }
         
@@ -591,7 +591,7 @@
             }//getBexp()
         
             // Parse a relational expression (which is a kind of boolean expression)
-            function getRexp(tokens) {
+            this.getRexp = function (tokens) {
                 //throws ParseError
         
         
@@ -602,11 +602,11 @@
                 var tk = tokens.nextToken();
         
                 var result = new Tree(tk);
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 //parse the first expression
                 if (tokens.hasToken()) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
                 else {
                     throw new ParseError("expected " + tk + "'s first operand: " + tokens);
@@ -614,14 +614,14 @@
         
                 //parse the second expression
                 if (tokens.hasToken()) {
-                    result.addSubTree(getExp(tokens));
+                    result.addSubTree(this.getExp(tokens));
                 }
                 else {
                     throw new ParseError("expected " + tk + "'s second operand: " + tokens);
                 }
         
                 if (!(tokens.hasToken() && tokens.match(")"))) {
-                    console.log("called from getRexp");
+                    console.log("called from this.getRexp");
                     throw new ParseError("expected ')': " + tokens);
                 }
         
@@ -629,7 +629,7 @@
             }//getRexp()
         
             // Parse an arithmetic expression
-            function getAexp(tokens) {
+            this.getAexp = function (tokens) {
                 //throws ParseError
         
                 
@@ -641,12 +641,12 @@
                 var tk = tokens.nextToken();
         
                 var result = new Tree(tk);
-                result.numId = counter++;
+                result.numId = this.counter++;
         
                 if (tk === "+") {
                     //parse the first expression
                     if (tokens.hasToken()) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                     else {
                         throw new ParseError("expected " + tk + "'s first operand: " + tokens);
@@ -654,13 +654,13 @@
         
                     //parse any other expressions
                     while (tokens.hasToken() && (!(tokens.peekToken() === ")"))) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                 }
                 else if (tk === "-") {
                     //parse the first expression
                     if (tokens.hasToken()) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                     else {
                         throw new ParseError("expected " + tk + "'s first operand: " + tokens);
@@ -668,7 +668,7 @@
         
                     //parse a second expression
                     if (tokens.hasToken()) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                     else {
                         throw new ParseError("expected " + tk + "'s second operand: " + tokens);
@@ -677,7 +677,7 @@
                 else if (tk === "*") {
                     //parse the first expression
                     if (tokens.hasToken()) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                     else {
                         throw new ParseError("expected " + tk + "'s first operand: " + tokens);
@@ -685,7 +685,7 @@
         
                     //parse a second expression
                     if (tokens.hasToken()) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                     else {
                         throw new ParseError("expected " + tk + "'s second operand: " + tokens);
@@ -693,13 +693,13 @@
         
                     //parse any other expressions
                     while (tokens.hasToken() && (!(tokens.peekToken() === ")"))) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                 }
                 else if ((tk === "/") || (tk === "%") || (tk === "^")) {
                     //parse the first expression
                     if (tokens.hasToken()) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                     else {
                         throw new ParseError("expected " + tk + "'s first operand: " + tokens);
@@ -707,7 +707,7 @@
         
                     //parse a second expression
                     if (tokens.hasToken()) {
-                        result.addSubTree(getExp(tokens));
+                        result.addSubTree(this.getExp(tokens));
                     }
                     else {
                         throw new ParseError("expected " + tk + "'s second operand: " + tokens);
@@ -723,15 +723,20 @@
                 //way Prof. Kraft wrote them. Proof by truth table 
                 //shows them to be logically equivalent
                 if (!(tokens.hasToken() && tokens.match(")"))) {
-                    console.log("called from getAexp");
+                    console.log("called from this.getAexp");
                     throw new ParseError("expected ')': " + tokens);
                 }
         
                 return result;
             }//getAexp()
+        }
+            
+            
+            
+            
     
             return {
-                'parse': parse,
+                'Parser': Parser,
             };
     }]);
 })();

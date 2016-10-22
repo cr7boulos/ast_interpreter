@@ -3,7 +3,10 @@
             angular
                 .module('astInterpreter')
                 .directive('buildTreeL8', [ 'l8.parserFactory', function(parserFactory){
+                        
                         console.log('Parser required');
+                        
+                        
                             return {
                                 restrict: 'A',
                                 replace: true,
@@ -12,9 +15,10 @@
                                     //var BuildTree = buildTreeFactory.BuildTree;
                                     
                                     this.createTree = function(tkStr){
-                                        //var t = new Tokenizer(tkStr);
-                                        //var b = new BuildTree(t);
-                                        return parserFactory.parse(tkStr);
+                                        var Parser = parserFactory.Parser;
+                                        var p = new Parser();
+                                        
+                                        return p.parse(tkStr);
                                     }
                                 },
                                 require: 'buildTreeL8',
