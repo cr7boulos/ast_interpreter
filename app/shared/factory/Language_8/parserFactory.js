@@ -74,7 +74,7 @@
             var counter = -1; //used for node animations
                              //numId should be zero-indexed not one-indexed. 8/21/16
             
-            function this.parse(expStr) {
+            function parse(expStr) {
                 //throws PraseError
                 
                 
