@@ -5,8 +5,8 @@
     .module('astInterpreter')
     .factory('l8.evaluateFactory', 
     [ 'l8.environmentFactory',
-         'l8.valueFactory', 'l8.evalErrorFactory', 
-        function(environmentFactory, valueFactory, evalErrorFactory) {
+         'l8.valueFactory', 'l8.evalErrorFactory', 'l8.IPEPFactory', 
+        function(environmentFactory, valueFactory, evalErrorFactory, IPEPFactory) {
             
         
         //Be careful of code breaking due to angular module name!!!
@@ -14,6 +14,8 @@
         
         var Environment = environmentFactory.Environment;
         var Value = valueFactory.Value;
+        
+        var IPEP = IPEPFactory.IPEP;
         //var EvalError = evalErrorFactory.EvaluationError;
 
     function Evaluate(scope) {
@@ -187,7 +189,7 @@
                         'node': node,
                     },
                 });
-                result = evaluateFun(tree);
+                result = this.evaluateFun(tree);
             }
             else if (node === "apply") {
                 scope.main.addAnimationData({'name': "nodeTraversal",
@@ -386,6 +388,14 @@
     
             // get the function name
             var name = tree.getSubTree(0).element;
+            
+            scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': tree.getSubTree(0).numId,
+                        'color': traverseColor,
+                        'node': name,
+                    }
+            });
     
             // check if this function has already been defined
             if (this.env.definedLocal(name)) {

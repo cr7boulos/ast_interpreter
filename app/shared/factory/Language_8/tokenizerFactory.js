@@ -45,6 +45,13 @@
             this.hasToken = function () {
                 return (this._currentToken < this._tokens.length);
             }
+            
+            /*
+            * Returns false if all, or all but one, of the tokens have been "consumed".
+            */  
+            this.has2Token = function () {
+               return (this._currentToken < this._tokens.length - 1);
+            }
 
             /**
              Use this method for information purposes. It

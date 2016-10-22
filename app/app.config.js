@@ -1,3 +1,6 @@
+// thanks to this YouTube Tutorial
+//https://www.youtube.com/watch?v=ZtqzeYooMw4
+
 angular
     .module('astInterpreter')
     .config(['$routeProvider', function($routeProvider){
@@ -8,14 +11,19 @@ angular
             templateUrl: './app/routes/language7.html',
             
         })
-        .when('/menu-toggle',
+        .when('/language1',
+        {
+            templateUrl: './app/routes/test.html',
+            
+        })
+        .when('/language7',
         {
             templateUrl: './app/routes/language7.html',
             
         })
-        .when('/language1',
+        .when('/language8',
         {
-            templateUrl: './app/routes/test.html',
+            templateUrl: './app/routes/language8.html',
             
         })
         .otherwise(

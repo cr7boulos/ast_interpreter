@@ -1965,8 +1965,8 @@ angular
     .module('astInterpreter')
     .factory('l8.evaluateFactory', 
     [ 'l8.environmentFactory',
-         'l8.valueFactory', 'l8.evalErrorFactory', 
-        function(environmentFactory, valueFactory, evalErrorFactory) {
+         'l8.valueFactory', 'l8.evalErrorFactory', 'l8.IPEPFactory', 
+        function(environmentFactory, valueFactory, evalErrorFactory, IPEPFactory) {
             
         
         //Be careful of code breaking due to angular module name!!!
@@ -1974,6 +1974,8 @@ angular
         
         var Environment = environmentFactory.Environment;
         var Value = valueFactory.Value;
+        
+        var IPEP = IPEPFactory.IPEP;
         //var EvalError = evalErrorFactory.EvaluationError;
 
     function Evaluate(scope) {
@@ -2147,7 +2149,7 @@ angular
                         'node': node,
                     },
                 });
-                result = evaluateFun(tree);
+                result = this.evaluateFun(tree);
             }
             else if (node === "apply") {
                 scope.main.addAnimationData({'name': "nodeTraversal",
@@ -2346,6 +2348,14 @@ angular
     
             // get the function name
             var name = tree.getSubTree(0).element;
+            
+            scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': tree.getSubTree(0).numId,
+                        'color': traverseColor,
+                        'node': name,
+                    }
+            });
     
             // check if this function has already been defined
             if (this.env.definedLocal(name)) {
@@ -3063,25 +3073,35 @@ angular
 
 (function(){
     'use strict';
-    
-    angular.module('astInterpreter')
-        .factory('l8.parserFactory', function(){
-    
-            function parse(expStr) {
-        //throws PraseError
-
-        var tokens = new Tokenizer(expStr); // Tokenizer is defined
-                                            // in Tokenizer.js
-        var result = getProg(tokens); // parse the token stream
+    //TODO: turn the parser into an object!!
+    angular
+        .module('astInterpreter')
+        .factory('l8.parserFactory', ['l8.tokenizerFactory', 'l8.treeFactory', function(tokenizerFactory, treeFactory){
+            console.log('Parser loaded in angular');
+            
+            var Tokenizer = tokenizerFactory.Tokenizer;
         
-        if (tokens.hasToken()) {
-            throw new ParseError("unexpected input: " + tokens.peekToken() + "\n" + tokens + "\n");
-        }
-
-        return result;
-
-
-    }//parse()
+            var Tree = treeFactory.Tree;
+            
+            var counter = -1; //used for node animations
+                             //numId should be zero-indexed not one-indexed. 8/21/16
+            
+            function parse(expStr) {
+                //throws PraseError
+                
+                
+                var tokens = new Tokenizer(expStr); // Tokenizer is defined
+                                                    // in Tokenizer.js
+                var result = getProg(tokens); // parse the token stream
+                
+                if (tokens.hasToken()) {
+                    throw new ParseError("unexpected input: " + tokens.peekToken() + "\n" + tokens + "\n");
+                }
+        
+                return result;
+        
+        
+            }//parse()
 
     //Parse a prog
     function getProg(tokens) {
@@ -3102,6 +3122,8 @@ angular
             }
 
             result = new Tree("prog");
+            result.numId = counter;
+            counter++;
 
             // Parse each Exp in the Prog.
             while (tokens.hasToken() && (!(tokens.peekToken() === ")"))) {
@@ -3133,10 +3155,14 @@ angular
         }
 
         var result = new Tree("fun");
+        result.numId = counter++;
 
         // parse the function name
         if (tokens.hasToken()) {
-            result.addSubTree(new Tree(tokens.nextToken()));
+            //this may be a source of bugs 10/22/16
+            var temp = new Tree(tokens.nextToken());
+            temp.numId = counter++;
+            result.addSubTree(temp);
         }
         else {
             throw new ParseError("expected function name: " + tokens);
@@ -3172,6 +3198,7 @@ angular
         }
 
         var result = new Tree("lambda");
+        result.numId = counter++;
 
         // this is not really correct since we are not distinguishing
         // between the formal parameters and the function body
@@ -3247,6 +3274,7 @@ angular
         }
         else {
             result = new Tree(tokens.nextToken());
+            result.numId = counter++;
         }
 
         return result;
@@ -3267,6 +3295,7 @@ angular
         }
 
         var result = new Tree("apply");
+        result.numId = counter++;
 
         while (tokens.hasToken() && (!(tokens.peekToken() === ")"))) {
             result.addSubTree(getExp(tokens));
@@ -3295,6 +3324,7 @@ angular
         }
 
         var result = new Tree("if");
+        result.numId = counter++;
 
         if (tokens.hasToken()) {
             result.addSubTree(getExp(tokens));
@@ -3340,6 +3370,7 @@ angular
         }
 
         var result = new Tree("while");
+        result.numId = counter++;
 
         if (tokens.hasToken()) {
             result.addSubTree(getExp(tokens));
@@ -3378,10 +3409,14 @@ angular
         }
 
         var result = new Tree("set");
+        result.numId = counter++;
 
         // parse the variable
         if (tokens.hasToken()) {
-            result.addSubTree(new Tree(tokens.nextToken()));
+            var temp = new Tree(tokens.nextToken());
+            temp.numId = counter++;
+            
+            result.addSubTree(temp);
         }
         else {
             throw new ParseError("expected variable name: " + tokens);
@@ -3418,10 +3453,14 @@ angular
         }
 
         var result = new Tree("var");
+        result.numId = counter++;
 
         // parse the variable
         if (tokens.hasToken()) {
-            result.addSubTree(new Tree(tokens.nextToken()));
+            var temp = new Tree(tokens.nextToken());
+            temp.numId = counter++;
+            
+            result.addSubTree(temp);
         }
         else {
             throw new ParseError("expected variable name: " + tokens);
@@ -3458,6 +3497,7 @@ angular
         }
 
         var result = new Tree("begin");
+        result.numId = counter++;
 
         while (tokens.hasToken() && (!(tokens.peekToken() === ")"))) {
             result.addSubTree(getExp(tokens));
@@ -3486,6 +3526,7 @@ angular
         }
 
         var result = new Tree("print");
+        result.numId = counter++;
 
         // parse the expression
         if (tokens.hasToken()) {
@@ -3515,6 +3556,7 @@ angular
         var tk = tokens.nextToken();
 
         var result = new Tree(tk);
+        result.numId = counter++;
 
         if ((tk === "&&") || (tk === "||")) {
             //parse the first expression
@@ -3572,6 +3614,7 @@ angular
         var tk = tokens.nextToken();
 
         var result = new Tree(tk);
+        result.numId = counter++;
 
         //parse the first expression
         if (tokens.hasToken()) {
@@ -3610,6 +3653,7 @@ angular
         var tk = tokens.nextToken();
 
         var result = new Tree(tk);
+        result.numId = counter++;
 
         if (tk === "+") {
             //parse the first expression
@@ -3701,7 +3745,7 @@ angular
             return {
                 'parse': parse,
             };
-    });
+    }]);
 })();
 
 (function(){
@@ -3902,6 +3946,13 @@ angular
             */
             this.hasToken = function () {
                 return (this._currentToken < this._tokens.length);
+            }
+            
+            /*
+            * Returns false if all, or all but one, of the tokens have been "consumed".
+            */  
+            this.has2Token = function () {
+               return (this._currentToken < this._tokens.length - 1);
             }
 
             /**
@@ -4408,6 +4459,310 @@ angular
     }]);
 })();
 
+
+(function(){
+"use strict";
+            angular
+                .module('astInterpreter')
+                .directive('buildTreeL8', [ 'l8.parserFactory', function(parserFactory){
+                        console.log('Parser required');
+                            return {
+                                restrict: 'A',
+                                replace: true,
+                                controller: function(){
+                                    //var Tokenizer = tokenizerFactory.Tokenizer;
+                                    //var BuildTree = buildTreeFactory.BuildTree;
+                                    
+                                    this.createTree = function(tkStr){
+                                        //var t = new Tokenizer(tkStr);
+                                        //var b = new BuildTree(t);
+                                        return parserFactory.parse(tkStr);
+                                    }
+                                },
+                                require: 'buildTreeL8',
+                                link: function(scope, element, attrs, buildTreeController ){
+                                    
+                                    attrs.$observe('editorcontent', function(newContent){
+                                        scope.main.setAST(buildTreeController.createTree(newContent));
+                                        
+                                    });
+                                }
+                            };
+            }]);
+            
+})();
+
+
+
+(function(){
+    'use strict';
+    angular
+        .module('astInterpreter')
+        .directive('envSvgL8', function(){
+                return {
+                    'restrict': 'E',
+                    'replace': true,
+                    'template': '<div id="envBase"><svg id="sBase" viewBox="0 0 150 300"></svg></div>',
+                    'link': function(scope, element, attrs ){
+                        
+                        var envCount = 0;
+                        var totalHeight = 0;
+                        var emptyEnv = 30; //height of an empty env
+                        var xWidth = 150; //width of all envs
+                        var xMargin = 10;
+                        var yMargin = 10; //bottom y Margin
+                        var varAddedHeight = 25; //extention of the length of an environment when a new variable is pushed to it.
+                        
+                        function pushTriangles(currentEnv, count) {
+                            while (currentEnv < count) {
+                                console.log(currentEnv);
+                                var oldHeight = Snap('#pointer' + currentEnv).transform();
+                                Snap('#pointer' + currentEnv).transform('translate( 0 ' + (oldHeight.localMatrix.f + varAddedHeight) + ')');
+                                console.log(count);
+                                //Snap('#pointer' + currentEnv).attr('height', oldHeight + 15);
+                                currentEnv++;
+                            }
+                        }
+                        
+                        function pushEnvs(currentEnv, count) {
+                            while (currentEnv <= count) {
+                                //console.log(currentEnv);
+                                var oldHeight = Snap('#env' + currentEnv).transform();
+                                Snap('#env' + currentEnv).transform('translate( 0 ' + (oldHeight.localMatrix.f + varAddedHeight) + ')');
+                                console.log(count);
+                                //Snap('#pointer' + currentEnv).attr('height', oldHeight + 15);
+                                currentEnv++;
+                            }
+                        }
+                        
+                        scope.$watch('index', function(newValue){
+                            if (newValue === -1) {
+                                Snap("#sBase").paper.clear(); //reset the env Stack on click of the Visualize data button
+                                //console.log(envCount);
+                                envCount = 0;
+                                totalHeight = 0;
+                            }
+                            
+                            var currentData = scope.main.getCurrentAnimObject();
+                            console.log(currentData);
+                            if (currentData.name === "envStackPush") {
+                                
+                                envCount++;
+                                
+                                var classNum = envCount % 2; //which color the div is
+                                console.log(totalHeight);
+                                Snap('#sBase')
+                                    .group()
+                                    .attr('id', 'env' + currentData.data.id)
+                                    .attr('transform', 'translate( 0 ' + totalHeight + ' )')
+                                    .rect(0, 0, xWidth, emptyEnv)
+                                    .addClass('color' + classNum)
+                                    .attr('id', 'rect' + currentData.data.id);
+                                    
+                                Snap('#env' + currentData.data.id)
+                                    .text(xWidth / 2, 15, currentData.data.label)
+                                    .attr({         //^ this is how far down from the top of the environment we want the name to be.
+                                        "text-anchor": 'middle',
+                                        'dy': '.35em',
+                                    });
+                                    
+                                    
+                                Snap('#env' + currentData.data.id)
+                                    .line(xMargin, 22, xWidth - xMargin, 22)
+                                    .attr({
+                                        stroke: '#000',
+                                        strokeWidth: 1,
+                                    });
+                                    
+                                    
+                                totalHeight += emptyEnv;
+                                  console.log(totalHeight);  
+                                if (envCount > 1) {
+                                    //add the triangular pointer between envs
+                                    console.log("Current data id and total height, respectively:")
+                                    console.log(currentData.data.id);
+                                    console.log(totalHeight);
+                                    Snap('#sBase' )
+                                        .group()
+                                        .polygon(65, 0 , 75, 7.5, 85, 0)
+                                        .addClass('color' + ((envCount - 1) % 2))
+                                        .attr('id', 'pointer' + (currentData.data.id - 1))
+                                        .attr('transform', 'translate( 0 ' + ( totalHeight - Snap('#rect' + (currentData.data.id)).attr('height') - 1 ) + ')')
+                                        
+                                }
+                                       
+                                //var envStack = d3.select("#envBase");
+                                //envStack
+                                //    .append("div")
+                                //    .attr("id", "env" + currentData.data.id)
+                                //    .attr("class", "alert alert-info")
+                                //    .text(currentData.data.label);
+                            }
+                            
+                            else if (currentData.name === "envAdd") {
+                                //console.log("#env" + currentData.data.id);
+                                //var envStack = d3.select("#env" + currentData.data.id);
+                                //envStack
+                                //    .append("p")
+                                //    .attr("class", "envVar")
+                                //    .text(currentData.data.value);
+                                
+                                var currentHeight = parseInt(Snap('#rect' + currentData.data.id).attr('height'), 10);
+                                //console.log('The current height of the previous rect is');                   // ^ base to convert numbers to.  
+                                //console.log(currentHeight);
+                                var newHeight = currentHeight + varAddedHeight;
+                                Snap('#rect' + currentData.data.id)
+                                    .attr('height', newHeight);
+                                    
+                                Snap('#env' + currentData.data.id)
+                                    .text(xMargin, newHeight - yMargin, currentData.data.value)
+                                    .addClass('envVar')
+                                    .attr({
+                                        'dy': '.35em',
+                                    });
+                                
+                                totalHeight += varAddedHeight;
+                                pushEnvs(currentData.data.id + 1, envCount);
+                                pushTriangles(currentData.data.id, envCount);
+                                console.log(totalHeight);
+                            }
+                            else if (currentData.name === "envSearch") {
+                                //d3.selectAll(".envVar").style("color", "#fff"); //color all nodes black to remove previous formatting
+                                //var envStack = d3.select("#env" + currentData.data.id);
+                                //console.log(envStack);
+                                //envStack
+                                //    .select("p:nth-child(" + currentData.data.childRank + ")")
+                                //    .style("color", currentData.data.color);
+                                
+                                //thanks to this SO answer for explaining how hth-child works: http://stackoverflow.com/a/29278310
+                                //Original Poster (OP): http://stackoverflow.com/questions/29278107/d3js-how-to-select-nth-element-of-a-group
+                                Snap('.envVar')
+                                    .attr({
+                                        'stroke': '#000'
+                                    });
+                                    //need to offset by 3 due to the way svg is displayed on the page.
+                                Snap('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')').attr({'stroke': currentData.data.color});
+                            }
+                            
+                            else if (currentData.name === "envUpdate") {
+                                //d3.selectAll(".envVar").style("color", "#fff"); //color all nodes white to remove previous formatting
+                                //var envStack = d3.select("#env" + currentData.data.id);
+                                //console.log(envStack);
+                                //envStack
+                                //    .select("p:nth-child(" + currentData.data.childRank + ")")
+                                //    .style("color", currentData.data.color)
+                                //    .text(currentData.data.value);
+                                Snap('.envVar')
+                                    .attr({
+                                        'stroke': '#000'
+                                    });
+                                    //need to offset by 3 due to the way svg is displayed on the page.
+                                
+                                //don't know of a way to set the innerSVG of an SVG element using Snap.svg
+                                d3.select('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')').text(currentData.data.value);
+                                Snap('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')')
+                                    .attr({
+                                        'stroke': currentData.data.color,
+                                    });
+                                
+                            }
+                            
+                            else if (currentData.name === "envStackPop") {
+                                //var envStack = d3.select("#env" + currentData.data.id);
+                                //console.log(envStack);
+                                //envStack.remove();
+                                Snap('#env' + currentData.data.id).remove();
+                                Snap('#pointer' + (currentData.data.id - 1)).remove();
+                                envCount--;
+                            }
+                        });
+                    }
+                }
+        });
+    
+})();
+
+(function(){
+    
+angular
+    .module('astInterpreter')
+    .directive('evaluateL8', ['l8.evaluateFactory', function(evalFactory){
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs){
+              var Evaluate = evalFactory.Evaluate;
+              var ast = null;
+              console.log('Language 8');
+              console.log(scope);
+              console.log(attrs);
+              attrs.$observe('data', function(){
+                  ast = scope.main.getAST();
+                  if(ast !== undefined) {
+                    scope.main.resetAnimationData();//clear out all previous animations
+                    console.log(ast);
+                    var e = new Evaluate(scope);
+                    scope.main.setResult(e.evaluate(ast));
+                    console.log(ast);
+                  }
+              });
+              
+              //console.log(mainController);
+            },
+        }
+    }]);
+})();
+
+
+(function(){
+"use strict";
+            angular
+                .module('astInterpreter')
+                .directive('prettyCodeL8', ['l8.prettyPrinterFactory' , '$compile', function(prettyPrinterFactory, $compile){
+                        return {
+                            restrict: 'E',
+                            replace: true,
+                            require: 'prettyCodeL8',
+                            template: '<div id="prettyCode" ng-show="!editing"><pre id="pCode"></pre></div>',
+                            controller: function($scope){
+                                //this.prettyCode = prettyPrinterFactory.prettyPrint($scope.main.getContent());
+                            },
+                            
+                            link: function(scope, element, attrs, pController){
+                                scope.prettyCode = "";
+                                if(scope.editing){
+                                    attrs.$observe('editorcontent', function(newContent){
+                                        console.log(scope.main.getAST());
+                                        angular.element('#pCode')[0].innerHTML = prettyPrinterFactory.prettyPrint(scope.main.getAST());
+                                        // I could use the $compile service in angular to build the HTML string...
+                                        
+                                    });
+                                
+                                    //console.log(scope);
+                                }
+                                
+                                scope.$watch('index', function(newValue){
+                                        if (!scope.editing) {
+                                            var currentData = scope.main.getCurrentAnimObject();
+                                            if(currentData.name === "nodeTraversal"){
+                                        
+                                             
+                                             d3.selectAll(".pNode") //removes all previous 
+                                               .style("color", "#000"); //formatting by coloring all nodes white
+                                            
+                                             d3.select("#" + "spn" + currentData.data.id)
+                                               .style("color", currentData.data.color);
+                                               //change nodeTraversal color from yellow to a higher contrast color in evaluateFactory.js
+                                            }
+                                        }
+                                }, true);
+                                        
+                                
+                                
+                            },
+                        }
+                }]);
+                
+})();
 
 (function(){
 "use strict";
