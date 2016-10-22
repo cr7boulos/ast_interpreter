@@ -1752,28 +1752,7 @@ angular
             this.defined = function (variable, emitEvents) {
                 return (null !== this.lookUp(variable, emitEvents));
             };
-            //this.defined = function (variable) {
-            //    
-            //    var i = 0;
-            //    for (; i < this.variables.length; i++) {
-            //        if (variable.trim() === this.variables[i].trim()) {
-            //            break;
-            //        }
-            //    }
-            //
-            //    if (i < this.variables.length) {
-            //        return true;// variable is found
-            //    }
-            //    else {
-            //        if (null === this.nonLocalLink) {
-            //            return false; //variable cannot be found
-            //        }
-            //        else {
-            //            // recursively search the rest of the environment chain
-            //            return this.nonLocalLink.defined(variable);
-            //        }
-            //    }
-            //};
+            
             
             //I need to set a parameter to tell the lookUp function if it should emit events or not
             this.lookUp = function (variable, emitEvents) {
@@ -1806,7 +1785,7 @@ angular
                                 'id': self.id,
                                 'label': self.label, 
                                 'childRank': i + 1,
-                                'color': "#FF0302", //red; color code from color.adobe.com
+                                'color': "#FF4", //yellow; color code from color.adobe.com
                             }
                         });
                     }
@@ -1867,7 +1846,7 @@ angular
                             'id': self.id,
                             'label': self.label, 
                             'childRank': i + 1,
-                            'color': "#FF0302", //red; color code from color.adobe.com
+                            'color': "#FF4", //yellow; color code from color.adobe.com "#FF4"
                         }
                     });
                 }
@@ -1880,7 +1859,7 @@ angular
                             'label': self.label, 
                             'childRank': i + 1,
                             'value': variable + " = " + value,
-                            'color': "#FF4", //yellow; I want the user to note the change made
+                            'color': "#FF0302", //red; I want the user to note the change made
                         }
                     });
                     return true;

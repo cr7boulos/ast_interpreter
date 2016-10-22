@@ -21,11 +21,12 @@ The interactive website is designed to visualize the data structures used by the
 
 | Event | Details |
 | --- | --- |
-| Node color: yellow | token was evaluated by interpreter |
+| Node color: green | token was evaluated by interpreter |
 | Node color: green | boolean expression evaluated to TRUE |
 | Node color: red | boolean expression evaluated to FALSE |
 | Environment variable color: green | interpreter performed a successful lookup of a variable i.e the variable is defined |
-| Environment variable color: yellow | variable contents were updated |
+| Environment variable color: red | variable contents were updated |
+| Environment variable color: yellow | interpreter traversed this variable, but it is not the one sought after |
 
 If you encounter a feature that renders the visualization inoperable, the only option is to refresh the page.
 
@@ -33,7 +34,7 @@ If you encounter a feature that renders the visualization inoperable, the only o
 ## Language Definition
 This interpreter evaluates a custom language similar in syntax to [Scheme](https://en.wikipedia.org/wiki/Scheme_(programming_language))
 
-To make tokenizing the language simple, all tokens must have at least one white space character between them ( returns and tabs are also allowed; thus enabling the user to nicely format their code. For example, this is how the language syntactically defines a variable declaration `( var x 10 )`. And a more complicated example that demostrates custom formatting: 
+To make tokenizing the language simple, all tokens must have at least one white space character between them (returns and tabs are also allowed; thus enabling the user to nicely format their code). For example, this is how the language syntactically defines a variable declaration `( var x 10 )`. And a more complicated example that demostrates custom formatting: 
 ```
   ( while ( > x 10 ) 
     ( set x ( - x 1 ) )
