@@ -32,7 +32,7 @@
                                         
                                              
                                              d3.selectAll(".pNode") //removes all previous 
-                                               .style("color", "#000"); //formatting by coloring all nodes white
+                                               .style("color", "#000"); //formatting by coloring all nodes black
                                             
                                              d3.select("#" + "spn" + currentData.data.id)
                                                .style("color", currentData.data.color);

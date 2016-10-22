@@ -1389,7 +1389,7 @@ angular
                         return result + "\n" + formatting + ")";
                     }
                     else if (tree.element == "apply") {
-                        if(tree.depth() == 2)
+                        if(tree.depth() <= 2)
                         {
                             result +=  formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                             for (var c = 0; c < tree.degree() ; c++) {
@@ -1397,10 +1397,15 @@ angular
                             }
                             return result + " )";
                         }
-                        else
+                        else // tree.depth() > 2
                         {
                             //TODO: Implement this feature
-                            return "Needs to be Implemented 1";
+                            result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
+                            for (var app = 0; app < tree.degree() ; app++) {
+                                result += "\n" + prettyPrint2(formatting + "   ", tree.getSubTree(app));
+                            }
+
+                            return result + "\n" + formatting + ")";
                         }
                     }
                     else if(tree.element === "var" ||
@@ -1419,20 +1424,20 @@ angular
 
                         }
                     }
-                    else if(tree.element === "+" ||
+                    else if(tree.element === "+"  ||
                             tree.element === "-"  ||
                             tree.element === "*"  ||
                             tree.element === "/"  ||
                             tree.element === "^"  ||
                             tree.element === "%"  ||
-                            tree.element === "--"  ||
-                            tree.element === "++"  ||
-                            tree.element === "||"  ||
-                            tree.element === "!="  ||
-                            tree.element === "&&"  ||
-                            tree.element === "=="  ||
+                            tree.element === "--" ||
+                            tree.element === "++" ||
+                            tree.element === "||" ||
+                            tree.element === "!=" ||
+                            tree.element === "&&" ||
+                            tree.element === "==" ||
                             tree.element === "<"  ||
-                            tree.element === "<="  ||
+                            tree.element === "<=" ||
                             tree.element === ">"  ||
                             tree.element === ">=" ){
                         if (tree.depth() > 2) {
@@ -1453,15 +1458,18 @@ angular
                     }
                 }
 
-                //TODO: Make sure this is never reached!
+                // Make sure this is never reached!
+                //If this section of code is reached
+                //there is a keyword in the program not accounted for
+                //in this prettyprinter
                 return "Needs to be Implemented 2";
 
             }
 
             function prettyPrint(tree) {
                 var result = prettyPrint2("", tree);
-                console.log("Printing from prettyPrintFactory");
-                console.log(result);
+                //console.log("Printing from prettyPrintFactory");
+                //console.log(result);
                 counter = 0; //reset the counter for proper highlighting of nodes
                 return result;
             }
@@ -3800,7 +3808,7 @@ angular
                         return result + "\n" + formatting + ")";
                     }
                     else if (tree.element == "apply") {
-                        if(tree.depth() == 2)
+                        if(tree.depth() <= 2) // changed from == 2 to <= 2 19/22/16
                         {
                             result +=  formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
                             for (var c = 0; c < tree.degree() ; c++) {
@@ -3808,10 +3816,15 @@ angular
                             }
                             return result + " )";
                         }
-                        else
+                        else //tree.depth > 2
                         {
                             //TODO: Implement this feature
-                            return "Needs to be Implemented 1";
+                            result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
+                            for (var app = 0; app < tree.degree() ; app++) {
+                                result += "\n" + prettyPrint2(formatting + "   ", tree.getSubTree(app));
+                            }
+
+                            return result + "\n" + formatting + ")";
                         }
                     }
                     else if(tree.element === "var" ||
@@ -3830,20 +3843,20 @@ angular
 
                         }
                     }
-                    else if(tree.element === "+" ||
+                    else if(tree.element === "+"  ||
                             tree.element === "-"  ||
                             tree.element === "*"  ||
                             tree.element === "/"  ||
                             tree.element === "^"  ||
                             tree.element === "%"  ||
-                            tree.element === "--"  ||
-                            tree.element === "++"  ||
-                            tree.element === "||"  ||
-                            tree.element === "!="  ||
-                            tree.element === "&&"  ||
-                            tree.element === "=="  ||
+                            tree.element === "--" ||
+                            tree.element === "++" ||
+                            tree.element === "||" ||
+                            tree.element === "!=" ||
+                            tree.element === "&&" ||
+                            tree.element === "==" ||
                             tree.element === "<"  ||
-                            tree.element === "<="  ||
+                            tree.element === "<=" ||
                             tree.element === ">"  ||
                             tree.element === ">=" ){
                         if (tree.depth() > 2) {
@@ -3864,15 +3877,18 @@ angular
                     }
                 }
 
-                //TODO: Make sure this is never reached!
+                // Make sure this is never reached!
+                //If this section of code is reached
+                //there is a keyword in the program not accounted for
+                //in this prettyprinter
                 return "Needs to be Implemented 2";
 
             }
 
             function prettyPrint(tree) {
                 var result = prettyPrint2("", tree);
-                console.log("Printing from prettyPrintFactory");
-                console.log(result);
+                //console.log("Printing from prettyPrintFactory");
+                //console.log(result);
                 counter = 0; //reset the counter for proper highlighting of nodes
                 return result;
             }
@@ -4735,7 +4751,7 @@ angular
                                         
                                              
                                              d3.selectAll(".pNode") //removes all previous 
-                                               .style("color", "#000"); //formatting by coloring all nodes white
+                                               .style("color", "#000"); //formatting by coloring all nodes black
                                             
                                              d3.select("#" + "spn" + currentData.data.id)
                                                .style("color", currentData.data.color);
