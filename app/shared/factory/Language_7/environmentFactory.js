@@ -45,28 +45,7 @@
             this.defined = function (variable, emitEvents) {
                 return (null !== this.lookUp(variable, emitEvents));
             };
-            //this.defined = function (variable) {
-            //    
-            //    var i = 0;
-            //    for (; i < this.variables.length; i++) {
-            //        if (variable.trim() === this.variables[i].trim()) {
-            //            break;
-            //        }
-            //    }
-            //
-            //    if (i < this.variables.length) {
-            //        return true;// variable is found
-            //    }
-            //    else {
-            //        if (null === this.nonLocalLink) {
-            //            return false; //variable cannot be found
-            //        }
-            //        else {
-            //            // recursively search the rest of the environment chain
-            //            return this.nonLocalLink.defined(variable);
-            //        }
-            //    }
-            //};
+            
             
             //I need to set a parameter to tell the lookUp function if it should emit events or not
             this.lookUp = function (variable, emitEvents) {
