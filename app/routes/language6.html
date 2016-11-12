@@ -1,0 +1,36 @@
+<div ng-controller="mainController as main">
+                          <a href="#" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                            <button ng-click="mco.save();main.resetIndex();editing = !editing">Visualize program</button>
+                            <animation-button>
+                                
+                            </animation-button>
+                            
+                            <env-svg-l6>
+                              
+                            </env-svg-l6>
+                            <monaco-editor>
+                                
+                            </monaco-editor>
+                            
+                            
+                            
+                            <d3-ast evaluate-l6 data="{{main.getAST()}}" build-tree-l6 editorcontent="{{main.getContent()}}">
+                                
+                            </d3-ast>
+                            
+                            <pretty-code-l6 editorcontent="{{main.getContent()}}">
+                              
+                            </pretty-code-l6>
+    <!-- Menu Toggle Script -->
+    <script>
+      //wrap the Toggle Menu button in a directive that fires this script so that this template looks nicer
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled" ); //this needs to be turned off by default
+        
+    });
+    </script>
+                            
+                            
+                            
+</div>

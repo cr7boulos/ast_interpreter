@@ -3,19 +3,15 @@
 
     angular
     .module('astInterpreter')
-    .factory('l8.evaluateFactory', 
-    [ 'l8.environmentFactory',
-         'l8.valueFactory', 'l8.evalErrorFactory', 'l8.IPEPFactory', 
-        function(environmentFactory, valueFactory, evalErrorFactory, IPEPFactory) {
-            
+    .factory('l6.evaluateFactory', 
+    [ 'environmentFactory',
+         'l6.valueFactory', 
+        function(environmentFactory, valueFactory) {
         
-        //Be careful of code breaking due to angular module name!!!
-        var EvalError = evalErrorFactory.EvaluationError;
+        
         
         var Environment = environmentFactory.Environment;
         var Value = valueFactory.Value;
-        
-        var IPEP = IPEPFactory.IPEP;
         //var EvalError = evalErrorFactory.EvaluationError;
 
     function Evaluate(scope) {
@@ -88,19 +84,19 @@
                 // Any other expressions would be pointless!
                 for (var i = 0; i < tree.degree() - 1 ; i++) {
 
-                    //if (tree.getSubTree(i).element === "fun") {
-                    //      scope.main.addAnimationData({'name': "nodeTraversal",
-                    //            data: {
-                    //                'id': tree.getSubTree(i).numId,
-                    //                'color': traverseColor,
-                    //                'node': tree.getSubTree(i).element,
-                    //            }
-                    //      });                      
-                    //    this.handleFun(tree.getSubTree(i));
-                    //}
-                    //else {
+                    if (tree.getSubTree(i).element === "fun") {
+                          scope.main.addAnimationData({'name': "nodeTraversal",
+                                data: {
+                                    'id': tree.getSubTree(i).numId,
+                                    'color': traverseColor,
+                                    'node': tree.getSubTree(i).element,
+                                }
+                          });                      
+                        this.handleFun(tree.getSubTree(i));
+                    }
+                    else {
                         this.evaluateExp(tree.getSubTree(i));
-                    //}
+                    }
                 }
 
                 // Evaluate the last expression and use its
@@ -180,18 +176,8 @@
             var result = null;
 
             var node = tree.element;
-            
-            if (node === "fun") {
-                scope.main.addAnimationData({'name': "nodeTraversal",
-                    data: {
-                        'id': tree.numId,
-                        'color': traverseColor,
-                        'node': node,
-                    },
-                });
-                result = this.evaluateFun(tree);
-            }
-            else if (node === "apply") {
+
+            if (node === "apply") {
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
@@ -357,86 +343,12 @@
 
             return result;
         }//EvaluateExp()
-        
-        /**
-            Evalute a function definition expression.
-      
-            This method mutates the current local environment object.
-            The Value object put into the environment by this method
-            has the tag "lambda" and its value field is a reference
-            to an IPEP object.
-      
-            An IPEP object is usually called a "closure" and it contains
-            two references. The first reference in a closure is an IP
-            (an "Instruction Pointer") and the other a reference is an EP
-            (an "Environment Pointer"). The IP reference refer's to the
-            function's lambda expression (its "instructions"). The EP
-            reference refer's to the function's outer scope, the scope
-            that is needed for looking up the function's non-local references.
-      
-            Since functions in this language can be nested, the function's
-            outer scope need no longer be the global environment (as it was
-            in the previous languages). The function's outer scope is whatever
-            local environment is being used at the time this evaluateFun()
-            is called.
-        */
-        this.evaluateFun = function (tree){
-            /**** Language_8 change (1) ***/
-            //throws EvalError
-    
-            var result = null; /*** Language_8 change (2) ***/
-    
-            // get the function name
-            var name = tree.getSubTree(0).element;
-            
-            scope.main.addAnimationData({'name': "nodeTraversal",
-                    data: {
-                        'id': tree.getSubTree(0).numId,
-                        'color': traverseColor,
-                        'node': name,
-                    }
-            });
-    
-            // check if this function has already been defined
-            if (this.env.definedLocal(name)) {
-                throw new EvalError("function already exists: " + name);
-            }
-            // get the "lambda expression" (the function's IP)
-            var lambda = tree.getSubTree(1);
-            // check if the definition really is a function
-            if (!(lambda.element === "lambda")) {
-                throw new EvalError("bad function definition: " + tree);
-            }
-            // get a reference to the current local Environment object (the function's EP)
-            var ep = this.env; /*** Language_8 change (3) ***/
-            // create an IPEP object (a closure)
-            var ipep = new IPEP(lambda, ep); /*** Language_8 change (4) ***/
-            // create the return value
-            result = new Value(ipep);           /*** Language_8 change (5) ***/
-            // add the <name, value> pair to the environment
-            this.env.add(name, result);              /*** Language_8 change (6) ***/
-            
-            //if (DEBUG > 0) {
-            //    // for debugging purposes
-            //    document.body.innerHTML += "<pre>" + env + "</pre>";
-            //}
-    
-            return result;   /*** Language_8 change (7) ***/
-        }//evaluateFun()
-        
 
         /**
-            This method "applies" a function value to actual parameters.
+         This method "applies" a function value to actual parameters.
         This method evaluates the body of the function in an environment
         that binds the actual parameter values (from this function application)
         to the formal parameters (from the function's lambda expression).
-
-            Since this language allows nested functions, the function's outer
-        scope (where the function finds its non-local references) may no
-        longer be the global Environment object. The function's closure
-        (the IPEP object that is the functions "value") points us to the
-        Environment object that the function should use for non-local
-        references.
         */
         this.evaluateApply = function (tree) {
             //throw EvalError
@@ -451,11 +363,9 @@
             }
 
 
-            // get a reference to the function's  closure
-            var ipep = funValue.valueL; /*** Language_8 change (1) ***/
-            // and to the function's "lambda expression" and its "nesting link".
-            var lambda = ipep.ip; /*** Language_8 change (2) ***/
-            var ep = ipep.ep; /*** Language_8 change (3) ***/
+            // and get a reference to the function's "lambda expression".
+            //var lambda := Tree
+            var lambda = funValue.valueL;
 
             // Check that the number of actual parameters
             // is equal to the number of formal parameters.
@@ -470,14 +380,12 @@
             }
 
             // Create a new environment object that is "nested"
-            // in this function's outer environment (lexical scope).
+            // in the global environment (lexical scope).
             // This environment is used to bind actual parameter
             // values to formal paramter names.
             /*2*/
-            var localEnv = new Environment(scope, ep, "Function Activation");
+            var localEnv = new Environment(scope, this.globalEnv, "Function Activation");
             //emit "envStackPush" event
-            //I might need to create a new event emitter named envStackPushFun
-            //with a reference to the enclosing ep.id
             scope.main.addAnimationData({'name': "envStackPush",
                     data: {
                         'id': localEnv.id,
@@ -515,7 +423,7 @@
                 // paramter value to a formal parameter name.
                 /*6*/
                 localEnv.add(formalParamName, actualParamValue);
-                //emit "envAdd" event; I don't believe we need an event emitter here
+                //emit "envAdd" event
 
             }
             if (this.DEBUG > 0) {

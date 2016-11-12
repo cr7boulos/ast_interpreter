@@ -16,6 +16,11 @@ angular
             templateUrl: './app/routes/test.html',
             
         })
+        .when('/language6',
+        {
+            templateUrl: './app/routes/language6.html',
+            
+        })
         .when('/language7',
         {
             templateUrl: './app/routes/language7.html',
