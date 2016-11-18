@@ -482,6 +482,7 @@
                     data: {
                         'id': localEnv.id,
                         'label': localEnv.label,
+                        'epId': ep.id, //added a link to the environment pointer's id for drawing Bezier curves.
                     }
             });
 

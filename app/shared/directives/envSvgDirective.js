@@ -12,7 +12,7 @@
                         var envCount = 0;
                         var totalHeight = 0;
                         var emptyEnv = 30; //height of an empty env
-                        var xWidth = 150; //width of all envs
+                        var xWidth = 150; //width of a single env
                         var xMargin = 10;
                         var yMargin = 10; //bottom y Margin
                         var varAddedHeight = 25; //extention of the length of an environment when a new variable is pushed to it.
@@ -95,21 +95,11 @@
                                         
                                 }
                                        
-                                //var envStack = d3.select("#envBase");
-                                //envStack
-                                //    .append("div")
-                                //    .attr("id", "env" + currentData.data.id)
-                                //    .attr("class", "alert alert-info")
-                                //    .text(currentData.data.label);
+                                
                             }
                             
                             else if (currentData.name === "envAdd") {
-                                //console.log("#env" + currentData.data.id);
-                                //var envStack = d3.select("#env" + currentData.data.id);
-                                //envStack
-                                //    .append("p")
-                                //    .attr("class", "envVar")
-                                //    .text(currentData.data.value);
+                                
                                 
                                 var currentHeight = parseInt(Snap('#rect' + currentData.data.id).attr('height'), 10);
                                 //console.log('The current height of the previous rect is');                   // ^ base to convert numbers to.  
@@ -131,12 +121,7 @@
                                 console.log(totalHeight);
                             }
                             else if (currentData.name === "envSearch") {
-                                //d3.selectAll(".envVar").style("color", "#fff"); //color all nodes black to remove previous formatting
-                                //var envStack = d3.select("#env" + currentData.data.id);
-                                //console.log(envStack);
-                                //envStack
-                                //    .select("p:nth-child(" + currentData.data.childRank + ")")
-                                //    .style("color", currentData.data.color);
+                                
                                 
                                 //thanks to this SO answer for explaining how hth-child works: http://stackoverflow.com/a/29278310
                                 //Original Poster (OP): http://stackoverflow.com/questions/29278107/d3js-how-to-select-nth-element-of-a-group
@@ -149,13 +134,7 @@
                             }
                             
                             else if (currentData.name === "envUpdate") {
-                                //d3.selectAll(".envVar").style("color", "#fff"); //color all nodes white to remove previous formatting
-                                //var envStack = d3.select("#env" + currentData.data.id);
-                                //console.log(envStack);
-                                //envStack
-                                //    .select("p:nth-child(" + currentData.data.childRank + ")")
-                                //    .style("color", currentData.data.color)
-                                //    .text(currentData.data.value);
+                                
                                 Snap('.envVar')
                                     .attr({
                                         'stroke': '#000'

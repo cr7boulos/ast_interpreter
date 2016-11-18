@@ -1159,28 +1159,7 @@
             this.defined = function (variable, emitEvents) {
                 return (null !== this.lookUp(variable, emitEvents));
             };
-            //this.defined = function (variable) {
-            //    
-            //    var i = 0;
-            //    for (; i < this.variables.length; i++) {
-            //        if (variable.trim() === this.variables[i].trim()) {
-            //            break;
-            //        }
-            //    }
-            //
-            //    if (i < this.variables.length) {
-            //        return true;// variable is found
-            //    }
-            //    else {
-            //        if (null === this.nonLocalLink) {
-            //            return false; //variable cannot be found
-            //        }
-            //        else {
-            //            // recursively search the rest of the environment chain
-            //            return this.nonLocalLink.defined(variable);
-            //        }
-            //    }
-            //};
+            
             
             //I need to set a parameter to tell the lookUp function if it should emit events or not
             this.lookUp = function (variable, emitEvents) {
@@ -3365,10 +3344,17 @@ angular
         
 
         /**
-         This method "applies" a function value to actual parameters.
+            This method "applies" a function value to actual parameters.
         This method evaluates the body of the function in an environment
         that binds the actual parameter values (from this function application)
         to the formal parameters (from the function's lambda expression).
+
+            Since this language allows nested functions, the function's outer
+        scope (where the function finds its non-local references) may no
+        longer be the global Environment object. The function's closure
+        (the IPEP object that is the functions "value") points us to the
+        Environment object that the function should use for non-local
+        references.
         */
         this.evaluateApply = function (tree) {
             //throw EvalError
@@ -3402,16 +3388,19 @@ angular
             }
 
             // Create a new environment object that is "nested"
-            // in the global environment (lexical scope).
+            // in this function's outer environment (lexical scope).
             // This environment is used to bind actual parameter
             // values to formal paramter names.
             /*2*/
-            var localEnv = new Environment(scope, this.globalEnv, "Function Activation");
+            var localEnv = new Environment(scope, ep, "Function Activation");
             //emit "envStackPush" event
+            //I might need to create a new event emitter named envStackPushFun
+            //with a reference to the enclosing ep.id
             scope.main.addAnimationData({'name': "envStackPush",
                     data: {
                         'id': localEnv.id,
                         'label': localEnv.label,
+                        'epId': ep.id, //added a link to the environment pointer's id for drawing Bezier curves.
                     }
             });
 
@@ -5249,7 +5238,7 @@ angular
                         var envCount = 0;
                         var totalHeight = 0;
                         var emptyEnv = 30; //height of an empty env
-                        var xWidth = 150; //width of all envs
+                        var xWidth = 150; //width of a single env
                         var xMargin = 10;
                         var yMargin = 10; //bottom y Margin
                         var varAddedHeight = 25; //extention of the length of an environment when a new variable is pushed to it.
@@ -5332,21 +5321,11 @@ angular
                                         
                                 }
                                        
-                                //var envStack = d3.select("#envBase");
-                                //envStack
-                                //    .append("div")
-                                //    .attr("id", "env" + currentData.data.id)
-                                //    .attr("class", "alert alert-info")
-                                //    .text(currentData.data.label);
+                                
                             }
                             
                             else if (currentData.name === "envAdd") {
-                                //console.log("#env" + currentData.data.id);
-                                //var envStack = d3.select("#env" + currentData.data.id);
-                                //envStack
-                                //    .append("p")
-                                //    .attr("class", "envVar")
-                                //    .text(currentData.data.value);
+                                
                                 
                                 var currentHeight = parseInt(Snap('#rect' + currentData.data.id).attr('height'), 10);
                                 //console.log('The current height of the previous rect is');                   // ^ base to convert numbers to.  
@@ -5368,12 +5347,7 @@ angular
                                 console.log(totalHeight);
                             }
                             else if (currentData.name === "envSearch") {
-                                //d3.selectAll(".envVar").style("color", "#fff"); //color all nodes black to remove previous formatting
-                                //var envStack = d3.select("#env" + currentData.data.id);
-                                //console.log(envStack);
-                                //envStack
-                                //    .select("p:nth-child(" + currentData.data.childRank + ")")
-                                //    .style("color", currentData.data.color);
+                                
                                 
                                 //thanks to this SO answer for explaining how hth-child works: http://stackoverflow.com/a/29278310
                                 //Original Poster (OP): http://stackoverflow.com/questions/29278107/d3js-how-to-select-nth-element-of-a-group
@@ -5386,13 +5360,7 @@ angular
                             }
                             
                             else if (currentData.name === "envUpdate") {
-                                //d3.selectAll(".envVar").style("color", "#fff"); //color all nodes white to remove previous formatting
-                                //var envStack = d3.select("#env" + currentData.data.id);
-                                //console.log(envStack);
-                                //envStack
-                                //    .select("p:nth-child(" + currentData.data.childRank + ")")
-                                //    .style("color", currentData.data.color)
-                                //    .text(currentData.data.value);
+                                
                                 Snap('.envVar')
                                     .attr({
                                         'stroke': '#000'
@@ -5798,8 +5766,8 @@ angular
         .directive('envSvgL8', function(){
                 return {
                     'restrict': 'E',
-                    'replace': true,
-                    'template': '<div id="envBase"><svg id="sBase" viewBox="0 0 150 300"></svg></div>',
+                    'replace': true, 
+                    'template': '<div id="envBase"><svg id="sBase" viewBox="0 0 250 300"><defs id="definitions"></defs></svg></div>',
                     'link': function(scope, element, attrs ){
                         
                         var envCount = 0;
@@ -5809,6 +5777,10 @@ angular
                         var xMargin = 10;
                         var yMargin = 10; //bottom y Margin
                         var varAddedHeight = 25; //extention of the length of an environment when a new variable is pushed to it.
+                        
+                        
+                        
+                        
                         
                         function pushTriangles(currentEnv, count) {
                             while (currentEnv < count) {
@@ -5835,7 +5807,24 @@ angular
                         scope.$watch('index', function(newValue){
                             if (newValue === -1) {
                                 Snap("#sBase").paper.clear(); //reset the env Stack on click of the Visualize data button
-                                //console.log(envCount);
+                                
+                                $(window).ready(function(){
+                                    //I have to keep reseting this since the paper.clear() call above deletes this important element.
+                                    //this sets up the arrowsheads for the links
+                                    //template for the arrows in the defs section comes from here: http://bl.ocks.org/mbostoc
+                                    d3.select('#definitions')
+                                        .append('marker')
+                                        .attr('id', 'arrow')
+                                        .attr('viewBox', '0 -5 10 10')
+                                        .attr('refX', '8')
+                                        .attr('refY', '0')
+                                        .attr('markerWidth', '6')
+                                        .attr('markerHeight', '6')
+                                        .attr('orient', 'auto')
+                                        .append('path')
+                                        .attr('d', 'M0,-5L10,0L0,5')
+                                    //end copied code
+                                });
                                 envCount = 0;
                                 totalHeight = 0;
                             }
@@ -5888,21 +5877,45 @@ angular
                                         
                                 }
                                        
-                                //var envStack = d3.select("#envBase");
-                                //envStack
-                                //    .append("div")
-                                //    .attr("id", "env" + currentData.data.id)
-                                //    .attr("class", "alert alert-info")
-                                //    .text(currentData.data.label);
+                                ///the code below is only executed if a function env is added to the stack
+                                //this code draws the ep link on the web page using a Bezier curve.
+                                
+                                if (currentData.data.epId) {
+                                    //all rects start at (0,0) in their respective coordinate space.
+                                    var ep = currentData.data.epId;
+                                    var startEPHeight = Snap('#env' + ep).transform().localMatrix.e;
+                                    var endEPHeight = Snap('#rect' + ep).attr('height');
+                                    
+                                    var startCurrentEnvHeight = totalHeight - Snap('#rect' + (currentData.data.id)).attr('height');
+                                    
+                                    var endCurrentEnvHeight = totalHeight;
+                                    
+                                    //note: p1 < p2 --- (always) 
+                                    var p1 = Math.floor((startEPHeight + endEPHeight) / 2); //midpoint of the ep env (on the y-axis)
+                                    var p2 = Math.floor((startCurrentEnvHeight + endCurrentEnvHeight ) / 2); //mid point of the starting env (on the y-axis)
+                                    
+                                    var arch = (p2 - p1) / 2;
+                                    //note: I am subtracting 1 off the xWidth to
+                                    //keep us just inside the right edge of the rect
+                                    
+                                    Snap('#sBase')
+                                        .group()
+                                        .path('M' + (xWidth - 1) + ','
+                                              + p2 + 'Q' + (xWidth - 1 + arch) + ','
+                                              + ((p1 + p2) / 2) + ',' + (xWidth - 1)
+                                              + ',' + p1)
+                                        //.addClass('color' + (currentData.data.id % 2)) //the line has the same color as the env from which it originates
+                                        .addClass('epLine')
+                                        .attr('id', 'link' + currentData.data.id);
+                                    d3.select('#link' + currentData.data.id)
+                                        .attr('marker-end', 'url(#arrow)' ); //implement this later
+                                        
+                                    
+                                }
                             }
                             
                             else if (currentData.name === "envAdd") {
-                                //console.log("#env" + currentData.data.id);
-                                //var envStack = d3.select("#env" + currentData.data.id);
-                                //envStack
-                                //    .append("p")
-                                //    .attr("class", "envVar")
-                                //    .text(currentData.data.value);
+                                
                                 
                                 var currentHeight = parseInt(Snap('#rect' + currentData.data.id).attr('height'), 10);
                                 //console.log('The current height of the previous rect is');                   // ^ base to convert numbers to.  
@@ -5924,12 +5937,7 @@ angular
                                 console.log(totalHeight);
                             }
                             else if (currentData.name === "envSearch") {
-                                //d3.selectAll(".envVar").style("color", "#fff"); //color all nodes black to remove previous formatting
-                                //var envStack = d3.select("#env" + currentData.data.id);
-                                //console.log(envStack);
-                                //envStack
-                                //    .select("p:nth-child(" + currentData.data.childRank + ")")
-                                //    .style("color", currentData.data.color);
+                                
                                 
                                 //thanks to this SO answer for explaining how hth-child works: http://stackoverflow.com/a/29278310
                                 //Original Poster (OP): http://stackoverflow.com/questions/29278107/d3js-how-to-select-nth-element-of-a-group
@@ -5942,13 +5950,7 @@ angular
                             }
                             
                             else if (currentData.name === "envUpdate") {
-                                //d3.selectAll(".envVar").style("color", "#fff"); //color all nodes white to remove previous formatting
-                                //var envStack = d3.select("#env" + currentData.data.id);
-                                //console.log(envStack);
-                                //envStack
-                                //    .select("p:nth-child(" + currentData.data.childRank + ")")
-                                //    .style("color", currentData.data.color)
-                                //    .text(currentData.data.value);
+                                
                                 Snap('.envVar')
                                     .attr({
                                         'stroke': '#000'
@@ -5965,9 +5967,7 @@ angular
                             }
                             
                             else if (currentData.name === "envStackPop") {
-                                //var envStack = d3.select("#env" + currentData.data.id);
-                                //console.log(envStack);
-                                //envStack.remove();
+                                
                                 Snap('#env' + currentData.data.id).remove();
                                 Snap('#pointer' + (currentData.data.id - 1)).remove();
                                 envCount--;
