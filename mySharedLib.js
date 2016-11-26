@@ -3460,6 +3460,8 @@ angular
                     data: {
                         'id': localEnv.id,
                         'label': localEnv.label,
+                        'closure': result.tag === 'lambda',
+                        'epId': result.tag === 'lambda' ? ep.id : null,
                     }
             });
             // emit "envRemove" event?
@@ -4044,12 +4046,14 @@ angular
     //TODO: turn the parser into an object!!
     angular
         .module('astInterpreter')
-        .factory('l8.parserFactory', ['l8.tokenizerFactory', 'l8.treeFactory', function(tokenizerFactory, treeFactory){
+        .factory('l8.parserFactory', ['l8.tokenizerFactory', 'l8.treeFactory', 'l8.parseErrorFactory', function(tokenizerFactory, treeFactory, parseFactory){
             console.log('Parser loaded in angular');
             
             var Tokenizer = tokenizerFactory.Tokenizer;
         
             var Tree = treeFactory.Tree;
+            
+            var ParseError = parseFactory.ParseError;
             
             function Parser() {
                 this.counter = 0;
@@ -5777,6 +5781,41 @@ angular
                         var xMargin = 10;
                         var yMargin = 10; //bottom y Margin
                         var varAddedHeight = 25; //extention of the length of an environment when a new variable is pushed to it.
+                        var closureCount = 0;
+                        
+                        
+                        //Use this API to make moving svg env elements easier
+                        
+                        function getWidth() {
+                            return xWidth;  // this is just a wrapper for xWidth
+                        }
+                        function getHeight(envId) {
+                            return Snap('#rect' + envId).attr('height'); //note that this returns a String; can be coerced to a Number.
+                        }
+                        
+                        function getXLocation(envId) {
+                            return Snap('#env' + envId).transform().localMatrix.e;
+                        }
+                        
+                        function getYLocation(envId) {
+                            return Snap('#env' + envId).transform().localMatrix.f;
+                        }
+                        
+                        function setXLocation(envId, dx) {
+                            Snap('#env' + envId).transform('translate(' + (getXLocation(envId) + dx) + ' '
+                                                           + getYLocation(envId) + ')');
+                        }
+                        
+                        function setYLocation(envId, dy) {
+                            Snap('#env' + envId).transform('translate(' + getXLocation(envId) + ' '
+                                                           + (getYLocation(envId) + dy) + ')');
+                        }
+                        
+                        function setXYLocation(envId, dx, dy) {
+                            setXLocation(envId. dx);
+                            setYLocation(envId, dy);
+                        }
+                        
                         
                         
                         
@@ -5881,12 +5920,13 @@ angular
                                 //this code draws the ep link on the web page using a Bezier curve.
                                 
                                 if (currentData.data.epId) {
+                                    
                                     //all rects start at (0,0) in their respective coordinate space.
                                     var ep = currentData.data.epId;
-                                    var startEPHeight = Snap('#env' + ep).transform().localMatrix.e;
-                                    var endEPHeight = Snap('#rect' + ep).attr('height');
+                                    var startEPHeight = getXLocation(ep); //Snap('#env' + ep).transform().localMatrix.e;
+                                    var endEPHeight = getHeight(ep); //Snap('#rect' + ep).attr('height');
                                     
-                                    var startCurrentEnvHeight = totalHeight - Snap('#rect' + (currentData.data.id)).attr('height');
+                                    var startCurrentEnvHeight = totalHeight - getHeight(currentData.data.id); //Snap('#rect' + (currentData.data.id)).attr('height');
                                     
                                     var endCurrentEnvHeight = totalHeight;
                                     
@@ -5968,7 +6008,39 @@ angular
                             
                             else if (currentData.name === "envStackPop") {
                                 
-                                Snap('#env' + currentData.data.id).remove();
+                                var closure = currentData.data.closure;
+                                
+                                if (!closure) {
+                                    Snap('#link' + currentData.data.id).remove(); //delete the EP link from the viz
+                                    Snap('#env' + currentData.data.id).remove(); //delete the unneeded environment
+                                    
+                                }
+                                else {
+                                    //TODO: implement the closure visualization.
+                                    closureCount++;
+                                    
+                                    var EP = Snap('#env' + epId);
+                                    var epId = currentData.data.epId;
+                                    //var startHep = EP.transform().localMatrix.e;
+                                    var startHep = getXLocation(epId);
+                                    var endHep = startHep + getHeight(epId); 
+                                    
+                                    var yEPQuarter = startHep + Math.floor((endHep - startHep) / 4);
+                                    var xlocEP = getXLocation(epId) + getWidth() - 1;
+                                    
+                                    var childEP = currentData.data.id;
+                                    //childEP.transform('translate(' + childEP.transform.localMatrix.e + ' ' + 300); //push the env out 300 units in the +x direction.
+                                    setXLocation(childEP, closureCount % 2 === 0 ? -300: 300); // this determines which side of the stack the cloure sits.
+                                    
+                                    var xEndChildEP = getXLocation(childEP) + getWidth(childEP);
+                                    
+                                    Snap('#link' + currentData.data.id).attr('d', 'M' + xlocEP + ',' + yEPQuarter + ' Q'
+                                                                             + ((getXLocation(childEP) + xlocEP) / 2) + ',' + ((getYLocation(epId) + getYLocation(childEP)) / 2)
+                                                                             + ', ' + ((getXLocation(childEP) + xEndChildEP) / 2) + ', ' + (getYLocation(childEP) + 1) );
+                                    
+                                }
+                                
+                                
                                 Snap('#pointer' + (currentData.data.id - 1)).remove();
                                 envCount--;
                             }

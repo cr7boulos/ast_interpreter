@@ -64,12 +64,14 @@
     //TODO: turn the parser into an object!!
     angular
         .module('astInterpreter')
-        .factory('l8.parserFactory', ['l8.tokenizerFactory', 'l8.treeFactory', function(tokenizerFactory, treeFactory){
+        .factory('l8.parserFactory', ['l8.tokenizerFactory', 'l8.treeFactory', 'l8.parseErrorFactory', function(tokenizerFactory, treeFactory, parseFactory){
             console.log('Parser loaded in angular');
             
             var Tokenizer = tokenizerFactory.Tokenizer;
         
             var Tree = treeFactory.Tree;
+            
+            var ParseError = parseFactory.ParseError;
             
             function Parser() {
                 this.counter = 0;

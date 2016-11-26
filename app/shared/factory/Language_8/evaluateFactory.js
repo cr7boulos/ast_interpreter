@@ -542,6 +542,8 @@
                     data: {
                         'id': localEnv.id,
                         'label': localEnv.label,
+                        'closure': result.tag === 'lambda',
+                        'epId': result.tag === 'lambda' ? ep.id : null,
                     }
             });
             // emit "envRemove" event?
