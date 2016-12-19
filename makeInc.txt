@@ -1,0 +1,9 @@
+( prog 
+	( var w 10 ) 
+	( fun f ( lambda x 
+				( fun g ( lambda y ( + x y ) ) )
+			)
+	)
+	( var inc10 ( apply f w ) )
+	( var u ( apply inc10 5 ) )
+)

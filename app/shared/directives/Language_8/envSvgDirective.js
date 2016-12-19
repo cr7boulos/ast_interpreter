@@ -47,7 +47,7 @@
                         }
                         
                         function setXYLocation(envId, dx, dy) {
-                            setXLocation(envId. dx);
+                            setXLocation(envId, dx);
                             setYLocation(envId, dy);
                         }
                         
@@ -84,7 +84,7 @@
                                 
                                 $(window).ready(function(){
                                     //I have to keep reseting this since the paper.clear() call above deletes this important element.
-                                    //this sets up the arrowsheads for the links
+                                    //this sets up the arrowheads for the links
                                     //template for the arrows in the defs section comes from here: http://bl.ocks.org/mbostoc
                                     d3.select('#definitions')
                                         .append('marker')
@@ -157,22 +157,31 @@
                                 if (currentData.data.epId) {
                                     
                                     //all rects start at (0,0) in their respective coordinate space.
+                                    
                                     var ep = currentData.data.epId;
-                                    var startEPHeight = getXLocation(ep); //Snap('#env' + ep).transform().localMatrix.e;
+                                    console.log("The ep id is: " + ep);
+                                    var startEPHeight = getYLocation(ep); //Snap('#env' + ep).transform().localMatrix.e;
                                     var endEPHeight = getHeight(ep); //Snap('#rect' + ep).attr('height');
                                     
                                     var startCurrentEnvHeight = totalHeight - getHeight(currentData.data.id); //Snap('#rect' + (currentData.data.id)).attr('height');
                                     
                                     var endCurrentEnvHeight = totalHeight;
                                     
+                                    console.log("The value of endEPHeight is: " + endEPHeight);
+                                    console.log("The value of startEPHeight is: " + startEPHeight);
+                                    
                                     //note: p1 < p2 --- (always) 
-                                    var p1 = Math.floor((startEPHeight + endEPHeight) / 2); //midpoint of the ep env (on the y-axis)
+                                    var p1 = (startEPHeight + endEPHeight) / 2; //midpoint of the ep env (on the y-axis)
                                     var p2 = Math.floor((startCurrentEnvHeight + endCurrentEnvHeight ) / 2); //mid point of the starting env (on the y-axis)
+                                    
+                                    
+                                    console.log("The value of p1 is: " + p1);
+                                    console.log("The value of p2 is: " + p2);
                                     
                                     var arch = (p2 - p1) / 2;
                                     //note: I am subtracting 1 off the xWidth to
                                     //keep us just inside the right edge of the rect
-                                    
+                                    console.log("Setting up the env line link");
                                     Snap('#sBase')
                                         .group()
                                         .path('M' + (xWidth - 1) + ','
@@ -257,7 +266,7 @@
                                     var EP = Snap('#env' + epId);
                                     var epId = currentData.data.epId;
                                     //var startHep = EP.transform().localMatrix.e;
-                                    var startHep = getXLocation(epId);
+                                    var startHep = getYLocation(epId); 
                                     var endHep = startHep + getHeight(epId); 
                                     
                                     var yEPQuarter = startHep + Math.floor((endHep - startHep) / 4);
@@ -265,13 +274,23 @@
                                     
                                     var childEP = currentData.data.id;
                                     //childEP.transform('translate(' + childEP.transform.localMatrix.e + ' ' + 300); //push the env out 300 units in the +x direction.
-                                    setXLocation(childEP, closureCount % 2 === 0 ? -300: 300); // this determines which side of the stack the cloure sits.
+                                    setXLocation(childEP, closureCount % 2 === 0 ? -300: 300); // this determines which side of the stack the closure sits.
+                                    
+                                    totalHeight -= (endHep - startHep); //reclaim the space on the stack where the current env--now a closure--sat.
                                     
                                     var xEndChildEP = getXLocation(childEP) + getWidth(childEP);
+                                    
+                                    Snap('#link' + currentData.data.id).attr('d', 'M' + ((getXLocation(childEP) + xEndChildEP) / 2) + ', ' + (getYLocation(childEP) + 1)  + ' Q'
+                                                                             + ((getXLocation(childEP) + xlocEP) / 2) + ',' + ((getYLocation(epId) + getYLocation(childEP)) / 2)
+                                                                             + ', ' + xlocEP + ',' + yEPQuarter);
+                                    
+                                    /*
                                     
                                     Snap('#link' + currentData.data.id).attr('d', 'M' + xlocEP + ',' + yEPQuarter + ' Q'
                                                                              + ((getXLocation(childEP) + xlocEP) / 2) + ',' + ((getYLocation(epId) + getYLocation(childEP)) / 2)
                                                                              + ', ' + ((getXLocation(childEP) + xEndChildEP) / 2) + ', ' + (getYLocation(childEP) + 1) );
+                                    
+                                    */
                                     
                                 }
                                 

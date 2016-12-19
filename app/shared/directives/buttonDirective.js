@@ -5,7 +5,7 @@
             return {
               restrict: 'E',
               replace: true,
-              template: '<div><button id="advance" ng-click="main.incrementIndex()">Advance<div>',
+              template: '<div><button id="advance" class="btn btn-primary" ng-click="main.incrementIndex()">Advance<div>',
             };
         });
     
