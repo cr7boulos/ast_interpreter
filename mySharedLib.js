@@ -5871,6 +5871,13 @@ angular
                             
                             var currentData = scope.main.getCurrentAnimObject();
                             console.log(currentData);
+                            
+                            //this resets all the text fill colors back to their default color--black
+                            //every single time a new animation is triggered.
+                            d3.selectAll('.envVar').attr('fill', '#000')
+
+                            
+                            
                             if (currentData.name === "envStackPush") {
                                 
                                 envCount++;
@@ -6003,23 +6010,25 @@ angular
                                 console.log(totalHeight);
                             }
                             else if (currentData.name === "envSearch") {
-                                
+                                //Note on using SVG text elements:
+                                //use the 'fill' attribute to color text rather than the 'stroke' attribute
+                                // see this tutorial as an example: https://www.dashingd3js.com/svg-text-element
                                 
                                 //thanks to this SO answer for explaining how hth-child works: http://stackoverflow.com/a/29278310
                                 //Original Poster (OP): http://stackoverflow.com/questions/29278107/d3js-how-to-select-nth-element-of-a-group
                                 Snap('.envVar')
                                     .attr({
-                                        'stroke': '#000'
+                                        'fill': '#000'
                                     });
                                     //need to offset by 3 due to the way svg is displayed on the page.
-                                Snap('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')').attr({'stroke': currentData.data.color});
+                                Snap('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')').attr({'fill': currentData.data.color});
                             }
                             
                             else if (currentData.name === "envUpdate") {
                                 
                                 Snap('.envVar')
                                     .attr({
-                                        'stroke': '#000'
+                                        'fill': '#000'
                                     });
                                     //need to offset by 3 due to the way svg is displayed on the page.
                                 
@@ -6027,7 +6036,7 @@ angular
                                 d3.select('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')').text(currentData.data.value);
                                 Snap('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')')
                                     .attr({
-                                        'stroke': currentData.data.color,
+                                        'fill': currentData.data.color,
                                     });
                                 
                             }
