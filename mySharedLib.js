@@ -5790,7 +5790,8 @@ angular
                             return xWidth;  // this is just a wrapper for xWidth
                         }
                         function getHeight(envId) {
-                            return Snap('#rect' + envId).attr('height'); //note that this returns a String; can be coerced to a Number.
+                            return Number(Snap('#rect' + envId).attr('height')); //note that this returns a String; can be coerced to a Number.
+                                                                                 // 12/20/16: this caused errors so it is being cast as a Number explicitly.
                         }
                         
                         function getXLocation(envId) {
@@ -5939,7 +5940,8 @@ angular
                                     var p1 = (startEPHeight + endEPHeight) / 2; //midpoint of the ep env (on the y-axis)
                                     var p2 = Math.floor((startCurrentEnvHeight + endCurrentEnvHeight ) / 2); //mid point of the starting env (on the y-axis)
                                     
-                                    
+                                    var test = (startEPHeight + endEPHeight) / 2;
+                                    console.log("The value of test is: " + test);
                                     console.log("The value of p1 is: " + p1);
                                     console.log("The value of p2 is: " + p2);
                                     
@@ -5947,7 +5949,10 @@ angular
                                     //note: I am subtracting 1 off the xWidth to
                                     //keep us just inside the right edge of the rect
                                     console.log("Setting up the env line link");
-                                    Snap('#sBase')
+                                    
+                                    if (getXLocation(ep) === 0) {
+                                        //env on the stack
+                                        Snap('#sBase')
                                         .group()
                                         .path('M' + (xWidth - 1) + ','
                                               + p2 + 'Q' + (xWidth - 1 + arch) + ','
@@ -5956,8 +5961,20 @@ angular
                                         //.addClass('color' + (currentData.data.id % 2)) //the line has the same color as the env from which it originates
                                         .addClass('epLine')
                                         .attr('id', 'link' + currentData.data.id);
-                                    d3.select('#link' + currentData.data.id)
-                                        .attr('marker-end', 'url(#arrow)' ); //implement this later
+                                        d3.select('#link' + currentData.data.id)
+                                            .attr('marker-end', 'url(#arrow)' ); //implement this later
+                                    }
+                                    else{
+                                        Snap('#sBase')
+                                            .group()
+                                            .line(getXLocation(currentData.data.id) + xWidth - 1, p2, getXLocation(ep) + 1, (getYLocation(ep) + ( getHeight(ep) * 0.25)))
+                                            .addClass('epLine')
+                                            .attr('id', 'link' + currentData.data.id);
+                                            
+                                        d3.select('#link' + currentData.data.id)
+                                            .attr('marker-end', 'url(#arrow)' ); //implement this later
+                                    }
+                                    
                                         
                                     
                                 }
@@ -6046,7 +6063,7 @@ angular
                                     var xEndChildEP = getXLocation(childEP) + getWidth(childEP);
                                     
                                     Snap('#link' + currentData.data.id).attr('d', 'M' + ((getXLocation(childEP) + xEndChildEP) / 2) + ', ' + (getYLocation(childEP) + 1)  + ' Q'
-                                                                             + ((getXLocation(childEP) + xlocEP) / 2) + ',' + ((getYLocation(epId) + getYLocation(childEP)) / 2)
+                                                                             + ((getXLocation(childEP) + xlocEP) * (2 / 3) ) + ',' + ((getYLocation(epId) + getYLocation(childEP)) / 2)
                                                                              + ', ' + xlocEP + ',' + yEPQuarter);
                                     
                                     /*
