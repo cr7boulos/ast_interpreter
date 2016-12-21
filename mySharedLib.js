@@ -5852,9 +5852,20 @@ angular
                                     //I have to keep reseting this since the paper.clear() call above deletes this important element.
                                     //this sets up the arrowheads for the links
                                     //template for the arrows in the defs section comes from here: http://bl.ocks.org/mbostoc
-                                    d3.select('#definitions')
-                                        .append('marker')
+                                    var defs = d3.select('#definitions');
+                                    defs.append('marker')
                                         .attr('id', 'arrow')
+                                        .attr('viewBox', '-10 -5 10 10')
+                                        .attr('refX', '-8')
+                                        .attr('refY', '0')
+                                        .attr('markerWidth', '6')
+                                        .attr('markerHeight', '6')
+                                        .attr('orient', 'auto')
+                                        .append('path')
+                                        .attr('d', 'M0,-5L-10,0L0,5');
+                                        
+                                    defs.append('marker')
+                                        .attr('id', 'arrow2')
                                         .attr('viewBox', '0 -5 10 10')
                                         .attr('refX', '8')
                                         .attr('refY', '0')
@@ -5862,7 +5873,7 @@ angular
                                         .attr('markerHeight', '6')
                                         .attr('orient', 'auto')
                                         .append('path')
-                                        .attr('d', 'M0,-5L10,0L0,5')
+                                        .attr('d', 'M0,-5L10,0L0,5');
                                     //end copied code
                                 });
                                 envCount = 0;
@@ -5959,27 +5970,80 @@ angular
                                     
                                     if (getXLocation(ep) === 0) {
                                         //env on the stack
-                                        Snap('#sBase')
-                                        .group()
-                                        .path('M' + (xWidth - 1) + ','
-                                              + p2 + 'Q' + (xWidth - 1 + arch) + ','
-                                              + ((p1 + p2) / 2) + ',' + (xWidth - 1)
-                                              + ',' + p1)
-                                        //.addClass('color' + (currentData.data.id % 2)) //the line has the same color as the env from which it originates
-                                        .addClass('epLine')
-                                        .attr('id', 'link' + currentData.data.id);
-                                        d3.select('#link' + currentData.data.id)
-                                            .attr('marker-end', 'url(#arrow)' ); //implement this later
+                                        //Snap('#sBase')
+                                        //.group()
+                                        //.path('M' + (xWidth - 1) + ','
+                                        //      + p1 + 'Q' + (xWidth - 1 + arch) + ','
+                                        //      + ((p1 + p2) / 2) + ',' + (xWidth - 1)
+                                        //      + ',' + p2)
+                                        ////.addClass('color' + (currentData.data.id % 2)) //the line has the same color as the env from which it originates
+                                        //.addClass('epLine')
+                                        //.attr('id', 'link' + currentData.data.id);
+                                        
+                                        var currentGroup = d3.select('#sBase').append('svg:g').attr('id', 'g' + currentData.data.id);
+                                            currentGroup
+                                                .append('svg:path')
+                                                .attr('d', 'M' + (xWidth - 1) + ','
+                                                  + p1 + 'Q' + (xWidth - 1 + arch) + ','
+                                                  + ((p1 + p2) / 2) + ',' + (xWidth - 1)
+                                                  + ',' + p2)
+                                                .attr('class', 'epLine')
+                                                .attr('id', 'link' + currentData.data.id)
+                                                .attr('marker-start', 'url(#arrow)');
+                                            
+                                            currentGroup
+                                                .append('svg:text')
+                                                .attr('text-anchor', 'middle')
+                                                .attr('dy', '-.15em')
+                                                .append('svg:textPath')
+                                                .attr('startOffset', '50%')
+                                                .attr('xlink:href', '#link' + currentData.data.id)
+                                                .text('EP');
+                                                
+                                        //d3.select('#link' + currentData.data.id)
+                                        //    .attr('marker-end', 'url(#arrow)' ); //implement this later
+                                         
+                                        //code template comes from here: http://bl.ocks.org/mzur/b30b932d1b9544644abd
+                                        //d3.select('#link' + currentData.data.id)
+                                        //    .append('svg:text')
+                                        //    .attr('text-anchor', 'middle')
+                                        //    .append('svg:textPath')
+                                        //    .attr('startOffset', '50%')
+                                        //    .attr('xlink:href', '#link' + currentData.data.id)
+                                        //    .text('EP');
                                     }
                                     else{
-                                        Snap('#sBase')
-                                            .group()
-                                            .line(getXLocation(currentData.data.id) + xWidth - 1, p2, getXLocation(ep) + 1, (getYLocation(ep) + ( getHeight(ep) * 0.25)))
-                                            .addClass('epLine')
-                                            .attr('id', 'link' + currentData.data.id);
-                                            
-                                        d3.select('#link' + currentData.data.id)
-                                            .attr('marker-end', 'url(#arrow)' ); //implement this later
+                                        
+                                        
+                                        var group = d3.select('#sBase').append('svg:g');
+                                        
+                                        group.append('svg:line')
+                                            .attr('x1', getXLocation(currentData.data.id) + xWidth - 1)
+                                            .attr('y1', p2)
+                                            .attr('x2', getXLocation(ep) + 1)
+                                            .attr('y2', (getYLocation(ep) + ( getHeight(ep) * 0.25)))
+                                            .attr('class', 'epLine')
+                                            .attr('id', 'link' + currentData.data.id)
+                                            .attr('marker-end', 'url(#arrow2)' );
+                                        
+                                        
+                                        group.append('svg:text')
+                                             .attr('id', 'text' + currentData.data.id)
+                                             .attr('text-anchor', 'middle')
+                                             .attr('dy', '-.15em')
+                                             .append('svg:textPath')
+                                             .attr('startOffset', '50%')
+                                             .attr('xlink:href', '#link' + currentData.data.id)
+                                             .text('EP');
+                                             
+                                        ////code template comes from here: http://bl.ocks.org/mzur/b30b932d1b9544644abd
+                                        //d3.select('#link' + currentData.data.id)
+                                        //    .append('svg:text')
+                                        //    .attr('text-anchor', 'middle')
+                                        //    .append('svg:textPath')
+                                        //    .attr('startOffset', '50%')
+                                        //    .attr('xlink:href', '#link' + currentData.data.id)
+                                        //    .text('EP');
                                     }
                                     
                                         
@@ -6047,6 +6111,7 @@ angular
                                 
                                 if (!closure) {
                                     Snap('#link' + currentData.data.id).remove(); //delete the EP link from the viz
+                                    Snap('#text' + currentData.data.id).remove(); //delete the text associated with the EP link from the viz
                                     Snap('#env' + currentData.data.id).remove(); //delete the unneeded environment
                                     
                                 }
@@ -6071,17 +6136,24 @@ angular
                                     
                                     var xEndChildEP = getXLocation(childEP) + getWidth(childEP);
                                     
-                                    Snap('#link' + currentData.data.id).attr('d', 'M' + ((getXLocation(childEP) + xEndChildEP) / 2) + ', ' + (getYLocation(childEP) + 1)  + ' Q'
-                                                                             + ((getXLocation(childEP) + xlocEP) * (2 / 3) ) + ',' + ((getYLocation(epId) + getYLocation(childEP)) / 2)
-                                                                             + ', ' + xlocEP + ',' + yEPQuarter);
+                                    //Snap('#link' + currentData.data.id).attr('d', 'M' + ((getXLocation(childEP) + xEndChildEP) / 2) + ', ' + (getYLocation(childEP) + 1)  + ' Q'
+                                    //                                         + ((getXLocation(childEP) + xlocEP) * (2 / 3) ) + ',' + ((getYLocation(epId) + getYLocation(childEP)) / 2)
+                                    //                                         + ', ' + xlocEP + ',' + yEPQuarter);
                                     
-                                    /*
-                                    
-                                    Snap('#link' + currentData.data.id).attr('d', 'M' + xlocEP + ',' + yEPQuarter + ' Q'
-                                                                             + ((getXLocation(childEP) + xlocEP) / 2) + ',' + ((getYLocation(epId) + getYLocation(childEP)) / 2)
-                                                                             + ', ' + ((getXLocation(childEP) + xEndChildEP) / 2) + ', ' + (getYLocation(childEP) + 1) );
-                                    
-                                    */
+                                    d3.select('#link' + currentData.data.id)
+                                        .attr('d', 'M' + xlocEP + ',' + yEPQuarter
+                                                       + ' Q' + ((getXLocation(childEP) + xlocEP) * (2 / 3) ) + ',' + ((getYLocation(epId) + getYLocation(childEP)) / 2)
+                                                       + ' ' + ((getXLocation(childEP) + xEndChildEP) / 2) + ', ' + (getYLocation(childEP) + 1) );
+                                        
+                                    d3.select('#g' + currentData.data.id)
+                                        .append('svg:text')
+                                        .attr('text-anchor', 'middle')
+                                        .attr('dy', '-.15em')
+                                        .append('svg:textPath')
+                                        .attr('startOffset', '50%')
+                                        .attr('xlink:href', '#link' + currentData.data.id)
+                                        .text('EP');
+                                        
                                     
                                 }
                                 
