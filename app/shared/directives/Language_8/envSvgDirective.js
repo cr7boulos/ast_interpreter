@@ -25,7 +25,7 @@
                             return xWidth;  // this is just a wrapper for xWidth
                         }
                         function getHeight(envId) {
-                            return Number(Snap('#rect' + envId).attr('height')); //note that this returns a String; can be coerced to a Number.
+                            return Number(d3.select('#rect' + envId).attr('height')); //note that this returns a String; can be coerced to a Number.
                                                                                  // 12/20/16: this caused errors so it is being cast as a Number explicitly.
                         }
                         
@@ -206,7 +206,6 @@
                                     if (getXLocation(ep) === 0) {
                                         //env on the stack
                                         
-                                        
                                         var currentGroup = d3.select('#sBase').append('svg:g').attr('id', 'g' + currentData.data.id);
                                             currentGroup
                                                 .append('svg:path')
@@ -243,15 +242,15 @@
                                         
                                         var group = d3.select('#sBase').append('svg:g');
                                         
-                                        group.append('svg:line')
-                                            .attr('x1', getXLocation(currentData.data.id) + xWidth - 1)
-                                            .attr('y1', p2)
-                                            .attr('x2', getXLocation(ep) + 1)
-                                            .attr('y2', (getYLocation(ep) + ( getHeight(ep) * 0.25)))
+                                        group.append('svg:path')
+                                            .attr('d', 'M' + (xWidth - 1) + ',' + p2 + 'Q'
+                                                             + ((getXLocation(ep) + xWidth ) / 2 )
+                                                             + ',' + ((p1 + p2) / 2) + ','
+                                                             + (getXLocation(ep) + 1) + ','
+                                                             + (getYLocation(ep) + ( getHeight(ep) * 0.25)) )
                                             .attr('class', 'epLine')
                                             .attr('id', 'link' + currentData.data.id)
-                                            .attr('marker-end', 'url(#arrow2)' );
-                                        
+                                            .attr('marker-end', 'url(#arrow2)');
                                         
                                         group.append('svg:text')
                                              .attr('id', 'text' + currentData.data.id)
