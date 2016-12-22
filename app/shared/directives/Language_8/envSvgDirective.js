@@ -170,7 +170,7 @@
                                         
                                 }
                                        
-                                ///the code below is only executed if a function env is added to the stack
+                                ///the code below is only executed if a function or begin env is added to the stack
                                 //this code draws the ep link on the web page using a Bezier curve.
                                 
                                 if (currentData.data.epId) {
@@ -180,7 +180,7 @@
                                     var ep = currentData.data.epId;
                                     console.log("The ep id is: " + ep);
                                     var startEPHeight = getYLocation(ep); //Snap('#env' + ep).transform().localMatrix.e;
-                                    var endEPHeight = getHeight(ep); //Snap('#rect' + ep).attr('height');
+                                    var endEPHeight = getHeight(ep) + getYLocation(ep); //Snap('#rect' + ep).attr('height');
                                     
                                     var startCurrentEnvHeight = totalHeight - getHeight(currentData.data.id); //Snap('#rect' + (currentData.data.id)).attr('height');
                                     
@@ -333,18 +333,23 @@
                             else if (currentData.name === "envStackPop") {
                                 
                                 var closure = currentData.data.closure;
-                                
+                                // console.log('Closure?:' + closure);
+
+                                var startHEnv = getYLocation(currentData.data.id);
+                                var endHEnv = getYLocation(currentData.data.id) + getHeight(currentData.data.id);
+
                                 if (!closure) {
                                     Snap('#link' + currentData.data.id).remove(); //delete the EP link from the viz
-                                    Snap('#text' + currentData.data.id).remove(); //delete the text associated with the EP link from the viz
+                                    //Snap('#text' + currentData.data.id).remove(); //delete the text associated with the EP link from the viz
                                     Snap('#env' + currentData.data.id).remove(); //delete the unneeded environment
                                     
+                                    totalHeight -= (endHEnv - startHEnv); //reclaim the space on the stack where the current env sat.
                                 }
                                 else {
                                     //TODO: implement the closure visualization.
                                     closureCount++;
                                     
-                                    var EP = Snap('#env' + epId);
+                                    //var EP = Snap('#env' + epId);
                                     var epId = currentData.data.epId;
                                     //var startHep = EP.transform().localMatrix.e;
                                     var startHep = getYLocation(epId); 
@@ -356,8 +361,10 @@
                                     var childEP = currentData.data.id;
                                     //childEP.transform('translate(' + childEP.transform.localMatrix.e + ' ' + 300); //push the env out 300 units in the +x direction.
                                     setXLocation(childEP, closureCount % 2 === 0 ? -300: 300); // this determines which side of the stack the closure sits.
+
                                     
-                                    totalHeight -= (endHep - startHep); //reclaim the space on the stack where the current env--now a closure--sat.
+                                    
+                                    totalHeight -= (endHEnv - startHEnv); //reclaim the space on the stack where the current env--now a closure--sat.
                                     
                                     var xEndChildEP = getXLocation(childEP) + getWidth(childEP);
                                     

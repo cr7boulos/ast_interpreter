@@ -1,0 +1,16 @@
+( prog 
+	( var w 10 ) 
+	( fun f ( lambda x 
+				( fun g ( lambda 
+							( begin 
+								( set x ( + 1 x ) )
+								x
+							) 
+						) 
+				)
+			)
+	)
+	( var inc10 ( apply f w ) )
+	( var u ( apply inc10 ) )
+	( var t ( apply inc10 ) )
+)

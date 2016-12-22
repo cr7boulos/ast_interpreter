@@ -466,7 +466,7 @@
             if (tree.degree() !== lambda.degree()) {
                 //runtime check
 
-                throw new evalerror("wrong number of parameters: " + tree);
+                throw new Evalerror("wrong number of parameters: " + tree);
             }
 
             // Create a new environment object that is "nested"
@@ -671,6 +671,7 @@
                     data: {
                         'id': self.env.id,
                         'label': self.env.label,
+                        'epId': previousEnv.id,
                     }
             });
 
@@ -686,11 +687,21 @@
             // Evaluate the last expression and use its
             // value as the value of the begin expression.
             result = this.evaluateExp(tree.getSubTree(tree.degree() - 1));
+            
+            scope.main.addAnimationData({'name': "envStackPop",
+                    data: {
+                        'id': self.env.id,
+                        'label': self.env.label,
+                        'closure': result.tag === 'lambda',
+                        'epId': result.tag === 'lambda' ? previousEnv.id : null,
+                    }
+            });
 
             this.env = previousEnv;  // Just before this method returns, we remove from the
             // chain of Environment objects the local Environment
             // object we created at the beginning of this method.
             // The local Environment object becomes a garbage object,
+            
             return result;
 
         }//evaluateBegin()
