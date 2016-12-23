@@ -13,6 +13,35 @@ angular
                // var idNumber = 0;
                 
                 var ast;
+                var root;
+                
+                attrs.$observe('data', function(newVal){
+                    ast = scope.$eval(newVal);
+                
+                
+                    
+                    var hier = [];
+                    i = 0;
+                    hier.push(ast2JsonFactory.traverse(ast));
+                    
+                    d3.layout.hierarchy(hier[0]);
+                    // ************** Generate the tree diagram	 *****************
+                    
+                    //the idea for clearing the <svg> container after
+                    //each render comes from this blog post
+                    // www.tivix.com/blog/data-viz-d3-and-angular
+                    //baseSvg.selectAll("*").remove();
+                    
+                    
+                    root = hier[0];
+                    root.x0 = viewerHeight;
+                    root.y0 = 0;
+                    update(root);
+                    centerNode(root);
+                    
+                    
+                    
+                });
                 
                 
                 
@@ -184,7 +213,7 @@ angular
                 });
             }
         };
-        childCount(0, source);
+        childCount(0, root);
         var newHeight = d3.max(levelWidth) * 200; // still need to work on the proper spacing b/t nodes D.B 9/2/16
         
         // Call visit function to establish maxLabelLength
@@ -199,7 +228,7 @@ angular
         tree = tree.size([newHeight, viewerWidth]);
 
         // Compute the new tree layout.
-        var nodes = tree.nodes(source), //might need to rm the reverse() call
+        var nodes = tree.nodes(root), //might need to rm the reverse() call
             links = tree.links(nodes);
 console.log(source);
         // Set widths between levels based on maxLabelLength.
@@ -224,7 +253,7 @@ console.log(source);
             .attr("transform", function(d) {
                 return "translate(" + source.x0 + "," + source.y0 + ")"; //try switching y0 and x0
             })
-            .on('click', click);
+            /*.on('click', click)*/; //this click handler is disabled since it introduces bugs into my program
         
         nodeEnter.append("circle")
             .attr('class', 'nodeCircle')
@@ -346,33 +375,7 @@ console.log(source);
     var svgGroup = baseSvg.append("g");
     //end copied code
                             
-                attrs.$observe('data', function(newVal){
-                    ast = scope.$eval(newVal);
                 
-                
-                    
-                    var hier = [];
-                    i = 0;
-                    hier.push(ast2JsonFactory.traverse(ast));
-                    
-                    d3.layout.hierarchy(hier[0]);
-                    // ************** Generate the tree diagram	 *****************
-                    
-                    //the idea for clearing the <svg> container after
-                    //each render comes from this blog post
-                    // www.tivix.com/blog/data-viz-d3-and-angular
-                    //baseSvg.selectAll("*").remove();
-                    
-                    
-                    var root = hier[0];
-                    root.x0 = viewerHeight;
-                    root.y0 = 0;
-                    update(root);
-                    centerNode(root);
-                    
-                    
-                    
-                });
                     
                 //handles animation of the generated ast diagram.
                 
