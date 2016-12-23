@@ -1,4 +1,16 @@
-'use strict';
+(function(){
+    'use strict';
+
+    /*
+        4.a 
+            This AST directive watches the 'data' attribute for changes
+            and then transforms our AST into a format that D3 can understand.
+            Once transformed, the AST is nicely displayed via the capabilities of D3. 
+            This directive also handles highlighting the various nodes of the AST as they 
+            are traversed by the interpreter. This is the final stage of this branch in the 
+            data pipeline. Please return to the previous stage (3.a) for details on viewing the 
+            other branch in the pipeline.
+     */
 
 angular
     .module('astInterpreter')
@@ -10,42 +22,10 @@ angular
             template: '<div id="ast"></div>',
             
             link: function(scope, element, attrs){
-               // var idNumber = 0;
-                
-                var ast;
-                var root;
-                
-                attrs.$observe('data', function(newVal){
-                    ast = scope.$eval(newVal);
-                
-                
-                    
-                    var hier = [];
-                    i = 0;
-                    hier.push(ast2JsonFactory.traverse(ast));
-                    
-                    d3.layout.hierarchy(hier[0]);
-                    // ************** Generate the tree diagram	 *****************
-                    
-                    //the idea for clearing the <svg> container after
-                    //each render comes from this blog post
-                    // www.tivix.com/blog/data-viz-d3-and-angular
-                    //baseSvg.selectAll("*").remove();
-                    
-                    
-                    root = hier[0];
-                    root.x0 = viewerHeight;
-                    root.y0 = 0;
-                    update(root);
-                    centerNode(root);
-                    
-                    
-                    
-                });
-                
-                
-                
-        /*Copyright (c) 2013-2016, Rob Schmuecker
+
+            //code for building the d3 tree comes from here: http://bl.ocks.org/robschmuecker/7880033
+               
+            /*Copyright (c) 2013-2016, Rob Schmuecker
             All rights reserved.
             
             Redistribution and use in source and binary forms, with or without
@@ -73,6 +53,41 @@ angular
             EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
             
             //Modified by Daniel Boulos 8/30/16
+                
+                var ast;
+                var root;
+                
+                attrs.$observe('data', function(newVal){
+                    ast = scope.$eval(newVal);
+                
+                
+                    
+                    var hier = [];
+                    i = 0;
+                    hier.push(ast2JsonFactory.traverse(ast));
+                    
+                    d3.layout.hierarchy(hier[0]);
+                    // ************** Generate the tree diagram	 *****************
+                    
+                    //the idea for clearing the <svg> container after
+                    //each render comes from this blog post
+                    // www.tivix.com/blog/data-viz-d3-and-angular
+                    //baseSvg.selectAll("*").remove();
+                    
+                    
+                    root = hier[0];
+                    root.x0 = viewerHeight;
+                    root.y0 = 0;
+                    update(root); //the functions update and centerNode are declared below and are hoisted 
+                    centerNode(root); // as per JS standards and are thus invocable from here.
+                    
+                    
+                    
+                });
+                
+                
+                
+        
                 // Calculate total nodes, max label length
     var totalNodes = 0;
     var maxLabelLength = 0;
@@ -241,7 +256,7 @@ console.log(source);
             //d.x = (d.depth * (maxLabelLength * 10));
         });
 
-        // Update the nodes�
+        // Update the nodes
         var node = svgGroup.selectAll("g.node")
             .data(nodes, function(d) {
                 return d.id || (d.id = ++i);
@@ -432,7 +447,7 @@ console.log(source);
                                               
                                               document.getElementById('envBase').offsetWidth -
                                               (angular.element(window)[0].innerWidth * 0.05) - 5);
-                        //console.log('Handle !editing state');
+                       
                     }
                     
                 });
@@ -440,3 +455,7 @@ console.log(source);
                 },
         };
     }]);
+
+})();
+
+

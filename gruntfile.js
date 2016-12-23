@@ -4,7 +4,7 @@ module.exports = function(grunt){
         
         watch: {
             js: {
-                files: ['./app/shared/factory/*.js', './app/shared/directives/*.js' ],
+                files: ['./app/shared/factory/*.js', './app/shared/directives/*.js', './app/routes/*.html' ],
                 tasks: ['concat'],
             }
         },

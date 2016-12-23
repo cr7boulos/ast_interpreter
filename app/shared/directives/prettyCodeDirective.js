@@ -1,4 +1,16 @@
 (function(){
+
+    /*
+        3.b 
+            This stage of the data pipeline watches the 'editorcontent'
+            attribute for any changes. When changes are made, this 
+            directive checks if the app is in a 'not-editing' state.
+            If so, the code editor is suppressed from view and in its place 
+            a pretty-printed version of the editor's contents are rendered in
+            the view. This is the last stage of this branch in the data pipeline.
+            Please return to stage 2 for details on how to view the other branch 
+            of the data pipeline.
+     */
 "use strict";
             angular
                 .module('astInterpreter')

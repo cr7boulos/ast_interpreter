@@ -6,37 +6,30 @@
         .module('astInterpreter')
         .factory('ast2JsonFactory', function(){
             function traverse(tree) {
+                
+                // To utilize D3's tree-building capabilities, our AST needs to be
+                // properly formatted using the traverse() method in this file.
+                // Due to the way AngularJS handles data stored on attributes
+                // our tree data structure is no longer an
+                // instance of a Tree object; it has been converted to 
+                // JSON and thus has all the relevant data intact just without
+                // the associated methods. At this point, however, the methods are no
+                // longer needed. We traverse the data and return the an object
+                // that will be consumed by D3.
+
                 var obj = {};
-                if (tree.degree !== undefined) {
-                    
-                    if (tree.degree() == 0) {
+                
+                if (tree.subTrees.length === 0) {
                     obj.name = tree.element;
-                    }
-                    else {
-                        obj.name = tree.element;
-                        obj.children = [];
-                        for (var i = 0; i < tree.degree() ; i++) {
-                            obj.children.push(traverse(tree.getSubTree(i)));
-                        }
-                        
-                    }
-                    return obj;
                 }
                 else{
-                    if (tree.subTrees.length === 0) {
-                        obj.name = tree.element;
+                    obj.name = tree.element;
+                    obj.children = [];
+                    for(var x = 0; x < tree.subTrees.length; x++){
+                        obj.children.push(traverse(tree.subTrees[x]));
                     }
-                    else{
-                        obj.name = tree.element;
-                        obj.children = [];
-                        for(var x = 0; x < tree.subTrees.length; x++){
-                            obj.children.push(traverse(tree.subTrees[x]));
-                        }
-                    }
-                    return obj;
                 }
-            
-                
+                return obj;
             }
             
             return {
@@ -5159,13 +5152,14 @@ angular
 
 
  (function(){
+     'use strict';
     angular
         .module('astInterpreter')
         .directive('animationButton', function(){
             return {
               restrict: 'E',
               replace: true,
-              template: '<div><button id="advance" class="btn btn-primary" ng-click="main.incrementIndex()">Advance<div>',
+              template: '<button id="advance" class="btn btn-primary" ng-click="main.incrementIndex()">Advance</button>',
             };
         });
     
@@ -5423,7 +5417,7 @@ angular
                     scope.main.resetAnimationData();//clear out all previous animations
                     console.log(ast);
                     var e = new Evaluate(scope);
-                    scope.main.setResult(e.evaluate(ast));
+                    scope.main.setResult(e.evaluate(ast)); // set up a directive for displaying output of the program
                     console.log(scope.main.getAnimationData());
                   }
               });
@@ -5737,12 +5731,24 @@ angular
 })();
 
 (function(){
+
+    /*
+        3.a
+            This directive watches the 'editorcontent' attribute
+            for changes and then creates an AST from the code 
+            editor's contents. The AST is made available to the 
+            other components on the page via the 'data' attribute on the 
+            d3-ast tag. The next two brnaching stages can be found here:
+
+                app/ast/astDirective.js
+                app/shared/directives/Language_8/evaluateDirective.js
+     */
 "use strict";
             angular
                 .module('astInterpreter')
                 .directive('buildTreeL8', [ 'l8.parserFactory', function(parserFactory){
                         
-                        console.log('Parser required');
+                        // console.log('Parser required');
                         
                         
                             return {
@@ -6177,7 +6183,14 @@ angular
 })();
 
 (function(){
-    
+    /*
+        4.b
+            This part of the data pipeline calls the actual interpreter
+            (the Evaluate.evaluate function) every time the 'data' attribute
+            on the d3-ast tag changes. This concludes this branch of the data pipeline.
+            Please return to the previous stage (3.a) for info on viewing the other branch in the 
+            pipeline.
+     */
 angular
     .module('astInterpreter')
     .directive('evaluateL8', ['l8.evaluateFactory', function(evalFactory){
@@ -6186,17 +6199,20 @@ angular
             link: function(scope, element, attrs){
               var Evaluate = evalFactory.Evaluate;
               var ast = null;
-              console.log('Language 8');
-              console.log(scope);
-              console.log(attrs);
+            //   console.log('Language 8');
+            //   console.log(scope);
+            //   console.log(attrs);
               attrs.$observe('data', function(){
-                  ast = scope.main.getAST();
+                  ast = scope.main.getAST(); //we grab the AST from the main controller
+                                             //directly since the AST attached to the data
+                                             //attribute is in JSON form and hence unsuited for
+                                             //the Evaluate.evaluate function.
                   if(ast !== undefined) {
                     scope.main.resetAnimationData();//clear out all previous animations
-                    console.log(ast);
+                    // console.log(ast);
                     var e = new Evaluate(scope);
                     scope.main.setResult(e.evaluate(ast));
-                    console.log(ast);
+                    // console.log(ast);
                   }
               });
               
@@ -6259,6 +6275,18 @@ angular
 })();
 
 (function(){
+
+    /*
+        3.b 
+            This stage of the data pipeline watches the 'editorcontent'
+            attribute for any changes. When changes are made, this 
+            directive checks if the app is in a 'not-editing' state.
+            If so, the code editor is suppressed from view and in its place 
+            a pretty-printed version of the editor's contents are rendered in
+            the view. This is the last stage of this branch in the data pipeline.
+            Please return to stage 2 for details on how to view the other branch 
+            of the data pipeline.
+     */
 "use strict";
             angular
                 .module('astInterpreter')
@@ -6307,4 +6335,29 @@ angular
                         }
                 }]);
                 
+})();
+
+(function(){
+    'use strict';
+    // 1. This button is the first stage in the flow of 
+    // data between the different components in the app.
+    // Three actions happen when a user clicks this button:
+    //      I. The editor contents are saved to a variable. 
+    //     II. The animation sequence is reset to the beginning
+    //    III. The app toggles between an editing state and a not-editing state.  
+    //         This determines whether the view renders a code editor (editing) or a 
+    //         pretty-printed version of the code inputted into the editor (not-editing).
+    //
+    // The second stage of the data pipeline can be found here:  app/editor/editorDirective.js
+    angular
+        .module('astInterpreter')
+        .directive('visButton', function(){
+            return {
+                restrict: 'E',
+                replace: true,
+                template: '<button class="btn btn-default" ng-click="mco.save();main.resetIndex();editing = !editing">Visualize program</button>',
+            }
+        });
+
+
 })();

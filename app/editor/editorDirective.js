@@ -1,3 +1,28 @@
+
+(function(){
+    'use strict';
+
+    /*
+        2. This is the second stage of the data pipeline. All the 
+            contents in the editor are saved via the save function (see below) 
+            to a variable and made accessible to the HTML page 
+            via the 'editorcontent' attribute on the d3-ast tag.
+            Components that make use of this information have watchers set to the 
+            'editorcontent' attribute so that when the contents of the
+            editor are updated, the aforementioned components are
+            notified. At the time being, two components watch the 
+            'editorcontent' attribute: the 'pretty-code' tag
+            ( an Angular tag directive) and the 'build-tree' attribute
+            ( an Angular attribute directive). Note: the build-tree directive is
+            sometimes suffixed by -l* with the * denoting the current language selected.
+            e.g. : build-tree-l8. Thus, this is would be the directive that builds trees for language 8 
+
+            To view the next stage in the data pipeline,
+            open one of these two files: 
+                 app/shared/directives/prettyCodeDirective.js
+                 app/shared/directives/Language_8/buildTreeDirective.js
+     */
+
 angular
     .module('astInterpreter')
     .directive('monacoEditor', function () {
@@ -125,6 +150,10 @@ angular
                                "( apply f ( + x y ) ) ) ) ) ) " + "z \n)",
                             language: 'myCustomLanguage'
                         });
+
+                        // TODO: the default program should be loaded into the editor depending on which language is user
+                        // currently working with. 
+
                         var ttt = "( prog " + /*default content*/
                                     "\n\t( fun f ( lambda x ( * x x ) ) ) " +
                                     "\n\t( fun g ( lambda x ( + x ( apply f x ) ) ) ) " +
@@ -153,12 +182,15 @@ angular
                             "( var w 10 )\n\t" +
                             "( while ( > w 5 ) ( set w ( - w 1 ) ) )\n)";
                         
+                        //this function is called by the first stage of 
+                        // the data pipeline and makes the contents of the 
+                        // editor available for all components to see.
                         mController.save = function(){
                             
                             
                             var prettifyContent = function(str){
-                                //this function allows users to adjust the code in the editor
-                                //to make it ledgible but remain parsable by the interpreter.
+                                //this function allows users to format the code in the editor
+                                //to make it ledgible yet still remain parsable by the interpreter.
                                 
                                 var string = str.replace(/\s/g, " "); //turn all tabs, newlines, etc into blank spaces.
                                 
@@ -222,4 +254,7 @@ angular
             };
 
     });
+
+})();
+
     
