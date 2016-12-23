@@ -3384,7 +3384,7 @@ angular
             if (tree.degree() !== lambda.degree()) {
                 //runtime check
 
-                throw new evalerror("wrong number of parameters: " + tree);
+                throw new Evalerror("wrong number of parameters: " + tree);
             }
 
             // Create a new environment object that is "nested"
@@ -3589,6 +3589,7 @@ angular
                     data: {
                         'id': self.env.id,
                         'label': self.env.label,
+                        'epId': previousEnv.id,
                     }
             });
 
@@ -3604,11 +3605,21 @@ angular
             // Evaluate the last expression and use its
             // value as the value of the begin expression.
             result = this.evaluateExp(tree.getSubTree(tree.degree() - 1));
+            
+            scope.main.addAnimationData({'name': "envStackPop",
+                    data: {
+                        'id': self.env.id,
+                        'label': self.env.label,
+                        'closure': result.tag === 'lambda',
+                        'epId': result.tag === 'lambda' ? previousEnv.id : null,
+                    }
+            });
 
             this.env = previousEnv;  // Just before this method returns, we remove from the
             // chain of Environment objects the local Environment
             // object we created at the beginning of this method.
             // The local Environment object becomes a garbage object,
+            
             return result;
 
         }//evaluateBegin()
@@ -5935,7 +5946,7 @@ angular
                                         
                                 }
                                        
-                                ///the code below is only executed if a function env is added to the stack
+                                ///the code below is only executed if a function or begin env is added to the stack
                                 //this code draws the ep link on the web page using a Bezier curve.
                                 
                                 if (currentData.data.epId) {
@@ -5945,7 +5956,7 @@ angular
                                     var ep = currentData.data.epId;
                                     console.log("The ep id is: " + ep);
                                     var startEPHeight = getYLocation(ep); //Snap('#env' + ep).transform().localMatrix.e;
-                                    var endEPHeight = getHeight(ep); //Snap('#rect' + ep).attr('height');
+                                    var endEPHeight = getHeight(ep) + getYLocation(ep); //Snap('#rect' + ep).attr('height');
                                     
                                     var startCurrentEnvHeight = totalHeight - getHeight(currentData.data.id); //Snap('#rect' + (currentData.data.id)).attr('height');
                                     
@@ -5970,7 +5981,6 @@ angular
                                     
                                     if (getXLocation(ep) === 0) {
                                         //env on the stack
-                                        
                                         
                                         var currentGroup = d3.select('#sBase').append('svg:g').attr('id', 'g' + currentData.data.id);
                                             currentGroup
@@ -6017,17 +6027,7 @@ angular
                                             .attr('class', 'epLine')
                                             .attr('id', 'link' + currentData.data.id)
                                             .attr('marker-end', 'url(#arrow2)');
-                                        /*
-                                        group.append('svg:line')
-                                            .attr('x1', getXLocation(currentData.data.id) + xWidth - 1)
-                                            .attr('y1', p2)
-                                            .attr('x2', getXLocation(ep) + 1)
-                                            .attr('y2', (getYLocation(ep) + ( getHeight(ep) * 0.25)))
-                                            .attr('class', 'epLine')
-                                            .attr('id', 'link' + currentData.data.id)
-                                            .attr('marker-end', 'url(#arrow2)' );
                                         
-                                        */
                                         group.append('svg:text')
                                              .attr('id', 'text' + currentData.data.id)
                                              .attr('text-anchor', 'middle')
@@ -6109,18 +6109,23 @@ angular
                             else if (currentData.name === "envStackPop") {
                                 
                                 var closure = currentData.data.closure;
-                                
+                                // console.log('Closure?:' + closure);
+
+                                var startHEnv = getYLocation(currentData.data.id);
+                                var endHEnv = getYLocation(currentData.data.id) + getHeight(currentData.data.id);
+
                                 if (!closure) {
                                     Snap('#link' + currentData.data.id).remove(); //delete the EP link from the viz
-                                    Snap('#text' + currentData.data.id).remove(); //delete the text associated with the EP link from the viz
+                                    //Snap('#text' + currentData.data.id).remove(); //delete the text associated with the EP link from the viz
                                     Snap('#env' + currentData.data.id).remove(); //delete the unneeded environment
                                     
+                                    totalHeight -= (endHEnv - startHEnv); //reclaim the space on the stack where the current env sat.
                                 }
                                 else {
                                     //TODO: implement the closure visualization.
                                     closureCount++;
                                     
-                                    var EP = Snap('#env' + epId);
+                                    //var EP = Snap('#env' + epId);
                                     var epId = currentData.data.epId;
                                     //var startHep = EP.transform().localMatrix.e;
                                     var startHep = getYLocation(epId); 
@@ -6132,8 +6137,10 @@ angular
                                     var childEP = currentData.data.id;
                                     //childEP.transform('translate(' + childEP.transform.localMatrix.e + ' ' + 300); //push the env out 300 units in the +x direction.
                                     setXLocation(childEP, closureCount % 2 === 0 ? -300: 300); // this determines which side of the stack the closure sits.
+
                                     
-                                    totalHeight -= (endHep - startHep); //reclaim the space on the stack where the current env--now a closure--sat.
+                                    
+                                    totalHeight -= (endHEnv - startHEnv); //reclaim the space on the stack where the current env--now a closure--sat.
                                     
                                     var xEndChildEP = getXLocation(childEP) + getWidth(childEP);
                                     
