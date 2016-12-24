@@ -20,6 +20,7 @@
 
            function Environment(scope, env, label ) {
             var self = this;
+            
             this.variables = [];
             this.values = [];
             this.id = envId++;

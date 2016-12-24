@@ -1,0 +1,40 @@
+<div ng-controller="mainController as main">
+                          <a href="#" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                            <vis-button>
+
+                            </vis-button>
+                            <animation-button>
+                                
+                            </animation-button>
+
+                            <button class="btn btn-default" ng-show="preOrder" ng-click="preOrder = !preOrder">PreOrder Traversal</button>
+
+                            <button class="btn btn-default" ng-show="!preOrder" ng-click="preOrder = !preOrder">PostOrder Traversal</button>
+                            
+                            
+                            <monaco-editor>
+                                
+                            </monaco-editor>
+                            
+                            
+                            
+                            <d3-ast data="{{main.getAST()}}" build-tree-l0 ordering="{{preOrder}}" editorcontent="{{main.getContent()}}">
+                                
+                            </d3-ast>
+                            
+                            <!--<pretty-code-l6 editorcontent="{{main.getContent()}}">
+                              
+                            </pretty-code-l6>-->
+    <!-- Menu Toggle Script -->
+    <script>
+      //wrap the Toggle Menu button in a directive that fires this script so that this template looks nicer
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled" ); //this needs to be turned off by default
+        
+    });
+    </script>
+                            
+                            
+                            
+</div>

@@ -13,7 +13,7 @@ angular
         })
         .when('/language1',
         {
-            templateUrl: './app/routes/test.html',
+            templateUrl: './app/routes/language0.html',
             
         })
         .when('/language6',

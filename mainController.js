@@ -5,12 +5,14 @@ angular
     .controller('mainController',['$scope', function($scope){
             var animationFunctionData = []; //stores objects relating
                                             //relating to animation
+
+            $scope.preOrder = false;  //this is only used by langauge 0                              
             
-            $scope.editing = true;// this determines if the editor is revealed or the pretty-printed code.
+            $scope.editing = true;// this determines if the editor or the pretty-printed code is revealed.
             
             this.editing = function(){
                 $scope.editing = !$scope.editing;
-                console.log($scope);
+                //console.log($scope);
             }
             
             this.resetAnimationData = function(){
@@ -52,7 +54,7 @@ angular
                 return $scope.index;
             }
             
-            this.animationReady = false;
+            //this.animationReady = false;
             
             $scope.index = -1; //this allows the animations to begin when the variable is incremented to 0
             
@@ -72,11 +74,11 @@ angular
                 }
             }
             
-            this.animate = function(){
-                if (animationFunctionData[$scope.index].name === "nodeTraversal") {
-                        animateNode(animationFunctionData[$scope.index].data);
-                }
-            }
+            // this.animate = function(){
+            //     if (animationFunctionData[$scope.index].name === "nodeTraversal") {
+            //             animateNode(animationFunctionData[$scope.index].data);
+            //     }
+            // }
             
             self.setContent = function(content){
              self.editorContent = content;
@@ -98,9 +100,9 @@ angular
               }
             }
             
-            this.executeAnimation = function(){
-              animationFunctionData[$scope.index]();
-            }
+            // this.executeAnimation = function(){
+            //   animationFunctionData[$scope.index]();
+            // }
             
             this.resetAnimations = function(){
                 animationFunctionData = [];
@@ -113,6 +115,8 @@ angular
             this.getAST = function(){
                 return tree;
             }
+
+            
             
             
             

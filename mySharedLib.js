@@ -39,6 +39,157 @@
     
 })();
 
+/**
+   A Tree is defined by the following grammar.
+
+     Tree ::= '(' String Tree+ ')'
+            | String
+
+   where '(' and ')' are literals, and Tree+ means "one or more".
+
+   This language also assumes that all tokens have white space around them.
+
+   The static method getTreePreOrder() is essentially a recursive descent
+   parser for this Tree langauge.
+
+   Notice that this version of BuildTree has a lot more error checking.
+*/
+
+
+(function () {
+    'use strict';
+    angular
+        .module('astInterpreter')
+        .factory('l0.buildTreeFactory', [ 'treeFactory',
+          function ( treeFactory) {
+            console.log("Hello world");
+            var Tree = treeFactory.Tree;
+            //var ParseError = parseErrorFactory.ParseError;
+
+            function BuildTree(tokenizer) { 
+                this.counter = 0;//numId should be zero-indexed not one-indexed. 8/21/16
+                this.tokens = tokenizer;
+                
+
+                this.getTreePreOrder = function() {
+                    //throws a ParseError
+
+                    var result = null; //this will be a Tree object
+
+                    if (!this.tokens.hasToken()) { // there should be another token
+
+                        throw new ParseError("unexpected end of input: " + "\n" + tokens + "\n");
+                    }
+                    var token = this.tokens.nextToken(); // consume one token
+
+                    if (token === "(") { // look for a parenthesized tree
+
+                        if (!this.tokens.hasToken()) { // there should be another token
+
+                            throw new ParseError("unexpected end of input: " + "\n" + this.tokens + "\n");
+                        }
+
+                        result = new Tree(this.tokens.nextToken()); // consume the root of the tree
+                        result.numId = this.counter++;
+
+                        result.addSubTree(this.getTreePreOrder(this.tokens));    // consume first sub tree
+
+                        if (!this.tokens.hasToken()) { // there should be another token
+                            
+                            throw new ParseError("unexpected end of input: " + "\n" + this.tokens + "\n");
+                        }
+
+                        token = this.tokens.peekToken(); //one character look ahead
+
+                        while (!(token === ")")) {
+
+                            result.addSubTree(this.getTreePreOrder(this.tokens)); // consume the sub tree
+
+                            if (!this.tokens.hasToken()) { // there should be another token
+                                
+                                throw new ParseError("unexpected end of input: " + "\n" + this.tokens + "\n");
+                            }
+                            token = this.tokens.peekToken(); //one character look ahead
+                        }
+                        this.tokens.match(")"); // consume the matching ")"
+
+                    }
+                    else {
+                        result = new Tree(token); // the tree must be just the root
+                        result.numId = this.counter++;
+                    }
+                    
+
+                    return result;
+                }; //getTreePreOrder()
+
+                
+        }
+
+        return {
+            "BuildTree": BuildTree
+        };
+    }]);
+})();
+
+(function() {
+    "use strict"
+
+    /**
+     * This object does two things: create a String
+     * of all the nodes on the tree in preOrder or
+     * postOrder and numbers the nodes accordingly 
+     * so that D3 can animate them in the correct order 
+     * as well.
+     */
+angular
+    .module('astInterpreter')
+    .factory('traverseFactory', function(){
+        function Traverse(){
+            this.counter = 0; 
+
+            this.preOrder = function(tree){
+                var result = "";
+                // "process" the root node
+                result += tree.element + " ";
+                tree.numId = this.counter++;
+                
+                // recursively traverse all the sub trees
+                for (var i = 0; i < tree.degree(); i++) {
+                    result += this.preOrder(tree.getSubTree(i));
+                }
+                
+                return result;
+            }//preOrder()
+
+            this.postOrder = function(tree) {
+                var result = "";
+                // recursively traverse all the sub trees
+                for (var i = 0; i < tree.degree(); i++) {
+                    result += this.postOrder(tree.getSubTree(i));
+                }
+                
+                // "process" the root node
+                result += tree.element + " ";
+                tree.numId = this.counter++;
+                
+                return result;
+            }//postOrder()
+        }
+
+        return {
+            'Traverse': Traverse,
+        }
+    });
+    
+    
+    
+    
+    
+    
+    
+})();
+
 (function () {
     "use strict";
 
@@ -2687,6 +2838,7 @@ angular
 
            function Environment(scope, env, label ) {
             var self = this;
+            
             this.variables = [];
             this.values = [];
             this.id = envId++;
@@ -5427,6 +5579,81 @@ angular
         }
     }]);
 })();
+
+
+(function(){
+
+    
+"use strict";
+            angular
+                .module('astInterpreter')
+                .directive('buildTreeL0', [ 'l0.buildTreeFactory','tokenizerFactory', 'traverseFactory', 
+                    function(buildTreeFactory, tokenizerFactory, traverseFactory ){
+                        
+                            return {
+                                restrict: 'A',
+                                replace: true,
+                                controller: function(){
+                                    var Tokenizer = tokenizerFactory.Tokenizer;
+                                    var BuildTree = buildTreeFactory.BuildTree;
+                                    this.Traverse = traverseFactory.Traverse;
+                                    
+                                    this.createTree = function(tkStr){
+                                        var t = new Tokenizer(tkStr);
+                                        var b = new BuildTree(t);
+                                        
+                                        return b.getTreePreOrder();
+                                    }
+                                },
+                                require: 'buildTreeL0',
+                                link: function(scope, element, attrs, buildTreeController ){
+                                    
+                                    
+                                    attrs.$observe('editorcontent', function(newContent){
+                                        var ast = buildTreeController.createTree(newContent);
+
+                                        var strResult; 
+                                        var traverse = new buildTreeController.Traverse();
+
+                                        if(!scope.preOrder){
+                                            strResult = traverse.postOrder(ast); //mutate the ast so that they are highlighted in post order
+                                            console.log(ast);
+                                        }
+                                        else{
+                                            strResult = traverse.preOrder(ast); //mutate the ast so that they are highlighted in post order
+                                            console.log(ast);
+                                        }
+                                        
+                                        console.log(strResult);
+                                        scope.main.setAST(ast);
+                                        
+                                    });
+
+                                    attrs.$observe('ordering', function(){
+                                        var ast = scope.main.getAST(); //note: the AST has not changed
+
+                                        var strResult; 
+                                        var traverse = new buildTreeController.Traverse();
+
+                                        if(!scope.preOrder){
+                                            strResult = traverse.postOrder(ast); //mutate the ast so that they are highlighted in post order
+                                            console.log(ast);
+                                        }
+                                        else{
+                                            strResult = traverse.preOrder(ast); //mutate the ast so that they are highlighted in post order
+                                            console.log(ast);
+                                        }
+                                        
+                                        console.log(strResult);
+                                        scope.main.setAST(ast);
+                                        
+                                    });
+                                }
+                            };
+            }]);
+            
+})();
+
 
 
 (function(){
