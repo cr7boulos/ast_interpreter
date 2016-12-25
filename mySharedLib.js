@@ -135,26 +135,20 @@
 (function() {
     "use strict"
 
-    /**
-     * This object does two things: create a String
-     * of all the nodes on the tree in preOrder or
-     * postOrder and numbers the nodes accordingly 
-     * so that D3 can animate them in the correct order 
-     * as well.
-     */
+   
 angular
     .module('astInterpreter')
     .factory('traverseFactory', function(){
         function Traverse(scope){
             var traverseColor = "#14A84A"; // defualt color to use when highlighting the current node or: "#14A84A" "#3885A8"
-            var id = 0; //used for the animation of nodes      //color codes from http://color.adobe.com  //^green   ^light-blue
+                                                              //color codes from http://color.adobe.com  //^green   ^light-blue
             
 
             this.preOrder = function(tree){
                 var result = "";
                 // "process" the root node
                 result += tree.element + " ";
-                tree.numId = id++;
+                
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
@@ -162,8 +156,7 @@ angular
                         'node': tree.element,
                     }
                 });
-                //  console.log(tree.element);
-                // console.log(id);
+               
                 // recursively traverse all the sub trees
                 for (var i = 0; i < tree.degree(); i++) {
                     result += this.preOrder(tree.getSubTree(i));
@@ -181,7 +174,7 @@ angular
                 
                 // "process" the root node
                 result += tree.element + " ";
-                //tree.numId = id++;
+                
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
                         'id': tree.numId,
@@ -189,8 +182,7 @@ angular
                         'node': tree.element,
                     }
                 });
-                // console.log(tree.element);
-                // console.log(id);
+                
                 
                 return result;
             }//postOrder()
@@ -5995,6 +5987,11 @@ console.log(source);
                 
                     
                 //handles animation of the generated ast diagram.
+
+                scope.$watch("preOrder", function(){
+                    d3.selectAll(".nodeCircle") //removes all previous 
+                     .style("fill", "#fff"); //formatting by coloring all nodes white
+                });
                 
                 scope.$watch("index", function(){
                  var currentData = scope.main.getCurrentAnimObject();
@@ -6011,19 +6008,17 @@ console.log(source);
                 }, true);
                 
                 scope.$watch("editing", function(newValue, oldValue){
-                    if (!scope.editing) {
-                        $(document).ready(function(){
-                            d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
-                                              
-                                              (angular.element(window)[0].innerWidth * 0.05) - 10);
-                            
-                        });
+                    if (scope.editing) {
                         
-                    }
-                    else{
                         $(document).ready(function(){
                             d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
                                               document.getElementById('editor').offsetWidth - 5);
+                            
+                        });
+                    }
+                    else{
+                        $(document).ready(function(){
+                            d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth);
                             
                         });
                         

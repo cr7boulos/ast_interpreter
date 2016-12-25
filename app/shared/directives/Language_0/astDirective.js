@@ -393,6 +393,11 @@ console.log(source);
                 
                     
                 //handles animation of the generated ast diagram.
+
+                scope.$watch("preOrder", function(){
+                    d3.selectAll(".nodeCircle") //removes all previous 
+                     .style("fill", "#fff"); //formatting by coloring all nodes white
+                });
                 
                 scope.$watch("index", function(){
                  var currentData = scope.main.getCurrentAnimObject();
@@ -409,19 +414,17 @@ console.log(source);
                 }, true);
                 
                 scope.$watch("editing", function(newValue, oldValue){
-                    if (!scope.editing) {
-                        $(document).ready(function(){
-                            d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
-                                              
-                                              (angular.element(window)[0].innerWidth * 0.05) - 10);
-                            
-                        });
+                    if (scope.editing) {
                         
-                    }
-                    else{
                         $(document).ready(function(){
                             d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
                                               document.getElementById('editor').offsetWidth - 5);
+                            
+                        });
+                    }
+                    else{
+                        $(document).ready(function(){
+                            d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth);
                             
                         });
                         
