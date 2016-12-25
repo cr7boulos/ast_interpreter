@@ -14,12 +14,12 @@
 
 angular
     .module('astInterpreter')
-    .directive('d3Ast', /*Inject dependencies here*/ ['ast2JsonFactory',
+    .directive('d3AstL0', /*Inject dependencies here*/ ['ast2JsonFactory',
         function( ast2JsonFactory){
         return {
             restrict: 'E',
             replace: true,
-            template: '<div id="ast" class="astLanguage-6_8"></div>',
+            template: '<div id="ast" class="astLanguage-0"></div>',
             
             link: function(scope, element, attrs){
 
@@ -412,8 +412,7 @@ console.log(source);
                     if (!scope.editing) {
                         $(document).ready(function(){
                             d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
-                                              //document.getElementById('prettyCode').offsetWidth - this might be wrong
-                                              document.getElementById('envBase').offsetWidth -
+                                              
                                               (angular.element(window)[0].innerWidth * 0.05) - 10);
                             
                         });
@@ -422,9 +421,7 @@ console.log(source);
                     else{
                         $(document).ready(function(){
                             d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
-                                              document.getElementById('editor').offsetWidth -
-                                              document.getElementById('envBase').offsetWidth -
-                                              (angular.element(window)[0].innerWidth * 0.05) - 10);
+                                              document.getElementById('editor').offsetWidth - 5);
                             
                         });
                         
@@ -437,16 +434,11 @@ console.log(source);
                     if (scope.editing) {
                         
                         d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
-                                              document.getElementById('editor').offsetWidth -
-                                              document.getElementById('envBase').offsetWidth -
-                                              (angular.element(window)[0].innerWidth * 0.05) - 5);
+                                              document.getElementById('editor').offsetWidth - 5);
                     }
                     else{
                         
-                        d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth -
-                                              
-                                              document.getElementById('envBase').offsetWidth -
-                                              (angular.element(window)[0].innerWidth * 0.05) - 5);
+                        d3.select('#astSvg').attr('width', angular.element(window)[0].innerWidth );
                        
                     }
                     

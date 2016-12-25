@@ -29,14 +29,17 @@
                                     attrs.$observe('editorcontent', function(newContent){
                                         var ast = buildTreeController.createTree(newContent);
 
-                                        var strResult; 
-                                        var traverse = new buildTreeController.Traverse();
+                                        var strResult;
+                                        var Traverse =  buildTreeController.Traverse;
+                                        var traverse = new Traverse(scope);
 
                                         if(!scope.preOrder){
+                                            scope.main.resetAnimationData();//clear out all previous animations
                                             strResult = traverse.postOrder(ast); //mutate the ast so that they are highlighted in post order
                                             console.log(ast);
                                         }
                                         else{
+                                            scope.main.resetAnimationData();//clear out all previous animations
                                             strResult = traverse.preOrder(ast); //mutate the ast so that they are highlighted in post order
                                             console.log(ast);
                                         }
@@ -50,18 +53,22 @@
                                         var ast = scope.main.getAST(); //note: the AST has not changed
 
                                         var strResult; 
-                                        var traverse = new buildTreeController.Traverse();
+                                        var Traverse =  buildTreeController.Traverse;
+                                        var traverse = new Traverse(scope);
 
                                         if(!scope.preOrder){
+                                            scope.main.resetAnimationData();//clear out all previous animations
                                             strResult = traverse.postOrder(ast); //mutate the ast so that they are highlighted in post order
                                             console.log(ast);
                                         }
                                         else{
+                                            scope.main.resetAnimationData();//clear out all previous animations
                                             strResult = traverse.preOrder(ast); //mutate the ast so that they are highlighted in post order
                                             console.log(ast);
                                         }
                                         
                                         console.log(strResult);
+                                        
                                         scope.main.setAST(ast);
                                         
                                     });

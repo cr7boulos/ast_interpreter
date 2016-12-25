@@ -7,9 +7,9 @@
                                 
                             </animation-button>
 
-                            <button class="btn btn-default" ng-show="preOrder" ng-click="preOrder = !preOrder">PreOrder Traversal</button>
+                            <button class="btn btn-default" ng-show="preOrder" ng-click="preOrder = !preOrder;main.resetIndex()">PreOrder Traversal</button>
 
-                            <button class="btn btn-default" ng-show="!preOrder" ng-click="preOrder = !preOrder">PostOrder Traversal</button>
+                            <button class="btn btn-default" ng-show="!preOrder" ng-click="preOrder = !preOrder;main.resetIndex()">PostOrder Traversal</button>
                             
                             
                             <monaco-editor>
@@ -18,9 +18,9 @@
                             
                             
                             
-                            <d3-ast data="{{main.getAST()}}" build-tree-l0 ordering="{{preOrder}}" editorcontent="{{main.getContent()}}">
+                            <d3-ast-l0 data="{{main.getAST()}}" build-tree-l0 ordering="{{preOrder}}" editorcontent="{{main.getContent()}}">
                                 
-                            </d3-ast>
+                            </d3-ast-l0>
                             
                             <!--<pretty-code-l6 editorcontent="{{main.getContent()}}">
                               
