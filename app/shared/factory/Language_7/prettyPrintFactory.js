@@ -59,10 +59,15 @@ angular
                     }
                     else if (tree.element === "lambda") {
                         result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
-                        for (var t = 0; t < tree.degree() - 1; t++) {
-                            result += prettyPrint2(" ", tree.getSubTree(t));
+                        result += " ( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.getSubTree(0).element + "</span>";
+                        for (var t = 0; t < tree.getSubTree(0).degree(); t++) {
+                            result += prettyPrint2(" ", tree.getSubTree(0).getSubTree(t));
                         }
-                        result += "\n" + prettyPrint2(formatting + "    ", tree.getSubTree(tree.degree() - 1));
+                        result += " )"; // right parenthesis for the formal arguments
+                        for( var l = 1; l < tree.degree(); l++) {
+                            result += "\n" + prettyPrint2(formatting + "    ", tree.getSubTree(l));
+                        }
+                        
                         return result + "\n" + formatting + ")";
                     }
                     else if (tree.element == "apply") {

@@ -373,11 +373,25 @@
             // the number of actual parameters is at least
             // the number of formal parameters.)
 
-            if (tree.degree() !== lambda.degree()) {
-                //runtime check
-
-                throw new evalerror("wrong number of parameters: " + tree);
+            if(lambda.getSubTree(0).element === '@'){ // the function has formal parameters
+                
+                if(lambda.getSubTree(0).degree() !== tree.degree() - 1){
+                    //runtime check
+                    throw new EvalError("wrong number of parameters: " + tree);
+                }
             }
+            else { // there are no formal parameters
+                if(0 !== tree.degree() - 1){
+                    //runtime check
+                    throw new EvalError("wrong number of parameters: " + tree);
+                }
+            }
+
+            // if (tree.degree() !== lambda.degree()) {
+            //     //runtime check
+
+            //     throw new evalerror("wrong number of parameters: " + tree);
+            // }
 
             // Create a new environment object that is "nested"
             // in the global environment (lexical scope).
@@ -405,14 +419,22 @@
                 /*4*/
                 var actualParamValue = this.evaluateExp(tree.getSubTree(zz));
 
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                        data: {
+                            'id': lambda.getSubTree(0).numId,
+                            'color': traverseColor,
+                            'node': lambda.getSubTree(0).element,
+                        },
+                });
+
                 // Retrieve, from within the lambda expression,
                 // a formal parameter name.
                 /*5*/
-                var formalParamName = lambda.getSubTree(zz - 1).element;
+                var formalParamName = lambda.getSubTree(0).getSubTree(zz - 1).element;
                 //emit a "nodeTraversal" event
                 scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
-                            'id': lambda.getSubTree(zz - 1).numId,
+                            'id': lambda.getSubTree(0).getSubTree(zz - 1).numId,
                             'color': traverseColor,
                             'node': formalParamName,
                         },
@@ -440,7 +462,13 @@
             this.env = localEnv;
 
             /*9*/
-            var result = this.evaluateExp(lambda.getSubTree(tree.degree() - 1));
+            for(var args = 1; args < lambda.degree(); args++){
+                //note: we are discarding all but the last
+                //expression's return value (if it has one) similar to the
+                //begin statement.
+                var result = this.evaluateExp(lambda.getSubTree(args));
+            }
+            
 
             // Finally, restore the environment chain.
             /*10*/
