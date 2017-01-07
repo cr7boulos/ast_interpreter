@@ -7,23 +7,23 @@
                             restrict: 'E',
                             replace: true,
                             require: 'prettyCodeL8',
-                            template: '<div id="prettyCode" ng-show="!editing"><pre id="pCode"></pre></div>',
+                            template: '<div id="prettyCode" ng-show="!editing"><pre class="pre-scrollable-l8"></pre></div>',
                             controller: function($scope){
                                 //this.prettyCode = prettyPrinterFactory.prettyPrint($scope.main.getContent());
                             },
                             
                             link: function(scope, element, attrs, pController){
                                 scope.prettyCode = "";
-                                if(scope.editing){
+                               if(scope.editing){
                                     attrs.$observe('editorcontent', function(newContent){
                                         console.log(scope.main.getAST());
-                                        angular.element('#pCode')[0].innerHTML = prettyPrinterFactory.prettyPrint(scope.main.getAST());
+                                        angular.element('.pre-scrollable-l8')[0].innerHTML = prettyPrinterFactory.prettyPrint(scope.main.getAST());
                                         // I could use the $compile service in angular to build the HTML string...
                                         
                                     });
                                 
                                     //console.log(scope);
-                                }
+                               }
                                 
                                 scope.$watch('index', function(newValue){
                                         if (!scope.editing) {

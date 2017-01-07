@@ -6,7 +6,7 @@
                 return {
                     'restrict': 'E',
                     'replace': true,
-                    'template': '<div id="envBase"><svg id="sBase" viewBox="0 0 150 300"></svg></div>',
+                    'template': '<div id="envBase" class="envBase-l0-l9"><svg id="sBase" viewBox="0 0 150 300"></svg></div>',
                     'link': function(scope, element, attrs ){
                         
                         var envCount = 0;

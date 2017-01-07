@@ -38,7 +38,7 @@
                                     
                                     attrs.$observe('editorcontent', function(newContent){
                                         scope.main.setAST(buildTreeController.createTree(newContent));
-                                        
+                                        console.log(scope.main.getAST());
                                     });
                                 }
                             };
