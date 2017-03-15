@@ -21,7 +21,7 @@
         var self = this;
         this.globalEnv = null;
         this.env = null;
-        var traverseColor = "#14A84A"; // defualt color to use when highlighting the current node or: "#14A84A" "#3885A8"
+        var traverseColor = "#14A84A"; // default color to use when highlighting the current node or: "#14A84A" "#3885A8"
         var id = 0; //used for the animation of nodes      //color codes from http://color.adobe.com  //^green   ^light-blue
         this.evaluate = function (tree) {
             //throws EvalError

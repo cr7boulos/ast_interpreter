@@ -1,0 +1,9 @@
+( prog 
+	( var w 10 ) 
+	( fun f ( lambda x ( * x x ) ) ) 
+	( var z ( begin 
+				( begin 
+					( set x w ) 
+					( apply f ( + x y ) ) ) ) ) ) 
+					z 
+)
