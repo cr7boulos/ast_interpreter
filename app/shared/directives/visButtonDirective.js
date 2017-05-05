@@ -16,7 +16,25 @@
             return {
                 restrict: 'E',
                 replace: true,
-                template: '<button class="btn btn-default" ng-click="mco.save();main.resetIndex();editing = !editing">Visualize program</button>',
+                controller: function($scope){
+                     $scope.text = 'Visualize Program';
+
+                     $scope.$watch('editing', function(newVal, oldVal){
+                        
+                        if(newVal){
+                            //currently in edit mode
+                            $scope.text = 'Visualize Program';
+                        }
+                        else{
+                            //we are not editing
+                            $scope.text = 'Edit Code';
+                        }
+                        
+                    });
+                },
+                template: '<button class="btn btn-default" ng-click="mco.save();main.resetIndex();editing = !editing">{{text}}</button>',
+                
+                
             }
         });
 
