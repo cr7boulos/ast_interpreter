@@ -173,6 +173,7 @@
             this.hasToken = function () {
                 return (this._currentToken < this._tokens.length);
             }
+			
 			/*
             * Returns false if all, or all but one, of the tokens have been "consumed".
             */  
