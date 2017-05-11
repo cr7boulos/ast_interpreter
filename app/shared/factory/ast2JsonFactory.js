@@ -14,7 +14,7 @@
                 // instance of a Tree object; it has been converted to 
                 // JSON and thus has all the relevant data intact just without
                 // the associated methods. At this point, however, the methods are no
-                // longer needed. We traverse the data and return the an object
+                // longer needed. We traverse the data and return an object
                 // that will be consumed by D3.
 
                 var obj = {};

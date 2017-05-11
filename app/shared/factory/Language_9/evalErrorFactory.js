@@ -3,7 +3,7 @@
 
     angular
         .module('astInterpreter')
-        .factory('l8.evalErrorFactory', function(){
+        .factory('l9.evalErrorFactory', function(){
             
 
             //the basic structure of these Errors follows

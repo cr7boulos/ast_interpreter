@@ -15,7 +15,7 @@
     "use strict";
     angular
         .module('astInterpreter')
-        .factory('l8.environmentFactory', function () {
+        .factory('l9.environmentFactory', function () {
            var envId = 0;
 
            function Environment(scope, env, label ) {

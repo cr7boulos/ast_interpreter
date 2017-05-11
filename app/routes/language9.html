@@ -1,0 +1,39 @@
+<div ng-controller="mainController as main">
+                          <a href="#" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                            <vis-button>
+
+                            </vis-button>
+                            <animation-button>
+                                
+                            </animation-button>
+                            
+                            <env-svg-l9>
+                              
+                            </env-svg-l9>
+                            <monaco-editor>
+                                
+                            </monaco-editor>
+                            
+                            
+                            
+                            <!--<d3-ast evaluate-l8 data="{{main.getAST()}}" build-tree-l8 editorcontent="{{main.getContent()}}">
+                                
+                            </d3-ast>-->
+                            <div evaluate-l9 data="{{main.getAST()}}" build-tree-l9 editorcontent="{{main.getContent()}}"></div>
+                            
+                            <pretty-code-l9    editorcontent="{{main.getContent()}}">
+                              
+                            </pretty-code-l9>
+    <!-- Menu Toggle Script -->
+    <script>
+      //wrap the Toggle Menu button in a directive that fires this script so that this template looks nicer
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled" ); //this needs to be turned off by default
+        
+    });
+    </script>
+                            
+                            
+                            
+</div>

@@ -1,7 +1,7 @@
 (function () {
    "use strict"; 
    angular.module('astInterpreter')
-        .factory('tokenizerFactory', function () {
+        .factory('l9.tokenizerFactory', function () {
            
 
             function Tokenizer(str) {
@@ -14,6 +14,7 @@
             this._LETTER = 0;
             this._UNKNOWN = 99;
             this._WHITESPACE = 101;
+            this._EQOP = 102; //since equality is a double-character operand it needs to be handled seperately
             this._EOI = 100; //End of Input
 
             this._charClass = 0; //used for determining what kind of character we are working with.
@@ -46,6 +47,9 @@
                     }
                     else if(this._currentChar.match(/\s/)){
                         this._charClass = this._WHITESPACE;
+                    }
+                     else if(this._currentChar.match(/=/)){
+                        this._charClass = this._EQOP;
                     }
                     else{
                         this._charClass = this._UNKNOWN;
@@ -117,11 +121,25 @@
                             this._lexeme = ""; //reset the variable in preparation for building the next lexeme. 
                             break;
 
+                        case this._EQOP:
+                            this._addChar();
+                            this._getChar();
+                            while(this._charClass == this._EQOP){
+                                this._addChar();
+                                this._getChar();
+                            }
+                            this._tokens.push(this._lexeme); //add the lexeme we have created to the array
+                            //console.log(this._tokens);
+
+                            //always remember to execute the following line!!!
+                            this._lexeme = ""; //reset the variable in preparation for building the next lexeme. 
+                            break;
+
                             case this._WHITESPACE:
                                 this._getChar();
                                 break;
 
-                        //Parentheses and operands
+                        //Parentheses and single-character operands
                         case this._UNKNOWN:
                             this._addUnknown();
                             this._getChar();

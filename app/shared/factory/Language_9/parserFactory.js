@@ -6,6 +6,7 @@
               | '(' 'prog' Exp+ Exp ')'
 
         Exp ::= Fun
+              | Lambda
               | Apply
               | If
               | While
@@ -64,7 +65,7 @@
     //TODO: turn the parser into an object!!
     angular
         .module('astInterpreter')
-        .factory('l8.parserFactory', ['l8.tokenizerFactory', 'l8.treeFactory', 'l8.parseErrorFactory', function(tokenizerFactory, treeFactory, parseFactory){
+        .factory('l9.parserFactory', ['l9.tokenizerFactory', 'l9.treeFactory', 'l9.parseErrorFactory', function(tokenizerFactory, treeFactory, parseFactory){
             console.log('Parser loaded in angular');
             
             var Tokenizer = tokenizerFactory.Tokenizer;
@@ -82,6 +83,8 @@
                     
                     var tokens = new Tokenizer(expStr); // Tokenizer is defined
                                                         // in Tokenizer.js
+                    console.log("Lang 9 token stream:");
+                    console.log(tokens._tokens);
                     var result = this.getProg(tokens); // parse the token stream
                     
                     if (tokens.hasToken()) {
@@ -222,6 +225,9 @@
         
                     if (tk === "fun") {
                         result = this.getFun(tokens);
+                    }
+                    else if (tk === "lambda") {
+                        result = this.getLambda(tokens);
                     }
                     else if (tk === "apply") {
                         result = this.getApply(tokens);

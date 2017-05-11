@@ -3,7 +3,7 @@
 
     angular
     .module('astInterpreter')
-    .factory('l8.evaluateFactory', 
+    .factory('l9.evaluateFactory', 
     [ 'l8.environmentFactory',
          'l8.valueFactory', 'l8.evalErrorFactory', 'l8.IPEPFactory', 
         function(environmentFactory, valueFactory, evalErrorFactory, IPEPFactory) {
@@ -190,6 +190,16 @@
                     },
                 });
                 result = this.evaluateFun(tree);
+            }
+            else if (node === "lambda") {
+                scope.main.addAnimationData({'name': "nodeTraversal",
+                    data: {
+                        'id': tree.numId,
+                        'color': traverseColor,
+                        'node': node,
+                    },
+                });
+                result = this.evaluateLambda(tree);
             }
             else if (node === "apply") {
                 scope.main.addAnimationData({'name': "nodeTraversal",
@@ -381,10 +391,10 @@
             is called.
         */
         this.evaluateFun = function (tree){
-            /**** Language_8 change (1) ***/
+            /**** Language_9 change (1) ***/
             //throws EvalError
     
-            var result = null; /*** Language_8 change (2) ***/
+            var result = null; /*** Language_9 change (2) ***/
     
             // get the function name
             var name = tree.getSubTree(0).element;
@@ -407,22 +417,38 @@
             if (!(lambda.element === "lambda")) {
                 throw new EvalError("bad function definition: " + tree);
             }
-            // get a reference to the current local Environment object (the function's EP)
-            var ep = this.env; /*** Language_8 change (3) ***/
-            // create an IPEP object (a closure)
-            var ipep = new IPEP(lambda, ep); /*** Language_8 change (4) ***/
-            // create the return value
-            result = new Value(ipep);           /*** Language_8 change (5) ***/
+            
+            result = this.evaluateLambda(lambda);
             // add the <name, value> pair to the environment
-            this.env.add(name, result);              /*** Language_8 change (6) ***/
+            this.env.add(name, result);              /*** Language_9 change (6) ***/
             
             //if (DEBUG > 0) {
             //    // for debugging purposes
             //    document.body.innerHTML += "<pre>" + env + "</pre>";
             //}
     
-            return result;   /*** Language_8 change (7) ***/
+            return result;   /*** Language_9 change (7) ***/
         }//evaluateFun()
+
+        this.evaluateLambda = function(tree){
+            //throws EvalError
+
+            var result = null;
+            // get the "lambda expression" (the function's IP)
+            var lambda = tree;
+            // check if the definition really is a function
+            if (!(lambda.element === "lambda")) {
+                throw new EvalError("bad function definition: " + tree);
+            }
+            // get a reference to the current local Environment object (the function's EP)
+            var ep = this.env; /*** Language_9 change (3) ***/
+            // create an IPEP object (a closure)
+            var ipep = new IPEP(lambda, ep); /*** Language_9 change (4) ***/
+            // create the return value
+            result = new Value(ipep);           /*** Language_9 change (5) ***/
+
+            return result;
+        }
         
 
         /**

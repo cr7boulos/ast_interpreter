@@ -3,7 +3,7 @@
 'use strict';
 angular
         .module('astInterpreter')
-        .factory('l8.prettyPrinterFactory', function () {
+        .factory('l9.prettyPrinterFactory', function () {
             
             var counter = 0;
 

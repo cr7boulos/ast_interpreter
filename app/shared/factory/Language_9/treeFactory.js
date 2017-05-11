@@ -2,7 +2,7 @@
    "use strict"; 
 
    angular.module('astInterpreter')
-   .factory('l8.treeFactory', function(){
+   .factory('l9.treeFactory', function(){
        
        function Tree(element) {
             this.element = element;

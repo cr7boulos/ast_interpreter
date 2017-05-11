@@ -2,7 +2,7 @@
     'use strict';
     
     angular.module('astInterpreter')
-        .factory('l8.IPEPFactory', function(){
+        .factory('l9.IPEPFactory', function(){
             
             /*
                 Construct a IPEP object
