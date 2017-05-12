@@ -2,7 +2,7 @@
 "use strict";
             angular
                 .module('astInterpreter')
-                .directive('prettyCodeL10', ['l8.prettyPrinterFactory' , '$compile', function(prettyPrinterFactory, /** unused */ $compile ){
+                .directive('prettyCodeL10', ['l10.prettyPrinterFactory' , '$compile', function(prettyPrinterFactory, /** unused */ $compile ){
                         return {
                             restrict: 'E',
                             replace: true,

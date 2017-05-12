@@ -1804,7 +1804,7 @@ angular
 'use strict';
 angular
         .module('astInterpreter')
-        .factory('l9.prettyPrinterFactory', function () {
+        .factory('l10.prettyPrinterFactory', function () {
             
             var counter = 0;
 
@@ -1917,6 +1917,7 @@ angular
                             tree.element === "<"  ||
                             tree.element === "<=" ||
                             tree.element === ">"  ||
+                            tree.element === "empty?"  ||
                             tree.element === ">=" ){
                         if (tree.depth() > 2) {
                             result += formatting + "( " + "<span class='pNode' id='spn" + counter++ + "'>" + tree.element + "</span>";
@@ -11723,7 +11724,7 @@ angular
 "use strict";
             angular
                 .module('astInterpreter')
-                .directive('prettyCodeL10', ['l8.prettyPrinterFactory' , '$compile', function(prettyPrinterFactory, /** unused */ $compile ){
+                .directive('prettyCodeL10', ['l10.prettyPrinterFactory' , '$compile', function(prettyPrinterFactory, /** unused */ $compile ){
                         return {
                             restrict: 'E',
                             replace: true,
