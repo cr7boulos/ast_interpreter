@@ -14,7 +14,7 @@
 "use strict";
             angular
                 .module('astInterpreter')
-                .directive('buildTreeL10', [ 'l10.buildTreeFactory', 'tokenizerFactory', function(buildTreeFactory, tokenizerFactory){
+                .directive('buildTreeL10', [ 'l10.buildTreeFactory', 'l10.tokenizerFactory', function(buildTreeFactory, tokenizerFactory){
                         
                         // console.log('Parser required');
                         

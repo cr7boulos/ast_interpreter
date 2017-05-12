@@ -1962,7 +1962,7 @@ angular
 (function () {
    "use strict"; 
    angular.module('astInterpreter')
-        .factory('l9.tokenizerFactory', function () {
+        .factory('l10.tokenizerFactory', function () {
            
 
             function Tokenizer(str) {
@@ -2000,7 +2000,9 @@ angular
                 if(this._currentIndex < this._rawString.length){
                     this._currentChar = this._rawString[this._currentIndex++];
 
-                    if(this._currentChar.match(/[A-Za-z]/)){
+                    // nice cheat sheet for RegEx: http://www.rexegg.com/regex-quickstart.html
+                    // for Lang 10 we need to catch the "empty?" token. 
+                    if(this._currentChar.match(/[A-Za-z]|\?/)){
                         this._charClass = this._LETTER;
                     }
                     else if(this._currentChar.match(/\d/)){
@@ -11239,7 +11241,7 @@ console.log(source);
 "use strict";
             angular
                 .module('astInterpreter')
-                .directive('buildTreeL10', [ 'l10.buildTreeFactory', 'tokenizerFactory', function(buildTreeFactory, tokenizerFactory){
+                .directive('buildTreeL10', [ 'l10.buildTreeFactory', 'l10.tokenizerFactory', function(buildTreeFactory, tokenizerFactory){
                         
                         // console.log('Parser required');
                         
