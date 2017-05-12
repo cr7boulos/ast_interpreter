@@ -1,0 +1,27 @@
+Should the definition of "fun" be changed to allow the following code:
+
+( prog 
+    
+	( var t 45)
+    
+	(fun g (lambda n (if (== 0 (% n 2))
+                        
+				(lambda x (+ x 1))
+                        
+				(lambda x (+ x 2))
+                     
+			     )
+            
+			 )
+  
+	)
+    	
+	// currently the line below does not work
+	(fun x (apply g t))
+ 
+	// this works though: 
+	// (var x (apply g t))
+   
+	( var z (apply x t))
+
+)

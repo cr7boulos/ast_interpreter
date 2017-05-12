@@ -1,0 +1,26 @@
+target program: the program being interpreted
+
+delete references to classroom
+
+stack frame should be called enviroments
+
+google escape analysis
+
+program "command" should be replaced with program expressions and statements
+
+this language everything is an expression.
+
+tokenizer delimited by whitespace not a blank space
+
+Data structure tranformations:
+list of characters
+list of tokens
+tree of tokens
+
+google compiler profiling
+
+add a code example for the square and circke
+
+global environment apearing the the top of the picuture/depiction
+
+instance of a function

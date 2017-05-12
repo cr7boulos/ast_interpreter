@@ -1,7 +1,7 @@
 (function () {
    "use strict"; 
    angular.module('astInterpreter')
-        .factory('tokenizerFactory', function () {
+        .factory('l9.tokenizerFactory', function () {
            
 
             function Tokenizer(str) {

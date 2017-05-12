@@ -36,6 +36,11 @@ angular
             templateUrl: './app/routes/language9.html',
             
         })
+        .when('/language10',
+        {
+            templateUrl: './app/routes/language10.html',
+            
+        })
         .otherwise(
         {
             template: '<h1>Something is wrong<h1>',
