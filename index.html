@@ -95,9 +95,13 @@
             clear: right;
             right: 50px;
             padding-top: 10px;
-            overflow: auto;
-            
-            height: 100%;
+            overflow-x: auto;
+            overflow-y: scroll;
+            /*
+                hard code the height so that the svg overflox will scroll
+                see this SO post: http://stackoverflow.com/a/29747938
+            */
+            height: 500px;
         }
 
         .envBase-l0-l9{
@@ -106,6 +110,8 @@
         
         .envBase-l8{
             width:50%;
+            overflow-x: auto;
+            overflow-y: scroll;
         }
         
         
