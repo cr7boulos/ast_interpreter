@@ -9,6 +9,10 @@ angular
             $scope.preOrder = false;  //this is only used by langauge 0                              
             
             $scope.editing = true;// this determines if the editor or the pretty-printed code is revealed.
+
+            $scope.language = 7; //set the default language setting here; will be used 
+                                 // by the editor directive to dynamically render
+                                 // various code examples
             
             this.editing = function(){
                 $scope.editing = !$scope.editing;

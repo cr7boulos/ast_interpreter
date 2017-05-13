@@ -7414,6 +7414,7 @@ angular
                     }
                     else if(this._currentChar.match(/\d/)){
                         this._charClass = this._DIGIT;
+                        //Used this SO post on Regex for matching +/- numbers: http://stackoverflow.com/a/15814655
                     }
                     else if(this._currentChar.match(/\s/)){
                         this._charClass = this._WHITESPACE;

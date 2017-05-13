@@ -138,16 +138,51 @@ angular
                         });
                         //end copied code
                         console.log(element);
+                        var langExample = "";
+                        switch (scope.language){
+                            case 6:
+                                langExample = "( prog \n\t" +
+                                "( var i 5 ) \n\t" +
+                                "( while ( > i 0 ) \n\t\t" +
+                                "( set i ( - i 1 ) ) ) \n)";
+                                break;
+                            case 7:
+                                langExample = "( prog \n\t" +
+                                "( var w 10 ) \n\t" +
+                                "( fun f ( lambda x ( * x x ) ) ) \n\t" +
+                                "( var z ( begin \n\t\t\t\t" +
+                                            "( var x 0 ) \n\t\t\t\t" +
+                                            "( begin ( var y 2 ) \n\t\t\t\t" +
+                                                    "( begin \n\t\t\t\t\t" +
+                                                    "( set x w ) \n\t\t\t\t\t" +
+                                                    "( apply f ( + x y ) ) ) ) ) ) " + "z \n)";
+                                break;
+                            case 8:
+                                langExample = "( prog\n\t" +
+                                "( var x 100 ) \n\t" +
+                                "( fun f ( lambda x ( begin \n\t\t\t" +
+                                                        "( fun g ( lambda y ( + y x ) ) ) \n\t\t\t" +
+                                                        "g ) ) ) \n\t" +  // return g
+                                "(var t ( apply ( apply f 5 ) 100 ))\n)";
+                                break;
+                            case 9:
+                                langExample = "( prog \n\t" +
+                                "( fun g ( lambda h ( apply h 5 ) ) ) \n\t" +
+                                "(var y ( apply g ( lambda x ( * x x ) ) ) ) \n)";
+                                break;
+                            case 10:
+                                langExample = "( prog\n\t" +
+                                "( fun reduce \n\t\t" +
+                                    "( lambda  op lst \n\t\t" +  // op is a function, lst is a non-empty list
+                                        "( if ( empty? ( cdr lst ) ) \n\t\t\t" +
+                                            "( car lst ) \n\t\t\t" +
+                                            "( apply op ( car lst ) ( apply reduce op ( cdr lst ) ) ) ) ) ) \n\t" +
+                                "( var x ( apply reduce ( lambda x y ( + x y ) ) ( list 1 2 3 4 5 6 7 ) ) ) \n\t" +
+                                "( var y ( apply reduce ( lambda x y ( * x y ) ) ( list 1 2 3 4 5 6 7 ) ) ) \n)";
+                                break;
+                        }
                         mController.editor = monaco.editor.create(element[0] /*the editor is the second element of the  nested <div>*/, {
-                            value: "( prog \n\t" +
-           "( var w 10 ) \n\t" +
-           "( fun f ( lambda x ( * x x ) ) ) \n\t" +
-           "( var z ( begin \n\t\t\t\t" +
-                     "( var x 0 ) \n\t\t\t\t" +
-                     "( begin ( var y 2 ) \n\t\t\t\t" +
-                            "( begin \n\t\t\t\t\t" +
-                               "( set x w ) \n\t\t\t\t\t" +
-                               "( apply f ( + x y ) ) ) ) ) ) " + "z \n)",
+                            value: langExample,
                             language: 'myCustomLanguage'
                         });
 
