@@ -177,6 +177,9 @@
 
             var node = tree.element;
 
+            console.log("This is the current node:");
+            console.log(node);
+
             if (node === "apply") {
                 scope.main.addAnimationData({'name': "nodeTraversal",
                     data: {
@@ -303,7 +306,9 @@
                     });
                     result = new Value(node === "true");
                 }
-                else if (node.match(/^[-]*[0-9][0-9]*/)) {
+                
+                else if (node !== undefined && node.match(/^[-]*[0-9][0-9]*/)) {
+                    
                     //emit "nodeTraversal" event
                     scope.main.addAnimationData({'name': "nodeTraversal",
                         data: {
@@ -591,6 +596,14 @@
             // Evaluate the last expression and use its
             // value as the value of the begin expression.
             result = this.evaluateExp(tree.getSubTree(tree.degree() - 1));
+			scope.main.addAnimationData({'name': "envStackPop",
+                    data: {
+                        'id': self.env.id,
+                        'label': self.env.label,
+                        'closure': result.tag === 'lambda',
+                        'epId': result.tag === 'lambda' ? previousEnv.id : null,
+                    }
+            });												   
 
             this.env = previousEnv;  // Just before this method returns, we remove from the
             // chain of Environment objects the local Environment

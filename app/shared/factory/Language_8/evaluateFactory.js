@@ -180,6 +180,9 @@
             var result = null;
 
             var node = tree.element;
+
+            console.log("This is the current node:");
+            console.log(node);
             
             if (node === "fun") {
                 scope.main.addAnimationData({'name': "nodeTraversal",
