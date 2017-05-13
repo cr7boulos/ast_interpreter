@@ -3298,8 +3298,6 @@ angular
 
     angular.module('astInterpreter')
         .factory('l6.valueFactory', function () {
-            
-
 
             function Value(value) {
 
@@ -3325,9 +3323,6 @@ angular
                     console.log(value);
                 }
             
-            
-
-        
                 this.toString = function () {
                     var result = "";
 
@@ -10457,10 +10452,13 @@ angular
                         var varAddedHeight = 25; //extention of the length of an environment when a new variable is pushed to it.
                         
                         function pushTriangles(currentEnv, count) {
-                            while (currentEnv < count) {
+                            //there are one fewer triangle pointers than there are environments
+                            while (currentEnv < count - 1) {
+                                console.log("Current triangle");
                                 console.log(currentEnv);
                                 var oldHeight = Snap('#pointer' + currentEnv).transform();
                                 Snap('#pointer' + currentEnv).transform('translate( 0 ' + (oldHeight.localMatrix.f + varAddedHeight) + ')');
+                                console.log("Env count");
                                 console.log(count);
                                 //Snap('#pointer' + currentEnv).attr('height', oldHeight + 15);
                                 currentEnv++;
@@ -10468,10 +10466,12 @@ angular
                         }
                         
                         function pushEnvs(currentEnv, count) {
-                            while (currentEnv <= count) {
-                                //console.log(currentEnv);
+                            while (currentEnv < count) {
+                                console.log("Current env");
+                                console.log(currentEnv);
                                 var oldHeight = Snap('#env' + currentEnv).transform();
                                 Snap('#env' + currentEnv).transform('translate( 0 ' + (oldHeight.localMatrix.f + varAddedHeight) + ')');
+                                console.log("Env count");
                                 console.log(count);
                                 //Snap('#pointer' + currentEnv).attr('height', oldHeight + 15);
                                 currentEnv++;
@@ -10484,7 +10484,13 @@ angular
                                 //console.log(envCount);
                                 envCount = 0;
                                 totalHeight = 0;
+
+                               
                             }
+
+                            //this resets all the text fill colors back to their default color--black
+                            //every single time a new animation is triggered.
+                            d3.selectAll('.envVar').attr('fill', '#000');
                             
                             var currentData = scope.main.getCurrentAnimObject();
                             console.log(currentData);
@@ -10513,7 +10519,7 @@ angular
                                 Snap('#env' + currentData.data.id)
                                     .line(xMargin, 22, xWidth - xMargin, 22)
                                     .attr({
-                                        stroke: '#000',
+                                        fill: '#000',
                                         strokeWidth: 1,
                                     });
                                     
@@ -10560,23 +10566,26 @@ angular
                                 console.log(totalHeight);
                             }
                             else if (currentData.name === "envSearch") {
-                                
+                                //Note on using SVG text elements:
+                                //use the 'fill' attribute to color text rather than the 'stroke' attribute
+                                // see this tutorial as an example: https://www.dashingd3js.com/svg-text-element
                                 
                                 //thanks to this SO answer for explaining how hth-child works: http://stackoverflow.com/a/29278310
                                 //Original Poster (OP): http://stackoverflow.com/questions/29278107/d3js-how-to-select-nth-element-of-a-group
                                 Snap('.envVar')
                                     .attr({
-                                        'stroke': '#000'
+                                        'fill': '#000'
                                     });
                                     //need to offset by 3 due to the way svg is displayed on the page.
-                                Snap('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')').attr({'stroke': currentData.data.color});
+                                Snap('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')').attr({'fill': currentData.data.color});
                             }
                             
                             else if (currentData.name === "envUpdate") {
                                 
+
                                 Snap('.envVar')
                                     .attr({
-                                        'stroke': '#000'
+                                        'fill': '#000'
                                     });
                                     //need to offset by 3 due to the way svg is displayed on the page.
                                 
@@ -10584,7 +10593,7 @@ angular
                                 d3.select('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')').text(currentData.data.value);
                                 Snap('#env' + currentData.data.id + '>text:nth-child(' + (currentData.data.childRank + 3) + ')')
                                     .attr({
-                                        'stroke': currentData.data.color,
+                                        'fill': currentData.data.color,
                                     });
                                 
                             }

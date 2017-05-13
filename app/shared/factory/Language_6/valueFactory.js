@@ -3,8 +3,6 @@
 
     angular.module('astInterpreter')
         .factory('l6.valueFactory', function () {
-            
-
 
             function Value(value) {
 
@@ -30,9 +28,6 @@
                     console.log(value);
                 }
             
-            
-
-        
                 this.toString = function () {
                     var result = "";
 
