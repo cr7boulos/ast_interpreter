@@ -13,7 +13,7 @@
                             },
                             
                             link: function(scope, element, attrs, pController){
-                                scope.prettyCode = "";
+                               scope.prettyCode = "";
                                if(scope.editing){
                                     attrs.$observe('editorcontent', function(newContent){
                                         console.log(scope.main.getAST());

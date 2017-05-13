@@ -2,48 +2,37 @@
     "use strict";
 
     angular.module('astInterpreter')
-        .factory('l9.valueFactory', function () {
+        .factory('l9.valueFactory', ['l9.IPEPFactory', function (IPEPFactory) {
             
-
+            var IPEP = IPEPFactory.IPEP;
 
             function Value(value) {
+
+                // setup code
+                this.INT_TAG = "int";
+                this.BOOL_TAG = "bool";
+                this.LAMBDA_TAG = "lambda";
+
+                this.tag = "unknown";
+                this.valueI = 0;
+                this.valueB = false;
+
                 if(typeof value === "number") {
                     this.tag = "int";
                     this.valueI = value;
-                    this.valueB = false;//default value
-                    this.INT_TAG = "int";
-                    this.BOOL_TAG = "bool";
-                    this.LAMBDA_TAG = "lambda";
+                    
                 }
                 else if(typeof value === "boolean") {
                         this.tag = "bool";
-                        this.valueI = 0;//default value
                         this.valueB = value;
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
+                        
                 }
-                else {
-                    
-                    if (typeof value === "object") {
-                        //This means value is an IPEP
+                else  if (value instanceof IPEP) {
                         this.tag = "lambda";
-                        this.valueI = 0;//default value
-                        this.valueB = false;//default value
-                        this.valueL = value;// valueL holds a Tree object
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
-                    }
-                    else {
-                        this.tag = "unknown";
-                        this.valueI = 0;//default value
-                        this.valueB = false;//default value
-                        this.valueL = null;// valueL holds a Tree object
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
-                    }
+                        this.valueL = value;                   
+                }
+                else{
+                    console.log("we have an error");
                 }
             
 
@@ -77,6 +66,6 @@
             return {
                 "Value": Value
             };
-        });
+        }]);
 
     })();

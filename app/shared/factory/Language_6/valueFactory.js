@@ -7,30 +7,27 @@
 
 
             function Value(value) {
+
+                //default values
+                this.tag = "unknown";
+                this.valueI = 0;
+                this.valueB = false;
+                this.INT_TAG = "int";
+                this.BOOL_TAG = "bool";
+
                 if(typeof value === "number") {
                     this.tag = "int";
                     this.valueI = value;
-                    this.valueB = false;//default value
-                    this.INT_TAG = "int";
-                    this.BOOL_TAG = "bool";
                     
                 }
                 else if(typeof value === "boolean") {
-                        this.tag = "bool";
-                        this.valueI = 0;//default value
-                        this.valueB = value;
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
+                    this.tag = "bool";
+                    this.valueB = value;
                        
                 }
                 else {
-                    this.tag = "unknown";
-                    this.valueI = 0;//default value
-                    this.valueB = false;//default value
-                    this.valueL = null;// valueL holds a Tree object
-                    this.INT_TAG = "int";
-                    this.BOOL_TAG = "bool";
-                    this.LAMBDA_TAG = "lambda";
+                    console.log("Bad Value param passed:");
+                    console.log(value);
                 }
             
             

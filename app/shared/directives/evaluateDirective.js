@@ -16,7 +16,7 @@ angular
                     console.log(ast);
                     var e = new Evaluate(scope);
                     scope.main.setResult(e.evaluate(ast)); // set up a directive for displaying output of the program
-                    console.log(scope.main.getAnimationData());
+                    //console.log(scope.main.getAnimationData());
                   }
               });
               

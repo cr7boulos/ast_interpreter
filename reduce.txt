@@ -1,0 +1,8 @@
+( prog
+           ( fun reduce
+               ( lambda  op lst   
+                 ( if ( empty? ( cdr lst ) )
+                      ( car lst ) 
+                      ( apply op ( car lst ) ( apply reduce op ( cdr lst ) ) ) ) ) )
+           ( var y ( apply reduce ( lambda x y ( + x y ) ) ( list 1 2 3 4 5 6 7 ) ) )
+           ( var x ( apply reduce ( lambda x y ( * x y ) ) ( list 1 2 3 4 5 6 7 ) ) ) )

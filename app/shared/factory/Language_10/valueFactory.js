@@ -12,41 +12,40 @@
         function Value (value) {
             //console.log("Value passed:")
             //console.log(value);
+
+            //default values
+            this.tag = "unknown"; 
+            this.valueI = 0;
+            this.valueB = false;
+            this.valueL = null;
+            this.valueS = null;
+            this.valueCC = null;
+            
+            this.INT_TAG = "int";
+            this.BOOL_TAG = "bool";
+            this.LAMBDA_TAG = "lambda";
+            this.LIST_TAG = "list";
+            this.SYMBOL_TAG = "sym";
+
             if(typeof value === "number") {
                 this.tag = "int";
                 this.valueI = value;
-                this.valueB = false;//default value
-                this.valueL = null;
-                this.valueS = null;
-                this.valueCC = null;
                 //console.log("Got a number");
             }
             else if(typeof value === "boolean") {
                     this.tag = "bool";
-                    this.valueI = 0;//default value
                     this.valueB = value;
-                    this.valueL = null;
-                    this.valueS = null;
-                    this.valueCC = null;
                     //console.log("Got a boolean");
             }
             else if (typeof value === "string") {
                 this.tag = "sym";
-                this.valueI = 0;//default value
-                this.valueB = false;// default value
-                this.valueL = null;// valueL holds an IPEP object
                 this.valueS = value;
-                this.valueCC = null;
                 //console.log("Got a symbol");
             }
             else if (value instanceof IPEP) {
                 
                 this.tag = "lambda";
-                this.valueI = 0;//default value
-                this.valueB = false;//default value
                 this.valueL = value; // valueL holds an IPEP object
-                this.valueS = null;
-                this.valueCC = null;
                 //console.log("Got an IPEP");
                 
             }
@@ -66,29 +65,16 @@
                 //e.g. var val = new Value()
                 //value := ConsCell
                 this.tag = "list";
-                this.valueI = 0;//default value
-                this.valueB = false;//default value
-                this.valueL = null; // valueL holds an IPEP object
-                this.valueS = null;
                 this.valueCC = null;
                 //console.log("Got a list");
             }
             else {
-                this.tag = "unknown";
-                this.valueI = 0;//default value
-                this.valueB = false;//default value
-                this.valueL = null;// valueL holds an IPEP object
-                this.valueS = null;
-                this.valueCC = null;
+                //don't do anything
+
                 //console.log("Got a unknown value:");
                 //console.log(value);
                 
             }
-            this.INT_TAG = "int";
-            this.BOOL_TAG = "bool";
-            this.LAMBDA_TAG = "lambda";
-            this.LIST_TAG = "list";
-            this.SYMBOL_TAG = "sym";
 
             this.toString = function () {
                 var result = "";

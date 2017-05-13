@@ -2268,41 +2268,40 @@ angular
         function Value (value) {
             //console.log("Value passed:")
             //console.log(value);
+
+            //default values
+            this.tag = "unknown"; 
+            this.valueI = 0;
+            this.valueB = false;
+            this.valueL = null;
+            this.valueS = null;
+            this.valueCC = null;
+            
+            this.INT_TAG = "int";
+            this.BOOL_TAG = "bool";
+            this.LAMBDA_TAG = "lambda";
+            this.LIST_TAG = "list";
+            this.SYMBOL_TAG = "sym";
+
             if(typeof value === "number") {
                 this.tag = "int";
                 this.valueI = value;
-                this.valueB = false;//default value
-                this.valueL = null;
-                this.valueS = null;
-                this.valueCC = null;
                 //console.log("Got a number");
             }
             else if(typeof value === "boolean") {
                     this.tag = "bool";
-                    this.valueI = 0;//default value
                     this.valueB = value;
-                    this.valueL = null;
-                    this.valueS = null;
-                    this.valueCC = null;
                     //console.log("Got a boolean");
             }
             else if (typeof value === "string") {
                 this.tag = "sym";
-                this.valueI = 0;//default value
-                this.valueB = false;// default value
-                this.valueL = null;// valueL holds an IPEP object
                 this.valueS = value;
-                this.valueCC = null;
                 //console.log("Got a symbol");
             }
             else if (value instanceof IPEP) {
                 
                 this.tag = "lambda";
-                this.valueI = 0;//default value
-                this.valueB = false;//default value
                 this.valueL = value; // valueL holds an IPEP object
-                this.valueS = null;
-                this.valueCC = null;
                 //console.log("Got an IPEP");
                 
             }
@@ -2322,29 +2321,16 @@ angular
                 //e.g. var val = new Value()
                 //value := ConsCell
                 this.tag = "list";
-                this.valueI = 0;//default value
-                this.valueB = false;//default value
-                this.valueL = null; // valueL holds an IPEP object
-                this.valueS = null;
                 this.valueCC = null;
                 //console.log("Got a list");
             }
             else {
-                this.tag = "unknown";
-                this.valueI = 0;//default value
-                this.valueB = false;//default value
-                this.valueL = null;// valueL holds an IPEP object
-                this.valueS = null;
-                this.valueCC = null;
+                //don't do anything
+
                 //console.log("Got a unknown value:");
                 //console.log(value);
                 
             }
-            this.INT_TAG = "int";
-            this.BOOL_TAG = "bool";
-            this.LAMBDA_TAG = "lambda";
-            this.LIST_TAG = "list";
-            this.SYMBOL_TAG = "sym";
 
             this.toString = function () {
                 var result = "";
@@ -3316,30 +3302,27 @@ angular
 
 
             function Value(value) {
+
+                //default values
+                this.tag = "unknown";
+                this.valueI = 0;
+                this.valueB = false;
+                this.INT_TAG = "int";
+                this.BOOL_TAG = "bool";
+
                 if(typeof value === "number") {
                     this.tag = "int";
                     this.valueI = value;
-                    this.valueB = false;//default value
-                    this.INT_TAG = "int";
-                    this.BOOL_TAG = "bool";
                     
                 }
                 else if(typeof value === "boolean") {
-                        this.tag = "bool";
-                        this.valueI = 0;//default value
-                        this.valueB = value;
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
+                    this.tag = "bool";
+                    this.valueB = value;
                        
                 }
                 else {
-                    this.tag = "unknown";
-                    this.valueI = 0;//default value
-                    this.valueB = false;//default value
-                    this.valueL = null;// valueL holds a Tree object
-                    this.INT_TAG = "int";
-                    this.BOOL_TAG = "bool";
-                    this.LAMBDA_TAG = "lambda";
+                    console.log("Bad Value param passed:");
+                    console.log(value);
                 }
             
             
@@ -5084,48 +5067,39 @@ angular
     "use strict";
 
     angular.module('astInterpreter')
-        .factory('valueFactory', function () {
+        .factory('valueFactory', ['treeFactory', function (treeFactory) {
             
-
+            var Tree = treeFactory.Tree;
 
             function Value(value) {
+
+                //default values
+                this.tag = "unknown";
+                this.valueI = 0;
+                this.valueB = false;
+                this.valueL = null;
+
+                this.INT_TAG = "int";
+                this.BOOL_TAG = "bool";
+                this.LAMBDA_TAG = "lambda";
+
                 if(typeof value === "number") {
                     this.tag = "int";
                     this.valueI = value;
-                    this.valueB = false;//default value
-                    this.INT_TAG = "int";
-                    this.BOOL_TAG = "bool";
-                    this.LAMBDA_TAG = "lambda";
                 }
                 else if(typeof value === "boolean") {
-                        this.tag = "bool";
-                        this.valueI = 0;//default value
-                        this.valueB = value;
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
+                    this.tag = "bool";
+                    this.valueB = value;
                 }
-                else {
-                    if (typeof value === "object") {
-                        this.tag = "lambda";
-                        this.valueI = 0;//default value
-                        this.valueB = false;//default value
-                        this.valueL = value;// valueL holds a Tree object
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
-                    }
-                    else {
-                        this.tag = "unknown";
-                        this.valueI = 0;//default value
-                        this.valueB = false;//default value
-                        this.valueL = null;// valueL holds a Tree object
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
-                    }
+                else if (value instanceof Tree) {
+                    this.tag = "lambda";
+                    this.valueL = value;
                 }
-            
+                    
+                else{
+                    console.log("Something went wrong");
+                    console.log(Value);
+                }
 
         
                 this.toString = function () {
@@ -5138,8 +5112,6 @@ angular
                         result += this.valueI;
                     }
                     else if (this.tag === this.LAMBDA_TAG) {
-                        //result += this.valueL;
-                        //changing this function may break code somewhere else; be careful!!! D.B. 8/23/16
                         result += "function";
                     }
                     else {
@@ -5157,7 +5129,7 @@ angular
             return {
                 "Value": Value
             };
-        });
+        }]);
 
     })();
 
@@ -7664,48 +7636,34 @@ angular
     "use strict";
 
     angular.module('astInterpreter')
-        .factory('l8.valueFactory', function () {
+        .factory('l8.valueFactory', ['l8.IPEPFactory', function (IPEPFactory) {
             
-
+            var IPEP = IPEPFactory.IPEP;
 
             function Value(value) {
+
+                // setup code
+                this.INT_TAG = "int";
+                this.BOOL_TAG = "bool";
+                this.LAMBDA_TAG = "lambda";
+
+                this.tag = "unknown";
+                this.valueI = 0;
+                this.valueB = false;
+
                 if(typeof value === "number") {
                     this.tag = "int";
                     this.valueI = value;
-                    this.valueB = false;//default value
-                    this.INT_TAG = "int";
-                    this.BOOL_TAG = "bool";
-                    this.LAMBDA_TAG = "lambda";
+                    
                 }
                 else if(typeof value === "boolean") {
                         this.tag = "bool";
-                        this.valueI = 0;//default value
                         this.valueB = value;
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
+                        
                 }
-                else {
-                    
-                    if (typeof value === "object") {
-                        //This means value is an IPEP
+                else  if (value instanceof IPEP) {
                         this.tag = "lambda";
-                        this.valueI = 0;//default value
-                        this.valueB = false;//default value
-                        this.valueL = value;// valueL holds a Tree object
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
-                    }
-                    else {
-                        this.tag = "unknown";
-                        this.valueI = 0;//default value
-                        this.valueB = false;//default value
-                        this.valueL = null;// valueL holds a Tree object
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
-                    }
+                        this.valueL = value;                   
                 }
             
 
@@ -7739,7 +7697,7 @@ angular
             return {
                 "Value": Value
             };
-        });
+        }]);
 
     })();
 
@@ -10296,48 +10254,37 @@ angular
     "use strict";
 
     angular.module('astInterpreter')
-        .factory('l9.valueFactory', function () {
+        .factory('l9.valueFactory', ['l9.IPEPFactory', function (IPEPFactory) {
             
-
+            var IPEP = IPEPFactory.IPEP;
 
             function Value(value) {
+
+                // setup code
+                this.INT_TAG = "int";
+                this.BOOL_TAG = "bool";
+                this.LAMBDA_TAG = "lambda";
+
+                this.tag = "unknown";
+                this.valueI = 0;
+                this.valueB = false;
+
                 if(typeof value === "number") {
                     this.tag = "int";
                     this.valueI = value;
-                    this.valueB = false;//default value
-                    this.INT_TAG = "int";
-                    this.BOOL_TAG = "bool";
-                    this.LAMBDA_TAG = "lambda";
+                    
                 }
                 else if(typeof value === "boolean") {
                         this.tag = "bool";
-                        this.valueI = 0;//default value
                         this.valueB = value;
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
+                        
                 }
-                else {
-                    
-                    if (typeof value === "object") {
-                        //This means value is an IPEP
+                else  if (value instanceof IPEP) {
                         this.tag = "lambda";
-                        this.valueI = 0;//default value
-                        this.valueB = false;//default value
-                        this.valueL = value;// valueL holds a Tree object
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
-                    }
-                    else {
-                        this.tag = "unknown";
-                        this.valueI = 0;//default value
-                        this.valueB = false;//default value
-                        this.valueL = null;// valueL holds a Tree object
-                        this.INT_TAG = "int";
-                        this.BOOL_TAG = "bool";
-                        this.LAMBDA_TAG = "lambda";
-                    }
+                        this.valueL = value;                   
+                }
+                else{
+                    console.log("we have an error");
                 }
             
 
@@ -10371,7 +10318,7 @@ angular
             return {
                 "Value": Value
             };
-        });
+        }]);
 
     })();
 
@@ -10675,7 +10622,7 @@ angular
                     console.log(ast);
                     var e = new Evaluate(scope);
                     scope.main.setResult(e.evaluate(ast)); // set up a directive for displaying output of the program
-                    console.log(scope.main.getAnimationData());
+                    //console.log(scope.main.getAnimationData());
                   }
               });
               
@@ -13583,7 +13530,7 @@ angular
                             },
                             
                             link: function(scope, element, attrs, pController){
-                                scope.prettyCode = "";
+                               scope.prettyCode = "";
                                if(scope.editing){
                                     attrs.$observe('editorcontent', function(newContent){
                                         console.log(scope.main.getAST());
