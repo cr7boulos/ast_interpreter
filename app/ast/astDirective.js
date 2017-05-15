@@ -273,6 +273,9 @@ console.log(source);
         nodeEnter.append("circle")
             .attr('class', 'nodeCircle')
             .attr("r", 0)
+            .attr("data-hasChildren", function(d){
+                return d.children || d._children ? true : false;
+            })
             .style("fill", function(d) {
                 return d._children ? "lightsteelblue" : "#fff";
             });
@@ -281,9 +284,12 @@ console.log(source);
             .attr("y", function(d) {
                 return d.children || d._children ? -10 : 10;
             })
+            
             .attr("dy", ".35em")
             .attr('class', 'nodeText')
-            
+            .attr("id", function(d){
+                return   "text" + (d.id - 1); 
+            })
             .attr("text-anchor", "middle")
             .text(function(d) {
                 return d.name;
@@ -300,7 +306,12 @@ console.log(source);
             //.attr("text-anchor", function(d) {
             //    return d.children || d._children ? "end" : "start";
             //})
+            .attr('class', 'nodeText')
             .attr("text-anchor", "middle")
+            .attr("id", function(d){
+                return   "text" + (d.id - 1); 
+            })
+            
             .text(function(d) {
                 return d.name;
             });
@@ -398,13 +409,28 @@ console.log(source);
                  var currentData = scope.main.getCurrentAnimObject();
                  if(currentData.name === "nodeTraversal"){
                  
-                   console.log(currentData); //change the class name Update
-                   d3.selectAll(".nodeCircle") //removes all previous 
-                     .style("fill", "#fff"); //formatting by coloring all nodes white
+                   //console.log(currentData); //change the class name Update
+                   d3.selectAll(".nodeCircle") //resets circles to default look
+                     .attr("r", 4.5)  
+                     .style("fill", "#fff"); 
+
+                   d3.selectAll(".nodeText")
+                     .attr("y", function(d, i){
+                         return d3.select("#node" + i).attr("data-hasChildren") == "true" ? -15 : 15;
+                     });  
                      
                    d3.select("#" + "node" + currentData.data.id)
-                     .style("fill", currentData.data.color);
-                    
+                     .transition()
+                     .attr("r", 15)
+                     .style("fill", currentData.data.color); //add  a transition to this method chain
+
+                   d3.select("#text" + currentData.data.id)
+                     .transition()
+                     .duration(750)
+                     .attr("y", function(d){
+                         return d3.select("#node" + currentData.data.id).attr("data-hasChildren") == "true" ? 30 : -30;
+                     });
+                     
                  }
                 }, true);
                 
